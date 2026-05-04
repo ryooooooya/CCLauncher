@@ -129,6 +129,7 @@ grep や awk を allow リストに残しながら、機密ファイルへの読
 | `security` | macOS キーチェーンの操作が可能 |
 | `pbcopy` / `pbpaste` | クリップボード経由の情報漏洩 |
 | `open` | ブラウザ・アプリの意図しない起動 |
+| `defaults write` | システム設定・Gatekeeper の改変、アプリ動作の改変が可能 |
 
 ### フックと settings.json の違い
 
@@ -158,6 +159,50 @@ Normal モードでもサンドボックス境界内のコマンドは自動承�
 
 ---
 
+## ask パーミッションによる HITL
+
+`deny` と `allow` の二元論に加えて、個別コマンド単位で `ask`（常に確認）を指定できる。
+一度「今後聞かない」で許可してしまったコマンドでも、`ask` に入れておけば毎回確認が入る。
+
+### 使いどころ
+
+- `deny` にすると業務に支障が出るが、毎回の中身は人間が見たいコマンド
+- 破壊的操作と読み取り操作が同じコマンド名で混在するもの（DB クライアントなど）
+- サプライチェーン経由のリスクがあるインストール系コマンド
+
+### 設定例
+
+```json
+{
+  "permissions": {
+    "ask": [
+      "Bash(pnpm add *)",
+      "Bash(pnpm install *)",
+      "Bash(psql *)",
+      "Bash(mysql *)",
+      "Bash(mongosh *)",
+      "Bash(sqlite3 *)",
+      "Bash(brew install *)"
+    ]
+  }
+}
+```
+
+### DB コマンドのジレンマ
+
+`Bash(psql *)` を deny にすると `SELECT` もブロックされて分析作業に支障が出る。
+かといって allow にすると `DROP TABLE` や `DELETE FROM` も通ってしまう。
+glob パターンはコマンド引数の中身を区別できないため、deny/allow だけでは解決できない。
+
+対処は 2 通りある。
+
+1. ask に入れて毎回人間が SQL の中身を見て判断する（シンプル）
+2. PreToolUse フックで破壊的 SQL キーワード（DROP / DELETE FROM / TRUNCATE / ALTER TABLE）をパターンマッチでブロックする（自動化）
+
+プロジェクトで DB を直接触る頻度が低ければ 1 で十分。頻度が高ければ 2 を検討する。
+
+---
+
 ## MCP サーバー管理
 
 MCP サーバーは一度許可すると AI が「正規のツール」として自由に使える。
@@ -175,6 +220,31 @@ OS コマンドインジェクションが可能だった。`mcp-remote` を使�
 cat ~/.claude.json 2>/dev/null | jq '.mcpServers // empty'
 cat .mcp.json 2>/dev/null
 ```
+
+### 読み取り系と書き込み系の切り分け
+
+MCP サーバーの接続を許可しても、ツール単位で allow/ask/deny を分けられる。
+読み取り系（search、fetch、list）は allow で構わないが、書き込み系（send、create、update、delete）は
+原則 ask に入れ、実行前に人間が確認する運用を推奨する。
+
+なりすましメッセージ送信・意図しない Issue 作成・ファイルの誤削除などの事故は、
+書き込み系を無条件 allow にしたときに起きる。
+
+```json
+{
+  "permissions": {
+    "ask": [
+      "mcp__*__*send*",
+      "mcp__*__*create*",
+      "mcp__*__*delete*",
+      "mcp__*__*update*"
+    ]
+  }
+}
+```
+
+ワイルドカードで一括指定すると、新規 MCP を追加したときも自動で ask 対象に入るメリットがある。
+ただし実際のツール名は各 MCP で異なるため、接続している MCP の tools 一覧を確認して調整すること。
 
 ---
 
@@ -232,6 +302,9 @@ CVE-2025-59536 では `.claude/settings.json` を通じて、リポジトリを�
 [ ] .env ファイルへのアクセスが deny されている（Read と Bash の両方）
 [ ] ~/.ssh / ~/.aws / ~/.config/gh が deny されている
 [ ] macOS: osascript / security / pbcopy / pbpaste が deny されている
+[ ] macOS: defaults write が deny されている
+[ ] git add . / git add -A / git checkout . / git clean -f が deny されている
+[ ] rsync / npm publish / pnpm publish / yarn publish が deny されている
 [ ] bash-firewall.sh が配置・実行権限あり
 [ ] protect-files.py が配置・実行権限あり
 [ ] settings.json の hooks に上記フックを登録

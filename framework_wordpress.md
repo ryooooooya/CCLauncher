@@ -273,6 +273,17 @@ swell-child/
 - ローカル環境（http://localhost:8888）で表示が崩れていない
 - `pnpm lint:php` がエラーなく完了する
 - SWELL 親テーマのファイルが変更されていない
+
+## プロジェクト属性（preflight の結果）
+
+`base_preflight.md` を実行した結果をここに記録する。属性が変わる機能追加（例：問い合わせフォームで個人情報を扱い始める、外部 API 連携を足す）を行う際は、該当 Step のみ再実行してこのセクションを更新する。
+
+- scope: production / prototype のいずれか
+- 外部 API 連携: あり / なし（あればサービス名とスペンディングキャップの設定状況）
+- 個人情報: 扱うデータと適用法（APPI / GDPR 等）・プライバシーポリシー掲載状況
+- フォーム: 該当フォームと nonce / reCAPTCHA 等のスパム対策状況
+- プロトタイプ省略項目: prototype で省略した Step があれば列挙
+- preflight 実行日: YYYY-MM-DD
 ```
 
 ---

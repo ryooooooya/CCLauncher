@@ -46,6 +46,7 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 | ファイル | 内容 |
 |---|---|
 | `base_harness.md` | Biome + Oxlint + Lefthook + フック設定 |
+| `base_preflight.md` | 実装前の前提確認（スコープ・LLM・コスト・法務・個人情報） |
 | `base_security_env.md` | .claudeignore, settings.json, セキュリティフック（Claude Code への指示） |
 | `base_security_env_guide.md` | セキュリティ設定の背景・理由（人間向け解説） |
 | `base_security_code.md` | TypeScript / Node.js セキュアコーディングルール（Claude Code への指示） |

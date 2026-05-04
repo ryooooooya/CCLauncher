@@ -282,6 +282,18 @@ content.config.ts     # Content Collections スキーマ定義
 - リントエラーがないこと
 - 型エラーがないこと
 - `pnpm build` が成功すること
+
+## プロジェクト属性（preflight の結果）
+
+`base_preflight.md` を実行した結果をここに記録する。属性が変わる機能追加（例：LLM 連携を後から足す、ユーザー登録を追加する）を行う際は、該当 Step のみ再実行してこのセクションを更新する。
+
+- scope: production / prototype のいずれか
+- LLM 連携: あり / なし（あればプロバイダ・リージョン・学習 opt-out の状態）
+- 外部コスト: 該当する外部 API とスペンディングキャップの設定状況
+- 個人情報: 扱うデータと適用法（GDPR / APPI / CCPA 等）
+- スクレイピング: あり / なし（あれば対象サイトと robots.txt / ToS の確認結果）
+- プロトタイプ省略項目: prototype で省略した Step があれば列挙
+- preflight 実行日: YYYY-MM-DD
 ```
 
 ---
