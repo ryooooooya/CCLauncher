@@ -15,6 +15,38 @@ MCP 経由では進捗が見えず、長時間の無応答が発生する。Skil
 
 ---
 
+## 認証
+
+Codex CLI は ChatGPT ログインと API キーの2方式に対応する。
+このプロジェクトでは ChatGPT ログインを使う（人間起点のローカル CLI 実行であり、
+CI/CD のような無人実行ではないため）。ChatGPT のプラン枠で動くので API の従量課金は発生しない。
+
+セットアップ:
+
+```bash
+# ブラウザが開き ChatGPT の OAuth フローでログインする
+codex login
+
+# 認証方式を確認（ChatGPT になっていること）
+codex login status
+```
+
+すでに API キーでログインしている場合は切り替える:
+
+```bash
+codex logout
+codex login
+```
+
+注意:
+
+- 環境に `OPENAI_API_KEY` が残っていると、意図せず API キー認証になることがある。
+  `codex login status` が API key を示す場合は、当該環境変数を外してから `codex login` し直す。
+- ChatGPT ログインはプランごとの利用上限に従う。高頻度のレビューで上限に達する運用なら、
+  上限なし従量課金の API キー（標準 API 課金）のほうが向く。用途に応じて選ぶ。
+
+---
+
 ## CLAUDE.md に追記するセクション
 
 以下の内容を CLAUDE.md の適切なセクションに追記する。

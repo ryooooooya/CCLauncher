@@ -24,9 +24,26 @@ Next.js / Astro 版との主な違い:
 - Node.js 20+
 - pnpm がインストール済み
 - Claude Code がインストール済み
-- Codex CLI がインストール済み
+- Codex CLI がインストール済み・ChatGPT ログイン済み（下記参照）
 - SWELL 親テーマ zip 取得済み（SWELLER'S マイページ）
 - SWELL 子テーマ zip 取得済み（同上、無料）
+
+### Codex CLI の認証
+
+レビュー連携は ChatGPT ログインで使う（人間起点のローカル CLI 実行であり、
+API の従量課金は発生しない）。
+
+```bash
+# ブラウザが開き ChatGPT の OAuth フローでログインする
+codex login
+
+# 認証方式を確認（ChatGPT になっていること）
+codex login status
+```
+
+API キーでログイン済みの場合は `codex logout` してから `codex login` し直す。
+環境に `OPENAI_API_KEY` が残っていると意図せず API キー認証になることがあるため、
+`codex login status` が API key を示す場合は当該環境変数を外す。
 
 ---
 

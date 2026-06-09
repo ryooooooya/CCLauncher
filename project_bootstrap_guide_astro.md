@@ -22,8 +22,25 @@ CMS はプロジェクトごとに異なるため、Phase 0 の末尾でいず�
 - Node.js 20+
 - pnpm がインストール済み
 - Claude Code がインストール済み
-- Codex CLI がインストール済み
+- Codex CLI がインストール済み・ChatGPT ログイン済み（下記参照）
 - 空のディレクトリまたは git init 済みのリポジトリ
+
+### Codex CLI の認証
+
+レビュー連携は ChatGPT ログインで使う（人間起点のローカル CLI 実行であり、
+API の従量課金は発生しない）。
+
+```bash
+# ブラウザが開き ChatGPT の OAuth フローでログインする
+codex login
+
+# 認証方式を確認（ChatGPT になっていること）
+codex login status
+```
+
+API キーでログイン済みの場合は `codex logout` してから `codex login` し直す。
+環境に `OPENAI_API_KEY` が残っていると意図せず API キー認証になることがあるため、
+`codex login status` が API key を示す場合は当該環境変数を外す。
 
 ---
 
