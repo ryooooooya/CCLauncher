@@ -169,6 +169,60 @@ protected="eslint.config biome.json pyproject.toml .prettierrc tsconfig.json lef
 
 ---
 
+## テスト（Next.js 固有）
+
+`base_testing.md` の方針に加えて、Next.js（App Router + React）固有の設定を行う。
+
+### 追加パッケージ
+
+React コンポーネントを vitest で単体テストするため、`base_testing.md` の vitest に加えて以下を入れる。
+
+```bash
+pnpm add -D @vitejs/plugin-react @testing-library/react @testing-library/jest-dom @testing-library/user-event happy-dom
+```
+
+`vitest.config.ts` に React プラグインと happy-dom 環境を設定する。
+
+```ts
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "happy-dom",
+    globals: true,
+    setupFiles: ["./vitest.setup.ts"],
+    // coverage は base_testing.md を参照
+  },
+});
+```
+
+`vitest.setup.ts` で `@testing-library/jest-dom` のマッチャーを読み込む。
+
+```ts
+import "@testing-library/jest-dom/vitest";
+```
+
+### async Server Component は E2E に回す
+
+async Server Component（データフェッチを含む `async function` のコンポーネント）は、現状 vitest（および React Testing Library）で描画できない。これは回避策のあるバグではなく、テストランナー側のサポートギャップなので、E2E（`base_a11y.md` の Playwright）で検証する。
+
+- 同期 Server Component / Client Component → vitest + RTL で出力を検証できる
+- async Server Component → Playwright E2E
+- Server Action は async 関数として、依存をモックして vitest で単体テストする
+- `next/image`, `next/navigation` 等は vitest 側でモックする
+
+### protect-config.sh への追加
+
+`base_harness.md` の `protect-config.sh` の保護対象に `vitest.config` を追加する（Storybook を使う場合は `.storybook/main.ts` と併せて）。
+
+```bash
+protected="eslint.config biome.json pyproject.toml .prettierrc tsconfig.json lefthook.yml .oxlintrc.json next.config .storybook/main.ts vitest.config"
+```
+
+---
+
 ## CLAUDE.md の Next.js 固有セクション
 
 ```markdown
@@ -185,6 +239,7 @@ pnpm lint         # リント（Oxlint）
 pnpm lint:next    # リント（Next.js ESLint + jsx-a11y）
 pnpm typecheck    # 型チェック（tsc --noEmit）
 pnpm format       # フォーマット（Biome）
+pnpm test         # テスト（vitest run）
 pnpm storybook    # Storybook 起動
 \`\`\`
 
@@ -240,3 +295,4 @@ src/
 - [ ] shadcn/ui のコンポーネントが `src/components/ui/` に存在する
 - [ ] `pnpm storybook` で Storybook が起動する
 - [ ] `@storybook/nextjs` または `@storybook/nextjs-vite` がフレームワークとして設定されている
+- [ ] `pnpm test` で vitest が実行され、同期コンポーネント・Server Action の単体テストが通る

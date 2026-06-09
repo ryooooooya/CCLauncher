@@ -307,9 +307,9 @@ const state = { fw: null, features: new Set(), secMode: null, docs: [] };
 
 const FEATURES = {
   nextjs: [
-    { id: 'preflight', label: '新規プロジェクトで実装前の前提確認をしたい', desc: 'スコープ・LLM・コスト・法務などを初期化時に記録' },
     { id: 'ui', label: 'UI コンポーネントの実装がある', desc: 'UX チェックリスト・UI モーション' },
     { id: 'a11y', label: 'アクセシビリティ対応が必要', desc: 'Playwright + jest-axe セットアップ' },
+    { id: 'test', label: 'テスト戦略がほしい', desc: 'vitest 単体 + Playwright E2E の層設計' },
     { id: 'codex', label: 'Codex でレビューしたい', desc: '計画・コードレビュー連携' },
     { id: 'npm', label: '外部 npm パッケージを多用する', desc: 'サプライチェーンセキュリティ' },
     { id: 'storybook', label: 'Storybook でコンポーネント管理する', desc: 'MCP server + Manifest 連携' },
@@ -317,16 +317,15 @@ const FEATURES = {
     { id: 'claude_md', label: 'CLAUDE.md の設計知識がほしい', desc: '設計・運用ナレッジ' },
   ],
   astro: [
-    { id: 'preflight', label: '新規プロジェクトで実装前の前提確認をしたい', desc: 'スコープ・LLM・コスト・法務などを初期化時に記録' },
     { id: 'ui', label: 'UI コンポーネントの実装がある', desc: 'UX チェックリスト・UI モーション' },
     { id: 'a11y', label: 'アクセシビリティ対応が必要', desc: 'Playwright + jest-axe セットアップ' },
+    { id: 'test', label: 'テスト戦略がほしい', desc: 'vitest 単体 + Playwright E2E の層設計' },
     { id: 'codex', label: 'Codex でレビューしたい', desc: '計画・コードレビュー連携' },
     { id: 'npm', label: '外部 npm パッケージを多用する', desc: 'サプライチェーンセキュリティ' },
     { id: 'skill', label: 'カスタム Skill を作る予定', desc: 'SKILL.md 生成プロンプト' },
     { id: 'claude_md', label: 'CLAUDE.md の設計知識がほしい', desc: '設計・運用ナレッジ' },
   ],
   wordpress: [
-    { id: 'preflight', label: '新規プロジェクトで実装前の前提確認をしたい', desc: 'スコープ・個人情報・フォームなどを初期化時に記録' },
     { id: 'ui', label: 'CSS アニメーション・UI の質感にこだわる', desc: 'UI モーション（CSS パターンを参考適用）' },
     { id: 'codex', label: 'Codex でレビューしたい', desc: '計画・コードレビュー連携' },
     { id: 'skill', label: 'カスタム Skill を作る予定', desc: 'SKILL.md 生成プロンプト' },
@@ -342,7 +341,6 @@ const DOC_DB = {
   'framework_astro.md':     { dest: '.claude/docs/',  desc: 'Astro 固有の設定・規約' },
   'framework_wordpress.md': { dest: '.claude/docs/',  desc: 'WordPress / SWELL 固有の設定・規約' },
   'base_harness.md':        { dest: '.claude/docs/',  desc: 'Biome + Oxlint + Lefthook + フック設定' },
-  'base_preflight.md':      { dest: '.claude/docs/',  desc: '実装前の前提確認（スコープ・LLM・コスト・法務）' },
   'base_security_env.md':   { dest: '.claude/rules/', desc: 'セキュリティ環境設定（禁止事項は常時適用）' },
   'base_security_env_guide.md': { dest: 'docs/',      desc: 'セキュリティ環境設定（人間向け解説）' },
   'base_security_code.md':  { dest: '.claude/rules/', desc: 'セキュアコーディングルール（常時適用）' },
@@ -350,6 +348,7 @@ const DOC_DB = {
   'base_security_npm.md':   { dest: '.claude/rules/', desc: 'npm サプライチェーンセキュリティ（常時適用）' },
   'base_codex_review.md':   { dest: '.claude/docs/',  desc: 'Codex 計画・コードレビュー連携' },
   'base_a11y.md':           { dest: '.claude/docs/',  desc: 'a11y セットアップ（Playwright + jest-axe）' },
+  'base_testing.md':        { dest: '.claude/docs/',  desc: 'テスト戦略（vitest 単体 + Playwright E2E の層設計）' },
   'base_ux_checklist_critical.md': { dest: '.claude/rules/', desc: 'UX チェックリスト CRITICAL（常時適用）' },
   'base_ux_checklist_high.md':    { dest: '.claude/docs/',   desc: 'UX チェックリスト HIGH（UI 実装・レビュー時）' },
   'base_ux_checklist_medium.md':  { dest: '.claude/docs/',   desc: 'UX チェックリスト MEDIUM / LOW' },
@@ -416,10 +415,10 @@ function updateResult() {
     docs.push('base_ui_motion.md');
   }
   if (state.features.has('a11y') && !isWP) docs.push('base_a11y.md');
+  if (state.features.has('test') && !isWP) docs.push('base_testing.md');
   if (state.features.has('storybook') && !isWP) docs.push('base_storybook.md');
   if (state.features.has('codex')) docs.push('base_codex_review.md');
   if (state.features.has('skill')) docs.push('base_skill_md_prompt.md');
-  if (state.features.has('preflight')) docs.push('base_preflight.md');
   if (state.secMode === 'both') {
     docs.push('base_security_env_guide.md');
     if (!isWP) docs.push('base_security_code_guide.md');

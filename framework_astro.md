@@ -230,6 +230,38 @@ content.config.ts     # Content Collections スキーマ定義
 
 ---
 
+## テスト（Astro 固有）
+
+`base_testing.md` の方針に加えて、Astro 固有の設定を行う。Astro は静的サイト寄りの用途が多く、ロジックが薄いプロジェクトでは vitest を入れない判断もあり得る（`lib/` にユーティリティや CMS クライアントの加工処理が出てきた段階で導入する）。
+
+### vitest の設定
+
+Astro は vitest 用に `getViteConfig` を提供しており、Astro プロジェクトの設定を引き継いだ状態でテストできる。
+
+```ts
+import { getViteConfig } from "astro/config";
+
+export default getViteConfig({
+  test: {
+    globals: true,
+    // coverage は base_testing.md を参照
+  },
+});
+```
+
+### 何をテストするか
+
+- `lib/` のユーティリティ・CMS レスポンスの加工関数 → vitest 単体（外部 CMS 呼び出しはモックする）
+- Content Collections のスキーマ（Zod）→ vitest 単体で正常系・異常系を検証する
+- `.astro` コンポーネントの描画 → Container API（`experimental_AstroContainer`）で文字列にレンダリングして検証できるが、見た目は Playwright + 人手に寄せる
+- ページ全体・遷移・フォーム送信 → Playwright E2E（`base_a11y.md`）
+
+### protect-config.sh への追加
+
+`base_harness.md` の `protect-config.sh` の保護対象に `vitest.config` を追加する。
+
+---
+
 ## CLAUDE.md の Astro 固有セクション
 
 ```markdown
