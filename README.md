@@ -66,6 +66,7 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 | `base_ux_checklist_medium.md` | UX チェックリスト（MEDIUM/LOW: 該当機能の実装時） |
 | `base_ui_motion.md` | UIの触感・質感（アニメーション・インタラクションフィードバック・ジェスチャー応答） |
 | `base_storybook.md` | Storybook + AI 連携（MCP server + Manifest）セットアップ・Story 作成ルール |
+| `base_chrome_devtools.md` | chrome-devtools-mcp の設定と使用方針（実行時デバッグ・パフォーマンス計測。Next/Astro のみ、UI 選択時に配布） |
 | `base_claude_md_knowledge.md` | CLAUDE.md の設計・運用に関する知識まとめ |
 | `base_skill_md_prompt.md` | SKILL.md 生成プロンプト |
 

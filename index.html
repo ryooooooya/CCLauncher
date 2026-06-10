@@ -357,6 +357,7 @@ const DOC_DB = {
   'base_ux_checklist_medium.md':  { dest: '.claude/docs/',   desc: 'UX チェックリスト MEDIUM / LOW' },
   'base_ui_motion.md':      { dest: '.claude/docs/',  desc: 'UI モーション・インタラクション' },
   'base_storybook.md':      { dest: '.claude/docs/',  desc: 'Storybook + AI 連携（MCP server + Manifest）' },
+  'base_chrome_devtools.md':{ dest: '.claude/docs/',  desc: 'chrome-devtools-mcp によるライブデバッグ・パフォーマンス計測（Next/Astro のみ）' },
   'base_skill_md_prompt.md':{ dest: '.claude/docs/',  desc: 'SKILL.md 生成プロンプト' },
   'base_claude_md_knowledge.md': { dest: 'docs/',     desc: 'CLAUDE.md 設計・運用ナレッジ（人間向け参照）' },
 };
@@ -421,6 +422,7 @@ function updateResult() {
     docs.push('base_ux_checklist_high.md');
     docs.push('base_ux_checklist_medium.md');
     docs.push('base_ui_motion.md');
+    if (!isWP) docs.push('base_chrome_devtools.md');
   }
   if (state.features.has('a11y') && !isWP) docs.push('base_a11y.md');
   if (state.features.has('test') && !isWP) docs.push('base_testing.md');
