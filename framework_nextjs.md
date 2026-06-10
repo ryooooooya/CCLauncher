@@ -273,6 +273,24 @@ src/
 - 型エラーがないこと
 - `pnpm build` が成功すること
 
+## 参照ドキュメント索引
+
+IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず読むこと。
+
+| 作業 | 読むファイル |
+|---|---|
+| UI コンポーネントの実装・レビュー | `.claude/docs/base_ux_checklist_high.md` |
+| アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
+| テストの作成・修正 | `.claude/docs/base_testing.md` |
+| Story の作成・修正 | `.claude/docs/base_storybook.md` |
+| a11y 対応・検証 | `.claude/docs/base_a11y.md` |
+| 実装計画・コミット前のレビュー | `.claude/docs/base_codex_review.md` |
+| フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_nextjs.md` |
+| リント・フォーマット・フックの設定変更 | `.claude/docs/base_harness.md` |
+| CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md` |
+
+配置していないファイルの行はセットアップ時に削除する。
+
 ## プロジェクト属性（preflight の結果）
 
 `base_preflight.md` を実行した結果をここに記録する。属性が変わる機能追加（例：LLM 連携を後から足す、ユーザー登録を追加する）を行う際は、該当 Step のみ再実行してこのセクションを更新する。

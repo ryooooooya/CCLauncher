@@ -274,6 +274,19 @@ swell-child/
 - `pnpm lint:php` がエラーなく完了する
 - SWELL 親テーマのファイルが変更されていない
 
+## 参照ドキュメント索引
+
+IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず読むこと。
+
+| 作業 | 読むファイル |
+|---|---|
+| UI コンポーネントの実装・レビュー | `.claude/docs/base_ux_checklist_high.md` |
+| アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
+| 実装計画・コミット前のレビュー | `.claude/docs/base_codex_review.md` |
+| フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_wordpress.md` |
+
+配置していないファイルの行はセットアップ時に削除する。
+
 ## プロジェクト属性（preflight の結果）
 
 `base_preflight.md` を実行した結果をここに記録する。属性が変わる機能追加（例：問い合わせフォームで個人情報を扱い始める、外部 API 連携を足す）を行う際は、該当 Step のみ再実行してこのセクションを更新する。
