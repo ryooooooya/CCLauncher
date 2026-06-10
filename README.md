@@ -56,7 +56,9 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 | `base_security_env_guide.md` | セキュリティ設定の背景・理由（人間向け解説） |
 | `base_security_code.md` | TypeScript / Node.js セキュアコーディングルール（Claude Code への指示） |
 | `base_security_code_guide.md` | セキュアコーディングルールの背景・理由（人間向け解説） |
-| `base_security_npm.md` | npm サプライチェーンセキュリティ: 依存関係の追加・更新・overrides・GitHub 側防御層・緊急対応手順（Claude Code への指示） |
+| `base_security_npm.md` | npm サプライチェーンセキュリティの常時ルール: 依存関係の追加・更新・lockfile・overrides |
+| `base_security_npm_setup.md` | CI/GitHub 側の自動防御層（Dependabot, Dependency Review, CI audit）のセットアップ手順（初期化時に一度だけ実行） |
+| `base_security_npm_incident.md` | npm インシデント情報を受けたときの影響確認・対処手順（オンデマンド参照） |
 | `base_codex_review.md` | Codex による計画レビュー・コードレビュー連携（ChatGPT ログイン認証） |
 | `base_a11y.md` | アクセシビリティセットアップ（Playwright + jest-axe） |
 | `base_ux_checklist_critical.md` | UX チェックリスト（CRITICAL: 常時適用） |

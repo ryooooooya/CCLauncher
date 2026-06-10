@@ -347,6 +347,8 @@ const DOC_DB = {
   'base_security_code.md':  { dest: '.claude/rules/', desc: 'セキュアコーディングルール（常時適用）' },
   'base_security_code_guide.md': { dest: 'docs/',     desc: 'セキュアコーディングルール（人間向け解説）' },
   'base_security_npm.md':   { dest: '.claude/rules/', desc: 'npm サプライチェーンセキュリティ（常時適用）' },
+  'base_security_npm_setup.md': { dest: '.claude/docs/', desc: 'CI/GitHub 側の自動防御層のセットアップ手順' },
+  'base_security_npm_incident.md': { dest: '.claude/docs/', desc: 'npm インシデント発生時の影響確認・対処手順' },
   'base_codex_review.md':   { dest: '.claude/docs/',  desc: 'Codex 計画・コードレビュー連携' },
   'base_a11y.md':           { dest: '.claude/docs/',  desc: 'a11y セットアップ（Playwright + jest-axe）' },
   'base_testing.md':        { dest: '.claude/docs/',  desc: 'テスト戦略（vitest 単体 + Playwright E2E の層設計）' },
@@ -406,7 +408,11 @@ function updateResult() {
   docs.push('base_security_env.md');
   docs.push('base_security_env_setup.md');
   if (!isWP) docs.push('base_security_code.md');
-  if (state.features.has('npm') && !isWP) docs.push('base_security_npm.md');
+  if (state.features.has('npm') && !isWP) {
+    docs.push('base_security_npm.md');
+    docs.push('base_security_npm_setup.md');
+    docs.push('base_security_npm_incident.md');
+  }
   if (state.features.has('ui')) docs.push('base_ux_checklist_critical.md');
   docs.push('project_bootstrap_guide_' + fw + '.md');
   docs.push('framework_' + fw + '.md');
