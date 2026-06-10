@@ -12,6 +12,10 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 - リポジトリ: https://github.com/ryooooooya/ClaudeCodeLauncherDocs
 - セレクター: https://ryooooooya.github.io/ClaudeCodeLauncherDocs/
 
+ドキュメントの正本はこのリポジトリ。Claude のプロジェクトナレッジにはファイルを置かず、
+参照・編集の際は raw URL（https://raw.githubusercontent.com/ryooooooya/ClaudeCodeLauncherDocs/main/<ファイル名>）
+から常に最新版を取得する。
+
 セレクターでフレームワーク・プロジェクト特徴・セキュリティ形式を選ぶと、Claude Code に貼り付けるだけでドキュメントの取得・配置・セットアップ開始ができるプロンプトが生成される。
 
 ### ドキュメントの配置先
@@ -47,7 +51,8 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 |---|---|
 | `base_harness.md` | Biome + Oxlint + Lefthook + フック設定 |
 | `base_preflight.md` | 実装前の前提確認（スコープ・LLM・コスト・法務・個人情報） |
-| `base_security_env.md` | .claudeignore, settings.json, セキュリティフック（Claude Code への指示） |
+| `base_security_env.md` | セキュリティ環境の禁止事項（常時適用ルール） |
+| `base_security_env_setup.md` | サンドボックス, .claudeignore, settings.json, セキュリティフックのセットアップ手順（初期化時に一度だけ実行） |
 | `base_security_env_guide.md` | セキュリティ設定の背景・理由（人間向け解説） |
 | `base_security_code.md` | TypeScript / Node.js セキュアコーディングルール（Claude Code への指示） |
 | `base_security_code_guide.md` | セキュアコーディングルールの背景・理由（人間向け解説） |
@@ -95,7 +100,7 @@ bootstrap guide は `base_*` と `framework_*` を組み合わせた成果物と
 ### 新規生成（Next.js 版）
 
 ```
-base_harness.md, base_security_env.md, base_security_code.md,
+base_harness.md, base_security_env_setup.md, base_security_env.md, base_security_code.md,
 base_codex_review.md, base_a11y.md, base_ui_motion.md, base_storybook.md, framework_nextjs.md を参照して、
 Next.js プロジェクトのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_nextjs.md を生成してください。
@@ -104,7 +109,7 @@ project_bootstrap_guide_nextjs.md を生成してください。
 ### 新規生成（Astro 版）
 
 ```
-base_harness.md, base_security_env.md, base_security_code.md,
+base_harness.md, base_security_env_setup.md, base_security_env.md, base_security_code.md,
 base_codex_review.md, base_a11y.md, base_ui_motion.md, framework_astro.md を参照して、
 Astro プロジェクトのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_astro.md を生成してください。
@@ -113,7 +118,7 @@ project_bootstrap_guide_astro.md を生成してください。
 ### 新規生成（WordPress 版）
 
 ```
-base_security_env.md, base_codex_review.md, framework_wordpress.md を参照して、
+base_security_env_setup.md, base_security_env.md, base_codex_review.md, framework_wordpress.md を参照して、
 WordPress + SWELL 子テーマのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_wordpress.md を生成してください。
 ```
@@ -153,8 +158,7 @@ base_security_env.md を更新しました。
 
 1. 該当の `base_*` を更新する
 2. その内容を使っているすべての bootstrap guide を再生成する
-3. このプロジェクト知識のファイルを差し替える
-4. GitHub リポジトリに push する
+3. GitHub リポジトリに push する
 
 どの bootstrap guide が影響を受けるかは「フレームワーク間の主な差異」表を参照。
 `base_harness.md` や `base_security_env.md` などフレームワーク非依存のものを変えた場合は、原則すべての bootstrap guide が再生成の対象になる。
@@ -163,15 +167,13 @@ base_security_env.md を更新しました。
 
 1. 該当の `framework_*` を更新する
 2. 対応する bootstrap guide のみ再生成する（他のフレームワークには影響しない）
-3. このプロジェクト知識のファイルを差し替える
-4. GitHub リポジトリに push する
+3. GitHub リポジトリに push する
 
 ### ファイルを追加・削除・リネームしたとき
 
 1. このREADMEのファイル一覧を更新する
 2. `index.html` の `DOC_DB` と `FEATURES` を更新する（配置先マッピングとセレクターの選択肢）
-3. このプロジェクト知識のファイルを差し替える
-4. GitHub リポジトリに push する
+3. GitHub リポジトリに push する
 
 `index.html` の更新箇所:
 
@@ -184,15 +186,13 @@ base_security_env.md を更新しました。
 2. 対応する `project_bootstrap_guide_{name}.md` を生成する
 3. このREADMEのファイル一覧と bootstrap guide 一覧・フレームワーク間の差異表を更新する
 4. `index.html` の `FEATURES`・`DOC_DB`・`selectFw` にフレームワークを追加する
-5. このプロジェクト知識にファイルをまとめて追加する
-6. GitHub リポジトリに push する
+5. GitHub リポジトリに push する
 
 ### ベストプラクティス・外部情報を反映したとき
 
 1. 反映先の `base_*` を特定して更新する
 2. 影響する bootstrap guide を再生成する
-3. このプロジェクト知識のファイルを差し替える
-4. GitHub リポジトリに push する
+3. GitHub リポジトリに push する
 
 「どの `base_*` に反映すべきか」判断に迷う場合はこのプロジェクトで相談すること。
 

@@ -341,7 +341,8 @@ const DOC_DB = {
   'framework_astro.md':     { dest: '.claude/docs/',  desc: 'Astro 固有の設定・規約' },
   'framework_wordpress.md': { dest: '.claude/docs/',  desc: 'WordPress / SWELL 固有の設定・規約' },
   'base_harness.md':        { dest: '.claude/docs/',  desc: 'Biome + Oxlint + Lefthook + フック設定' },
-  'base_security_env.md':   { dest: '.claude/rules/', desc: 'セキュリティ環境設定（禁止事項は常時適用）' },
+  'base_security_env.md':   { dest: '.claude/rules/', desc: 'セキュリティ環境の禁止事項（常時適用）' },
+  'base_security_env_setup.md': { dest: '.claude/docs/', desc: 'セキュリティ環境のセットアップ手順（サンドボックス・settings.json・フック）' },
   'base_security_env_guide.md': { dest: 'docs/',      desc: 'セキュリティ環境設定（人間向け解説）' },
   'base_security_code.md':  { dest: '.claude/rules/', desc: 'セキュアコーディングルール（常時適用）' },
   'base_security_code_guide.md': { dest: 'docs/',     desc: 'セキュアコーディングルール（人間向け解説）' },
@@ -403,6 +404,7 @@ function updateResult() {
   const fw = state.fw;
   const isWP = fw === 'wordpress';
   docs.push('base_security_env.md');
+  docs.push('base_security_env_setup.md');
   if (!isWP) docs.push('base_security_code.md');
   if (state.features.has('npm') && !isWP) docs.push('base_security_npm.md');
   if (state.features.has('ui')) docs.push('base_ux_checklist_critical.md');
