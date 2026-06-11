@@ -1,32 +1,33 @@
 # project_bootstrap_guide_wordpress
 
-SWELL 子テーマ開発用のローカル環境を立ち上げ、
-Claude Code のセキュリティ設定と Codex 連携をセットアップする手順。
+SWELL 子テーマ開発用のローカル環境（wp-env / Docker）を立ち上げ、
+Claude Code の限定ハーネス・セキュリティ設定・Codex 連携までセットアップする手順。
 Phase 0 から順番に実行すれば完了する。
 
-Next.js / Astro 版との主な違い:
+Next.js / Astro とは環境が大きく異なる点に注意:
 
-- PHP + CSS 環境のためビルドツールを使わない
-- ハーネス（Biome / Oxlint）の恩恵が限定的（JS ファイルのみ有効）
+- 言語: PHP + CSS（JS は補助的）
+- ビルドツールなし（子テーマは素の PHP / CSS）
+- ハーネスの範囲が限定的（Biome / Oxlint の恩恵が薄い）
 - ローカル環境は wp-env（Docker）
 
 各設定の背景・理由は以下を参照:
 
-- セキュリティ（環境制御）→ `base_security_env.md` / `base_security_env_guide.md`
+- セキュリティ（環境制御）→ `base_security_env.md` / `base_security_env_setup.md` / `base_security_env_guide.md`
 - Codex 連携 → `base_codex_review.md`
-- WordPress / SWELL 固有の設定 → `framework_wordpress.md`
+- フレームワーク固有 → `framework_wordpress.md`
 
 ---
 
 ## 前提
 
 - Docker Desktop がインストール済み・起動済み
-- Node.js 20+
+- Node.js 20+（wp-env のために必要）
 - pnpm がインストール済み
+- SWELL 親テーマ zip 取得済み（SWELLER'S マイページからダウンロード）
+- SWELL 子テーマ zip 取得済み（同上、無料）
 - Claude Code がインストール済み
 - Codex CLI がインストール済み・ChatGPT ログイン済み（下記参照）
-- SWELL 親テーマ zip 取得済み（SWELLER'S マイページ）
-- SWELL 子テーマ zip 取得済み（同上、無料）
 
 ### Codex CLI の認証
 
@@ -47,63 +48,31 @@ API キーでログイン済みの場合は `codex logout` してから `codex l
 
 ---
 
-## Phase 0: ディレクトリ構成と初期ファイルの作成
+## Phase 0: ローカル環境（wp-env）
 
-### 0-1. プロジェクト構成
+### 0-1. テーマの配置
+
+SWELL 親テーマと子テーマの zip を展開し、`.wp-env.json` から参照できる形に配置する。
 
 ```
 project-root/
-├── swell/          # SWELL 親テーマ zip を展開して配置
-├── swell-child/    # SWELL 子テーマ zip を展開して配置
+├── swell/          # SWELL 親テーマ（zip を展開）
+├── swell-child/    # SWELL 子テーマ（zip を展開）
 ├── .wp-env.json
-├── package.json
-└── .gitignore
+└── package.json
 ```
 
-SWELL 親テーマと子テーマの zip を展開し、上記の構成で配置する。
+SWELL 親テーマ（`swell/`）は編集しない。カスタマイズはすべて子テーマ（`swell-child/`）で行う。
 
-### 0-2. .gitignore の作成
-
-SWELL 親テーマはバージョン管理対象外にする（ライセンス上の理由・容量）。
-子テーマのみを管理する。
-
-```
-# SWELL 親テーマ
-/swell/
-
-# wp-env 生成ファイル
-.wp-env/
-node_modules/
-
-# 機密情報
-.env*
-*.pem
-*.key
-```
-
-### 0-3. package.json の作成
-
-```json
-{
-  "name": "your-project",
-  "version": "1.0.0",
-  "scripts": {
-    "wp:start": "wp-env start",
-    "wp:stop": "wp-env stop",
-    "wp:reset": "wp-env clean all && wp-env start",
-    "wp:logs": "wp-env logs",
-    "lint:js": "oxlint swell-child/js"
-  }
-}
-```
-
-### 0-4. wp-env のインストール
+### 0-2. wp-env のインストール
 
 ```bash
 pnpm add -D @wordpress/env
 ```
 
-### 0-5. .wp-env.json の作成
+### 0-3. .wp-env.json の作成
+
+プロジェクトルートに `.wp-env.json` を作成する。
 
 ```json
 {
@@ -124,9 +93,55 @@ pnpm add -D @wordpress/env
 }
 ```
 
-### 0-6. 子テーマの最小ファイルを作成
+### 0-4. package.json に wp-env スクリプトを追加
 
-#### swell-child/style.css
+```json
+{
+  "scripts": {
+    "wp:start": "wp-env start",
+    "wp:stop": "wp-env stop",
+    "wp:reset": "wp-env clean all && wp-env start",
+    "wp:logs": "wp-env logs"
+  }
+}
+```
+
+### 0-5. 起動確認
+
+```bash
+pnpm wp:start
+```
+
+- フロントエンド: `http://localhost:8888`
+- 管理画面: `http://localhost:8888/wp-admin`
+- ログイン: `admin` / `password`
+
+### 0-6. git 初期化とコミット
+
+```bash
+git init
+git add -A
+git commit -m "init: WordPress (wp-env) + SWELL 子テーマ"
+```
+
+---
+
+## Phase 1: SWELL 子テーマの構成
+
+`swell-child/` を以下の構成にする。
+
+```
+swell-child/
+├── style.css           # テーマ定義（必須）
+├── functions.php       # フック・スクリプト読み込みのみ
+├── css/
+│   ├── tokens.css      # Figma MCP から生成したデザイントークン（任意）
+│   └── custom.css      # カスタムスタイル
+└── js/
+    └── custom.js       # カスタムスクリプト（必要な場合）
+```
+
+### 1-1. style.css の最小構成
 
 ```css
 /*
@@ -136,7 +151,10 @@ Version: 1.0.0
 */
 ```
 
-#### swell-child/functions.php
+### 1-2. functions.php の最小構成
+
+`functions.php` にはすべての処理を書かず、フックと読み込みのみを記述する。
+機能ごとにファイルを分けて `require_once` で読み込む。
 
 ```php
 <?php
@@ -151,52 +169,139 @@ add_action('wp_enqueue_scripts', function() {
 }, 11);
 ```
 
-#### swell-child/css/tokens.css
+### 1-3. SWELL CSS カスタムプロパティ
 
-Figma MCP 経由で生成するファイルのプレースホルダー。初期は空ファイルで可。
+子テーマで色をハードコードせず、必ず SWELL の CSS 変数を経由する。
+SWELL のカスタムプロパティはアンダースコア命名（`--color_main` 形式）。
+`--swl-color-*` のようなハイフン形式は SWELL では使われていない。
 
 ```css
-/* このファイルは Figma MCP 経由で自動生成する */
-/* pnpm wp:figma-sync で更新する */
-:root {
+/* css/custom.css */
+.my-component {
+  color: var(--color_main);
+  font-size: var(--font_size_base);
 }
 ```
 
-#### swell-child/css/custom.css
+主要な変数: `--color_main` / `--color_main_thin` / `--color_text` / `--color_link` /
+`--font_size_base` / `--font_size_s` / `--font_size_l` / `--content_width`。
+カスタマイザーで設定した色はこれらの変数に自動的に反映される。
 
-```css
-/* SWELL カスタムスタイル */
-/* SWELL のカスタムプロパティ（--color_main 等）を参照する */
+### 1-4. Figma MCP との連携（任意）
+
+Figma Variables から SWELL のカスタムプロパティに CSS を伝播させる場合、
+`get_variable_defs` でトークンを取得し、アンダースコア命名で `css/tokens.css` に出力する。
+
 ```
-
-### 0-7. ローカル環境の起動
-
-Docker Desktop が起動していることを確認してから実行する:
-
-```bash
-pnpm wp:start
-```
-
-`✔ Done!` が表示されたら以下でアクセスできる:
-
-- フロントエンド: `http://localhost:8888`
-- 管理画面: `http://localhost:8888/wp-admin`（`admin` / `password`）
-
-管理画面 > 外観 > テーマ から「SWELL CHILD」を有効化する。
-
-### 0-8. git 初期化とコミット
-
-```bash
-git init
-git add -A
-git commit -m "init: SWELL child theme + wp-env"
+Figma ファイルの SWELL Tokens コレクションから get_variable_defs でトークンを取得し、
+:root { --color_main: ... } の形式で swell-child/css/tokens.css に出力してください。
+変数名はアンダースコア命名（--color_main 形式）を維持してください。
 ```
 
 ---
 
-## Phase 1: セキュリティ設定
+## Phase 2: ハーネス（限定）
 
-### 1-1. .claudeignore
+PHP + 素の CSS 環境では Biome / Oxlint の恩恵が限定的。
+PHP は PHP_CodeSniffer（WordPress Coding Standards）、JS は Oxlint でカバーする。
+
+| ツール | 適用可否 | 備考 |
+|---|---|---|
+| Biome | △ | `.js` のみ。PHP / CSS には効かない |
+| Oxlint | △ | `.js` のみ |
+| Lefthook | ○ | PHP_CodeSniffer と組み合わせて使える |
+| PostToolUse フック | ○ | PHP / CSS / JS に対応するスクリプトを使う（Phase 3 で配置） |
+
+### 2-1. Oxlint のインストール（JS 用）
+
+```bash
+pnpm add -D oxlint lefthook
+```
+
+`.oxlintrc.json` をプロジェクトルートに作成する。
+
+```json
+{
+  "rules": {
+    "no-unused-vars": "error"
+  }
+}
+```
+
+### 2-2. PHP_CodeSniffer のインストール
+
+PHP がインストールされている環境で実行する（一度だけ）。
+
+```bash
+composer global require squizlabs/php_codesniffer wp-coding-standards/wpcs
+phpcs --config-set installed_paths $(composer config -g home)/vendor/wp-coding-standards/wpcs
+```
+
+### 2-3. package.json に lint スクリプトを追加
+
+```json
+{
+  "scripts": {
+    "lint:php": "phpcs --standard=WordPress swell-child/",
+    "lint:js": "oxlint swell-child/js"
+  }
+}
+```
+
+### 2-4. Lefthook でプリコミットフックを設定
+
+`lefthook.yml` をプロジェクトルートに作成する。
+
+```yaml
+pre-commit:
+  parallel: true
+  commands:
+    lint-php:
+      glob: "swell-child/**/*.php"
+      run: pnpm lint:php
+    lint-js:
+      glob: "swell-child/**/*.js"
+      run: pnpm lint:js
+```
+
+```bash
+pnpm lefthook install
+```
+
+---
+
+## Phase 3: セキュリティ設定
+
+### 3-0. サンドボックスを有効化する（Docker 除外つき）
+
+Claude Code のネイティブサンドボックス（macOS: Seatbelt、Linux: bubblewrap）を有効化する。
+settings.json やフックよりも下のレイヤーで強制されるため、最初に設定する。
+
+Linux / WSL2 の場合は先に依存をインストールする（macOS は不要、WSL1 は非対応）:
+
+```bash
+# Debian / Ubuntu
+sudo apt install bubblewrap socat
+# Fedora
+sudo dnf install bubblewrap socat
+```
+
+Claude Code 内で有効化する:
+
+```
+/sandbox
+```
+
+| モード | 挙動 | 使いどころ |
+|---|---|---|
+| Auto-allow | サンドボックス内のコマンドは自動承認。境界外のアクセスのみ確認が出る | 推奨。承認プロンプトが大幅に減る |
+| Regular permissions | サンドボックス内でも全コマンドが通常の承認フローを通る | 最大限の慎重さが必要な場面 |
+
+**重要**: wp-env は Docker を使う。Docker コマンドはサンドボックス外で実行する必要があるため、
+次の 3-2 の `~/.claude/settings.json` に `sandbox.excludedCommands` を設定する。
+`/sandbox` で「Sandbox is enabled」と表示されれば完了。
+
+### 3-1. .claudeignore
 
 プロジェクトルートに `.claudeignore` を作成する。
 
@@ -214,31 +319,30 @@ secrets/
 *.token
 *secret*
 *credential*
-.wp-env/
 ```
 
-### 1-2. ~/.claude/settings.json
+### 3-2. ~/.claude/settings.json（ユーザーレベル）
 
-既存の内容がある場合はバックアップを取ってから上書きする。
-WordPress 環境では `php` コマンドと `composer` を追加で許可する。
+既存の内容がある場合はバックアップを取ってから上書きすること。
+wp-env のために `sandbox.excludedCommands` で Docker をサンドボックス外で許可する。
 
 ```json
 {
   "enableAllProjectMcpServers": false,
+  "sandbox": {
+    "excludedCommands": ["docker", "docker-compose"]
+  },
   "permissions": {
     "disableBypassPermissionsMode": "disable",
     "defaultMode": "ask",
     "allow": [
       "Read",
       "Bash(pnpm *)",
-      "Bash(php *)",
-      "Bash(composer *)",
       "Bash(git status)",
       "Bash(git diff *)",
       "Bash(git log *)",
       "Bash(git branch *)",
       "Bash(git switch *)",
-      "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git stash *)",
       "Bash(git fetch *)",
@@ -255,9 +359,9 @@ WordPress 環境では `php` コマンドと `composer` を追加で許可する
       "Bash(sed *)",
       "Bash(cut *)",
       "Bash(diff *)",
+      "Bash(python3 --version)",
       "Bash(node --version)",
       "Bash(pnpm --version)",
-      "Bash(php --version)",
       "Bash(git --version)",
       "Write(/tmp/**)"
     ],
@@ -275,13 +379,23 @@ WordPress 環境では `php` コマンドと `composer` を追加で許可する
       "Bash(telnet *)",
       "Bash(ssh *)",
       "Bash(scp *)",
+      "Bash(rsync *)",
       "Bash(git push --force *)",
       "Bash(git reset --hard *)",
+      "Bash(git add .)",
+      "Bash(git add -A)",
+      "Bash(git add --all *)",
+      "Bash(git checkout .)",
+      "Bash(git clean -f *)",
       "Bash(osascript *)",
       "Bash(security *)",
       "Bash(pbcopy *)",
       "Bash(pbpaste *)",
       "Bash(open *)",
+      "Bash(defaults write *)",
+      "Bash(npm publish *)",
+      "Bash(pnpm publish *)",
+      "Bash(yarn publish *)",
       "Bash(* .env*)",
       "Bash(* ~/.ssh/*)",
       "Bash(* ~/.aws/*)",
@@ -295,6 +409,8 @@ WordPress 環境では `php` コマンドと `composer` を追加で許可する
       "Read(./.env.*)",
       "Edit(./.env.*)",
       "Write(./.env.*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
       "Read(~/.ssh/**)",
       "Read(~/.aws/**)",
       "Read(~/.git-credentials)",
@@ -332,9 +448,11 @@ WordPress 環境では `php` コマンドと `composer` を追加で許可する
 jq . ~/.claude/settings.json > /dev/null && echo "OK" || echo "JSON構文エラー"
 ```
 
-### 1-3. .claude/settings.json（プロジェクトレベル）
+`defaultMode` は `"ask"`（推奨。未知のリポジトリ・外部コンテンツを扱う場合は必ずこちら）。
 
-WordPress 環境では PHP / CSS ファイルに対応したフックに差し替える。
+### 3-3. .claude/settings.json（プロジェクトレベル）
+
+PostToolUse フック（PHP / JS の自動チェック）と PreToolUse フック（設定・親テーマ保護）を登録する。
 
 ```json
 {
@@ -365,7 +483,7 @@ WordPress 環境では PHP / CSS ファイルに対応したフックに差し�
 }
 ```
 
-### 1-4. フックスクリプトの作成
+### 3-4. フックスクリプトの作成
 
 `.claude/hooks/` ディレクトリを作成し、以下の4ファイルを配置する。
 
@@ -384,12 +502,12 @@ if echo "$COMMAND" | grep -qE '(curl|wget).*\|.*(sh|bash|zsh)'; then
 fi
 
 if echo "$COMMAND" | grep -qE 'rm\s+-[a-z]*[rf]'; then
-  echo "Blocked: rm with recursive/force flags is prohibited." >&2
+  echo "Blocked: rm with recursive/force flags is prohibited. Use trash or mv instead." >&2
   exit 2
 fi
 
 if echo "$COMMAND" | grep -qP 'git\s+push\s+(origin\s+)?(main|master)\b'; then
-  echo "Blocked: direct push to main/master is prohibited." >&2
+  echo "Blocked: direct push to main/master is prohibited. Use a feature branch." >&2
   exit 2
 fi
 
@@ -411,7 +529,7 @@ from pathlib import Path
 SENSITIVE_PATTERNS = {
     '.env', '.pem', '.key', '.p12', '.pfx',
     '.credential', '.token', 'credentials.json',
-    'id_rsa', 'id_ed25519', 'id_ecdsa'
+    'service-account.json', 'id_rsa', 'id_ed25519', 'id_ecdsa'
 }
 
 def is_sensitive(path: str) -> bool:
@@ -426,35 +544,17 @@ def is_sensitive(path: str) -> bool:
         return True
     return False
 
-def is_parent_theme(path: str) -> bool:
-    # SWELL 親テーマへの書き込みをブロック
-    p = Path(path)
-    parts = p.parts
-    if 'swell' in parts and 'swell-child' not in parts:
-        return True
-    return False
-
 def main():
     try:
         data = json.load(sys.stdin)
     except json.JSONDecodeError:
         sys.exit(0)
-    tool_name = data.get('tool_name', '')
     file_path = data.get('tool_input', {}).get('path') \
              or data.get('tool_input', {}).get('file_path', '')
-    if not file_path:
-        sys.exit(0)
-    if is_sensitive(file_path):
+    if file_path and is_sensitive(file_path):
         print(
             f"SECURITY: Access to '{file_path}' is blocked.\n"
             "Credential files and .env must not be read or modified by Claude.",
-            file=sys.stderr
-        )
-        sys.exit(2)
-    if tool_name in ('Write', 'Edit', 'MultiEdit') and is_parent_theme(file_path):
-        print(
-            f"BLOCKED: '{file_path}' は SWELL 親テーマのファイルです。\n"
-            "親テーマは編集禁止。カスタマイズは swell-child/ で行ってください。",
             file=sys.stderr
         )
         sys.exit(2)
@@ -466,7 +566,7 @@ if __name__ == '__main__':
 
 #### .claude/hooks/post-wp-lint.sh
 
-PHP / CSS / JS ファイルの編集後に対応するリンターを自動実行する。
+ファイル編集後に PHP は PHP_CodeSniffer、JS は Oxlint を実行し、残った違反をエージェントに返す。
 
 ```bash
 #!/usr/bin/env bash
@@ -477,40 +577,30 @@ file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")
 
 case "$file" in
   *.php)
-    if command -v phpcs &>/dev/null; then
-      diag="$(phpcs --standard=WordPress "$file" 2>&1 | head -20 || true)"
-      if [ -n "$diag" ]; then
-        jq -Rn --arg msg "$diag" '{
-          hookSpecificOutput: {
-            hookEventName: "PostToolUse",
-            additionalContext: $msg
-          }
-        }'
-      fi
-    fi
+    diag="$(phpcs --standard=WordPress "$file" 2>&1 | head -30)"
     ;;
   *.js)
     npx oxlint --fix "$file" >/dev/null 2>&1 || true
     diag="$(npx oxlint "$file" 2>&1 | head -20)"
-    if [ -n "$diag" ]; then
-      jq -Rn --arg msg "$diag" '{
-        hookSpecificOutput: {
-          hookEventName: "PostToolUse",
-          additionalContext: $msg
-        }
-      }'
-    fi
-    ;;
-  *.css)
-    # CSS はリンターなし。構文エラーがあれば手動で確認する
     ;;
   *)
     exit 0
     ;;
 esac
+
+if [ -n "$diag" ]; then
+  jq -Rn --arg msg "$diag" '{
+    hookSpecificOutput: {
+      hookEventName: "PostToolUse",
+      additionalContext: $msg
+    }
+  }'
+fi
 ```
 
 #### .claude/hooks/protect-config.sh
+
+設定ファイルへの編集と、SWELL 親テーマ（`swell/`）への編集を物理的にブロックする。
 
 ```bash
 #!/usr/bin/env bash
@@ -519,8 +609,8 @@ set -euo pipefail
 input="$(cat)"
 file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")"
 
-protected=".wp-env.json package.json lefthook.yml"
-
+# 設定ファイルの保護
+protected="lefthook.yml .wp-env.json composer.json .oxlintrc.json"
 for p in $protected; do
   case "$file" in
     *$p*)
@@ -529,6 +619,16 @@ for p in $protected; do
       ;;
   esac
 done
+
+# SWELL 親テーマの保護（カスタマイズは swell-child/ で行う）
+case "$file" in
+  swell/*|*/swell/*)
+    echo "BLOCKED: SWELL 親テーマ(swell/)は編集禁止です。カスタマイズは swell-child/ で行ってください。" >&2
+    exit 2
+    ;;
+esac
+
+exit 0
 ```
 
 実行権限を付与する:
@@ -542,7 +642,7 @@ chmod +x .claude/hooks/protect-config.sh
 
 ---
 
-## Phase 2: CLAUDE.md
+## Phase 4: CLAUDE.md
 
 以下の内容をプロジェクトルートの `CLAUDE.md` として配置する。
 
@@ -558,22 +658,22 @@ WordPress + SWELL 子テーマ
 ```bash
 pnpm wp:start     # ローカル WordPress 起動（http://localhost:8888）
 pnpm wp:stop      # ローカル WordPress 停止
-pnpm wp:reset     # 環境リセット（データも消える）
+pnpm wp:reset     # 環境リセット
+pnpm wp:logs      # ログ表示
+pnpm lint:php     # PHP コードスタイルチェック（WordPress Coding Standards）
 pnpm lint:js      # JS リント（Oxlint）
 ```
 
-管理画面: http://localhost:8888/wp-admin（admin / password）
-
 ## ルール
 
-- SWELL 親テーマ（swell/）のファイルは編集禁止。protect-files.py がブロックする
-- カスタマイズはすべて swell-child/ で行う
-- CSS カスタムプロパティは SWELL のアンダースコア命名に従う（`--color_main` 形式）
+- SWELL 親テーマ（`swell/`）のファイルは編集禁止。カスタマイズはすべて子テーマ（`swell-child/`）で行う
+- CSS カスタムプロパティは SWELL のアンダースコア命名に従う（`--color_main` 形式、`--swl-color-*` ではない）
 - 子テーマで色をハードコードしない。必ず SWELL の CSS 変数（`var(--color_main)` 等）を使う
 - Figma のデザイントークンを変更したときは Figma MCP 経由で `css/tokens.css` を再生成する
-- functions.php にすべての処理を書かない。機能ごとにファイルを分けて require_once で読み込む
+- `functions.php` にすべての処理を書かない。機能ごとにファイルを分けて `require_once` で読み込む
 - WordPress の nonce を使わないフォーム送信を書かない
-- PHP のバージョンは .wp-env.json の phpVersion に合わせる（現在: 8.2）
+- ユーザー入力は必ずサニタイズ（`sanitize_text_field` 等）し、出力時はエスケープ（`esc_html` / `esc_attr` / `esc_url`）する
+- `git commit --no-verify` 禁止
 
 ## アーキテクチャ
 
@@ -588,52 +688,15 @@ swell-child/
     └── custom.js       # カスタムスクリプト（必要な場合）
 ```
 
-## SWELL CSS 変数リファレンス
+## セキュリティ（常時適用）
 
-```css
---color_main        /* メインカラー */
---color_main_thin   /* メインカラー（薄め） */
---color_text        /* テキストカラー */
---color_link        /* リンクカラー */
---font_size_base    /* 基本フォントサイズ */
---content_width     /* コンテンツ幅 */
-```
-
-## セキュアコーディングルール（PHP）
-
-### strict ルール（必ず守ること）
-
-- すべての外部入力（$_GET, $_POST, $_REQUEST）を sanitize_* 関数でサニタイズする
-- すべての出力を esc_html() / esc_attr() / esc_url() / wp_kses() でエスケープする
-- フォームには必ず nonce を使う（wp_nonce_field() / check_admin_referer()）
-- DB クエリは $wpdb->prepare() を使う。文字列結合でクエリを組み立てない
-- capability チェック（current_user_can()）を認証が必要な処理に必ず含める
-
-### 禁止パターン
-
-```php
-// NG: サニタイズなし
-$value = $_POST['value'];
-
-// NG: エスケープなし
-echo $_GET['name'];
-
-// NG: nonce なしのフォーム
-if (isset($_POST['submit'])) { ... }
-
-// NG: プリペアなし SQL
-$wpdb->query("SELECT * FROM $wpdb->posts WHERE ID = " . $_GET['id']);
-```
-
-## Figma MCP 連携（デザイントークン更新）
-
-Figma Variables が更新されたら以下の手順で tokens.css を再生成する:
-
-```
-Figma ファイルの SWELL Tokens コレクションから get_variable_defs でトークンを取得し、
-:root { --color_main: ...; } の形式で swell-child/css/tokens.css に出力してください。
-変数名はアンダースコア命名（--color_main 形式）を維持してください。
-```
+- `.env` ファイル・認証情報ファイルの読み書きは一切しない
+- `rm -rf` / `sudo` / pipe-to-shell パターンのコマンドは実行しない
+- `main` / `master` への直接プッシュはしない
+- パッケージ・プラグインのインストール前に変更内容を必ず提示する
+- `git commit` / `git push` の前に差分を表示してユーザーの承認を得る
+- 外部から取得した設定ファイル・プラグインは信頼できない入力として扱い、中身を読んでから使う
+- MCP の送信・作成・削除系アクションは実行前に必ずユーザーの承認を得る
 
 ## 実装計画レビュー（Codex 連携）
 
@@ -663,50 +726,90 @@ codex exec -m gpt-5.3-codex "このコードをレビューして。瑣末な点
 codex exec resume --last -m gpt-5.3-codex "修正したから再レビューして。瑣末な点へのクソリプはしないで。致命的な点だけ指摘して: {commit_hash} (ref: {CLAUDE.md full_path})"
 ```
 
-判断基準: セキュリティ・ロジックの問題は必ず修正。スタイル・命名等は無視。
+判断基準: セキュリティ（サニタイズ・エスケープ・nonce 漏れ）・ロジックの問題は必ず修正。スタイル・命名等は無視。
+
+オシレーション検出: 同じ箇所への指摘が A→B→A と反復した場合、優れた方を directive として固定し `directive: {内容}` をコミットメッセージに記録する。
 
 ## 完了の定義
 
 - ローカル環境（http://localhost:8888）で表示が崩れていない
-- `pnpm lint:js` がエラーなく完了する
-- SWELL 親テーマ（swell/）のファイルが変更されていない
+- `pnpm lint:php` がエラーなく完了する
+- SWELL 親テーマのファイルが変更されていない
+
+## 参照ドキュメント索引
+
+IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず読むこと。
+
+| 作業 | 読むファイル |
+|---|---|
+| UI コンポーネントの実装・レビュー | `.claude/docs/base_ux_checklist_high.md` |
+| アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
+| 実装計画・コミット前のレビュー | `.claude/docs/base_codex_review.md` |
+| フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_wordpress.md` |
+
+配置していないファイルの行はセットアップ時に削除する。
+
+## プロジェクト属性（preflight の結果）
+
+`base_preflight.md` を実行した結果をここに記録する。属性が変わる機能追加（例：問い合わせフォームで個人情報を扱い始める、外部 API 連携を足す）を行う際は、該当 Step のみ再実行してこのセクションを更新する。
+
+- scope: production / prototype のいずれか
+- 外部 API 連携: あり / なし（あればサービス名とスペンディングキャップの設定状況）
+- 個人情報: 扱うデータと適用法（APPI / GDPR 等）・プライバシーポリシー掲載状況
+- フォーム: 該当フォームと nonce / reCAPTCHA 等のスパム対策状況
+- プロトタイプ省略項目: prototype で省略した Step があれば列挙
+- preflight 実行日: YYYY-MM-DD
 ````
 
 ---
 
-## Phase 3: 動作確認
+## Phase 5: 動作確認
 
-### wp-env の確認
+### WordPress / SWELL の確認
 
 - [ ] `pnpm wp:start` で `http://localhost:8888` が表示される
-- [ ] 管理画面に SWELL と SWELL CHILD が存在する
+- [ ] SWELL 親テーマと SWELL CHILD が管理画面のテーマ一覧に表示される
 - [ ] SWELL CHILD が有効化されている
-- [ ] `swell-child/css/custom.css` の変更がブラウザに反映される
+- [ ] `css/custom.css` の変更がブラウザに反映される
+- [ ] SWELL の CSS 変数（`--color_main` 等）が子テーマから参照できている
+
+### ハーネスの確認
+
+- [ ] `pnpm lint:php` が実行できる（PHP_CodeSniffer + WordPress 標準）
+- [ ] `pnpm lint:js` が実行できる（Oxlint）
+- [ ] `.php` を編集すると PostToolUse フックで phpcs が走り、違反がコンテキストに注入される
+- [ ] SWELL 親テーマ（`swell/`）を編集しようとするとブロックされる
+- [ ] コミット時に Lefthook が lint を実行する
 
 ### セキュリティの確認
 
+- [ ] サンドボックスが有効化されている（`/sandbox` で確認）
+- [ ] `~/.claude/settings.json` の `sandbox.excludedCommands` に `docker` が入っている
 - [ ] `.claudeignore` が存在し、機密ファイルパターンが記載されている
 - [ ] `~/.claude/settings.json` の JSON 構文が正しい（`jq .` で確認）
 - [ ] `disableBypassPermissionsMode` が `"disable"` になっている
+- [ ] `enableAllProjectMcpServers` が `false` になっている
 - [ ] `.claude/hooks/` の4ファイルが存在し、実行権限がある
-- [ ] `swell/` 配下のファイルを編集しようとすると `protect-files.py` がブロックする
 
 ### MCP サーバーの確認
 
 - [ ] `~/.claude.json` に不要な MCP サーバーが登録されていない
+- [ ] `.mcp.json` に不審な MCP サーバーがない（Figma MCP を使う場合は確認のうえ許可）
 
 ### CLAUDE.md の確認
 
 - [ ] プロジェクトルートに `CLAUDE.md` が配置されている
-- [ ] PHP セキュアコーディングルールが含まれている
-- [ ] SWELL CSS 変数リファレンスが含まれている
+- [ ] 参照ドキュメント索引の、配置していないファイルの行を削除済み
 - [ ] Codex 連携のセクションが含まれている
 
 ---
 
 ## 運用ルール
 
-- SWELL 親テーマのアップデートは手動で行う（zip を差し替えて `pnpm wp:reset`）
-- Figma のデザイントークンが変わったら必ず Figma MCP 経由で `tokens.css` を再生成する
-- `tokens.css` は自動生成ファイルのため直接編集しない
-- お金が動くサービスの認証情報は AI がアクセスできる環境から完全に隔離する
+- SWELL 親テーマは絶対に編集しない。SWELL 本体のアップデートで上書きされ、変更が消える
+- CSS の色・サイズは SWELL の CSS 変数を経由する。カスタマイザー設定との一貫性を保つため
+- フォーム・管理画面処理を書くときは nonce 検証・サニタイズ・エスケープを必ず入れる
+- プラグインを追加する前に出所と中身を確認し、ユーザーの承認を得る
+- 外部から取得した設定ファイル・プラグイン zip は信頼できない入力として扱う
+- wp-env の Docker コマンドはサンドボックス外で実行されるため、`excludedCommands` の設定を消さない
+- お金が動くサービス（決済プラグイン等）の認証情報は AI がアクセスできる環境から完全に隔離する
