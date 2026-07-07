@@ -1185,6 +1185,8 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | 実装計画・コミット前のレビュー | `.claude/docs/base_codex_review.md` |
 | フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_astro.md` |
 | ブラウザでの実行時デバッグ・パフォーマンス計測 | `.claude/docs/base_chrome_devtools.md` |
+| SEO・メタデータの実装 | `.claude/docs/base_seo.md` |
+| パフォーマンス改善・予算の確認 | `.claude/docs/base_performance.md` |
 | リント・フォーマット・フックの設定変更 | `.claude/docs/base_harness.md` |
 | CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md` |
 

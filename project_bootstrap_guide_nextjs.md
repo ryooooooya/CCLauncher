@@ -1162,6 +1162,18 @@ src/
 
 決定の経緯は `/docs/adr/` の ADR を参照。
 
+## データベース（DB を使う場合）
+
+DB を使う場合は、スキーマから TypeScript の型を自動生成する仕組みを必ず入れる。
+手動で型を書いてスキーマと二重管理する構成は採らない。手段はプロジェクトに合わせて選ぶ:
+
+- Prisma（デフォルト推奨）: `prisma generate` でスキーマから型を生成
+- Supabase: `supabase gen types typescript` で型を生成（Prisma を重ねない）
+- Drizzle: スキーマ定義自体が TypeScript で、型が直接得られる
+
+スキーマ変更のたびに型を再生成して差分をコミットし、コンパイラが不整合を検出できる状態を保つ。
+スキーマ変更のレビュー観点は `.claude/docs/base_codex_review.md`、Supabase を使う場合の固有ルールは `.claude/rules/base_security_supabase.md` を参照。
+
 ## セキュアコーディングルール
 
 生成するすべてのコードに適用する。詳細は `.claude/rules/security_code.md` を参照。
@@ -1257,6 +1269,8 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | 実装計画・コミット前のレビュー | `.claude/docs/base_codex_review.md` |
 | フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_nextjs.md` |
 | ブラウザでの実行時デバッグ・パフォーマンス計測 | `.claude/docs/base_chrome_devtools.md` |
+| SEO・メタデータの実装 | `.claude/docs/base_seo.md` |
+| パフォーマンス改善・予算の確認 | `.claude/docs/base_performance.md` |
 | リント・フォーマット・フックの設定変更 | `.claude/docs/base_harness.md` |
 | CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md` |
 
