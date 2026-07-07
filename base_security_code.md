@@ -157,6 +157,12 @@ fs.readFile(filePath, ...)
 
 ## 8. 認証・パスワード（strict）
 
+認証は自作を第一選択にしない。まず既製の認証基盤（Supabase Auth / Auth.js / Clerk 等）を検討し、
+要件上使えない理由がある場合のみ自作する。DB・インフラも同様に、マネージドサービス（BaaS / PaaS）を
+自前運用より優先する。Supabase を使う場合は `base_security_supabase.md` のルールを併用すること。
+自作する場合はこのセクションとセクション9を厳守し、パスワードリセット・セッション無効化・
+アカウントロックまで含めた設計をユーザーに提示する。
+
 パスワードのハッシュは `argon2` を使う。`bcrypt` は可。`md5` / `sha1` / `sha256` は禁止。
 比較には `crypto.timingSafeEqual` を使い、タイミング攻撃を防ぐ。
 

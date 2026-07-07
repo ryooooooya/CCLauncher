@@ -36,9 +36,11 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 | `base_security_code.md` | `.claude/rules/` | セキュアコーディングを常時適用 |
 | `base_security_npm.md` | `.claude/rules/` | npm セキュリティを常時適用 |
 | `base_ux_checklist_critical.md` | `.claude/rules/` | UX 最重要ルールを常時適用 |
+| `base_security_supabase.md` | `.claude/rules/` | Supabase の認可境界（RLS 等）を常時適用。Supabase 採用時のみ配布 |
 | `base_security_env_guide.md` | `docs/` | 人間向け解説 |
 | `base_security_code_guide.md` | `docs/` | 人間向け解説 |
 | `base_claude_md_knowledge.md` | `docs/` | 人間向けリファレンス |
+| `base_privacy_guide.md` | `docs/` | 人間向け解説 |
 | その他すべて | `.claude/docs/` | セットアップ・参照用 |
 
 ---
@@ -59,8 +61,10 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 | `base_security_npm.md` | npm サプライチェーンセキュリティの常時ルール: 依存関係の追加・更新・lockfile・overrides |
 | `base_security_npm_setup.md` | CI/GitHub 側の自動防御層（Dependabot, Dependency Review, CI audit）のセットアップ手順（初期化時に一度だけ実行） |
 | `base_security_npm_incident.md` | npm インシデント情報を受けたときの影響確認・対処手順（オンデマンド参照） |
+| `base_security_supabase.md` | Supabase セキュリティルール（RLS・キー管理・セッション検証・Storage）。Supabase 採用時のみ |
 | `base_codex_review.md` | Codex による計画レビュー・コードレビュー連携（ChatGPT ログイン認証） |
 | `base_a11y.md` | アクセシビリティセットアップ（Playwright + jest-axe） |
+| `base_testing.md` | テスト戦略（vitest 単体 + Playwright E2E の層設計） |
 | `base_ux_checklist_critical.md` | UX チェックリスト（CRITICAL: 常時適用） |
 | `base_ux_checklist_high.md` | UX チェックリスト（HIGH: UI実装・レビュー時） |
 | `base_ux_checklist_medium.md` | UX チェックリスト（MEDIUM/LOW: 該当機能の実装時） |
@@ -69,6 +73,12 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。
 | `base_chrome_devtools.md` | chrome-devtools-mcp の設定と使用方針（実行時デバッグ・パフォーマンス計測。Next/Astro のみ、UI 選択時に配布） |
 | `base_claude_md_knowledge.md` | CLAUDE.md の設計・運用に関する知識まとめ |
 | `base_skill_md_prompt.md` | SKILL.md 生成プロンプト |
+| `base_seo.md` | SEO・メタデータ（Metadata API / sitemap / OGP / 構造化データ / noindex） |
+| `base_performance.md` | パフォーマンス予算と Lighthouse CI による回帰検知 |
+| `base_sentry_setup.md` | Sentry エラー監視のセットアップ手順（初期化時に一度だけ実行） |
+| `base_privacy_guide.md` | 個人情報・プライバシー対応の実装チェックリスト（人間向け解説） |
+| `base_automation_roadmap.md` | 運用自動化の仕分けロードマップ（今やる/条件付き/やらない・人間向け） |
+| `base_ops_incident.md` | 本番障害発生時の対応手順・平時準備（人間向け、オンデマンド参照） |
 
 ### framework_*（フレームワーク固有）
 
@@ -198,6 +208,35 @@ base_security_env.md を更新しました。
 3. GitHub リポジトリに push する
 
 「どの `base_*` に反映すべきか」判断に迷う場合はこのプロジェクトで相談すること。
+
+### ドキュメントの鮮度管理
+
+外部仕様（ツールのバージョン・デフォルト設定・API・サービス仕様）に依存する記述を含むファイルは、
+末尾に「最終検証日: YYYY-MM-DD」を記載する。新規作成時に付与し、既存ファイルは編集したついでに付与する
+（全ファイルの一括改修はしない）。
+
+四半期に一度、以下をこのプロジェクトで実行して突き合わせを行う:
+
+```
+README のファイル一覧のうち「最終検証日」が90日以上前または未記載のファイルを対象に、
+外部仕様に依存する記述（コマンド・デフォルト値・設定キー・サービス仕様）を web 検索で
+最新仕様と突き合わせ、乖離があるものだけ修正案を提示してください。
+```
+
+### 既存プロジェクトへの更新反映（再同期）
+
+配布済みプロジェクトのドキュメントは配布時点で凍結され、上流の改善は自動では届かない。
+上流を更新したら、影響の大きい変更（セキュリティルール等）については既存プロジェクト側で
+以下のプロンプトを Claude Code に貼って再同期する:
+
+```
+このプロジェクトの .claude/rules/ .claude/docs/ docs/ に配置済みの base_*・framework_* ファイルについて、
+https://raw.githubusercontent.com/ryooooooya/ClaudeCodeLauncherDocs/main/<ファイル名> から最新版を取得し、
+ローカル版と差分があるファイルを一覧で提示してください。
+私が承認したファイルだけ上書きしてください。ローカル側に独自変更があるファイルは上書きせず、
+差分を示して相談してください。更新後のファイルに新しいセットアップ手順が含まれる場合は、
+実行前に内容を提示してください。
+```
 
 ### このREADMEを更新するタイミング
 

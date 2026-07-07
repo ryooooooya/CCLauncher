@@ -312,6 +312,11 @@ const FEATURES = {
     { id: 'test', label: 'テスト戦略がほしい', desc: 'vitest 単体 + Playwright E2E の層設計' },
     { id: 'codex', label: 'Codex でレビューしたい', desc: '計画・コードレビュー連携' },
     { id: 'npm', label: '外部 npm パッケージを多用する', desc: 'サプライチェーンセキュリティ' },
+    { id: 'supabase', label: 'Supabase を使う', desc: 'RLS・キー管理・セッション検証のルール' },
+    { id: 'seo', label: 'SEO 対応が必要', desc: 'メタデータ・sitemap・OGP・構造化データ' },
+    { id: 'perf', label: 'パフォーマンス基準を CI で守る', desc: '予算定義 + Lighthouse CI' },
+    { id: 'sentry', label: 'エラー監視（Sentry）を入れる', desc: 'SDK 導入・PII 設定・通知経路' },
+    { id: 'privacy', label: '個人情報を扱う', desc: 'ポリシー・外部送信公表・保持と削除' },
     { id: 'storybook', label: 'Storybook でコンポーネント管理する', desc: 'MCP server + Manifest 連携' },
     { id: 'skill', label: 'カスタム Skill を作る予定', desc: 'SKILL.md 生成プロンプト' },
     { id: 'claude_md', label: 'CLAUDE.md の設計知識がほしい', desc: '設計・運用ナレッジ' },
@@ -322,11 +327,17 @@ const FEATURES = {
     { id: 'test', label: 'テスト戦略がほしい', desc: 'vitest 単体 + Playwright E2E の層設計' },
     { id: 'codex', label: 'Codex でレビューしたい', desc: '計画・コードレビュー連携' },
     { id: 'npm', label: '外部 npm パッケージを多用する', desc: 'サプライチェーンセキュリティ' },
+    { id: 'supabase', label: 'Supabase を使う', desc: 'RLS・キー管理・セッション検証のルール' },
+    { id: 'seo', label: 'SEO 対応が必要', desc: 'メタデータ・sitemap・OGP・構造化データ' },
+    { id: 'perf', label: 'パフォーマンス基準を CI で守る', desc: '予算定義 + Lighthouse CI' },
+    { id: 'sentry', label: 'エラー監視（Sentry）を入れる', desc: 'SDK 導入・PII 設定・通知経路' },
+    { id: 'privacy', label: '個人情報を扱う', desc: 'ポリシー・外部送信公表・保持と削除' },
     { id: 'skill', label: 'カスタム Skill を作る予定', desc: 'SKILL.md 生成プロンプト' },
     { id: 'claude_md', label: 'CLAUDE.md の設計知識がほしい', desc: '設計・運用ナレッジ' },
   ],
   wordpress: [
     { id: 'ui', label: 'CSS アニメーション・UI の質感にこだわる', desc: 'UI モーション（CSS パターンを参考適用）' },
+    { id: 'privacy', label: '個人情報を扱う', desc: 'ポリシー・外部送信公表・保持と削除' },
     { id: 'codex', label: 'Codex でレビューしたい', desc: '計画・コードレビュー連携' },
     { id: 'skill', label: 'カスタム Skill を作る予定', desc: 'SKILL.md 生成プロンプト' },
     { id: 'claude_md', label: 'CLAUDE.md の設計知識がほしい', desc: '設計・運用ナレッジ' },
@@ -349,6 +360,7 @@ const DOC_DB = {
   'base_security_npm.md':   { dest: '.claude/rules/', desc: 'npm サプライチェーンセキュリティ（常時適用）' },
   'base_security_npm_setup.md': { dest: '.claude/docs/', desc: 'CI/GitHub 側の自動防御層のセットアップ手順' },
   'base_security_npm_incident.md': { dest: '.claude/docs/', desc: 'npm インシデント発生時の影響確認・対処手順' },
+  'base_security_supabase.md': { dest: '.claude/rules/', desc: 'Supabase セキュリティ（RLS・キー管理・セッション検証。常時適用）' },
   'base_codex_review.md':   { dest: '.claude/docs/',  desc: 'Codex 計画・コードレビュー連携' },
   'base_a11y.md':           { dest: '.claude/docs/',  desc: 'a11y セットアップ（Playwright + jest-axe）' },
   'base_testing.md':        { dest: '.claude/docs/',  desc: 'テスト戦略（vitest 単体 + Playwright E2E の層設計）' },
@@ -358,8 +370,14 @@ const DOC_DB = {
   'base_ui_motion.md':      { dest: '.claude/docs/',  desc: 'UI モーション・インタラクション' },
   'base_storybook.md':      { dest: '.claude/docs/',  desc: 'Storybook + AI 連携（MCP server + Manifest）' },
   'base_chrome_devtools.md':{ dest: '.claude/docs/',  desc: 'chrome-devtools-mcp によるライブデバッグ・パフォーマンス計測（Next/Astro のみ）' },
+  'base_seo.md':          { dest: '.claude/docs/', desc: 'SEO・メタデータ（sitemap / OGP / 構造化データ / noindex）' },
+  'base_performance.md':  { dest: '.claude/docs/', desc: 'パフォーマンス予算 + Lighthouse CI 回帰検知' },
+  'base_sentry_setup.md': { dest: '.claude/docs/', desc: 'Sentry エラー監視セットアップ（初期化時に一度）' },
+  'base_privacy_guide.md':{ dest: 'docs/',         desc: '個人情報・プライバシー対応チェックリスト（人間向け）' },
   'base_skill_md_prompt.md':{ dest: '.claude/docs/',  desc: 'SKILL.md 生成プロンプト' },
   'base_claude_md_knowledge.md': { dest: 'docs/',     desc: 'CLAUDE.md 設計・運用ナレッジ（人間向け参照）' },
+  'base_automation_roadmap.md': { dest: 'docs/',    desc: '運用自動化の仕分けロードマップ（今やる/条件付き/やらない・人間向け）' },
+  'base_ops_incident.md':   { dest: 'docs/',        desc: '本番障害の対応手順・平時準備（人間向け、オンデマンド参照）' },
 };
 
 const DEST_META = {
@@ -426,6 +444,11 @@ function updateResult() {
   }
   if (state.features.has('a11y') && !isWP) docs.push('base_a11y.md');
   if (state.features.has('test') && !isWP) docs.push('base_testing.md');
+  if (state.features.has('supabase') && !isWP) docs.push('base_security_supabase.md');
+  if (state.features.has('seo') && !isWP) docs.push('base_seo.md');
+  if (state.features.has('perf') && !isWP) docs.push('base_performance.md');
+  if (state.features.has('sentry') && !isWP) docs.push('base_sentry_setup.md');
+  if (state.features.has('privacy')) docs.push('base_privacy_guide.md');
   if (state.features.has('storybook') && !isWP) docs.push('base_storybook.md');
   if (state.features.has('codex')) docs.push('base_codex_review.md');
   if (state.features.has('skill')) docs.push('base_skill_md_prompt.md');
