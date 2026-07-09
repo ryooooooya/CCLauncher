@@ -117,6 +117,8 @@ base_harness.md, base_security_env_setup.md, base_security_env.md, base_security
 base_codex_review.md, base_a11y.md, base_ui_motion.md, base_storybook.md, framework_nextjs.md を参照して、
 Next.js プロジェクトのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_nextjs.md を生成してください。
+ガイドの末尾に、運用開始後の参照先として docs/base_automation_roadmap.md と
+docs/base_ops_incident.md への1行ずつのポインタを含めてください。
 ```
 
 ### 新規生成（Astro 版）
@@ -126,6 +128,8 @@ base_harness.md, base_security_env_setup.md, base_security_env.md, base_security
 base_codex_review.md, base_a11y.md, base_ui_motion.md, framework_astro.md を参照して、
 Astro プロジェクトのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_astro.md を生成してください。
+ガイドの末尾に、運用開始後の参照先として docs/base_automation_roadmap.md と
+docs/base_ops_incident.md への1行ずつのポインタを含めてください。
 ```
 
 ### 新規生成（WordPress 版）
@@ -134,6 +138,8 @@ project_bootstrap_guide_astro.md を生成してください。
 base_security_env_setup.md, base_security_env.md, base_codex_review.md, framework_wordpress.md を参照して、
 WordPress + SWELL 子テーマのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_wordpress.md を生成してください。
+ガイドの末尾に、運用開始後の参照先として docs/base_automation_roadmap.md と
+docs/base_ops_incident.md への1行ずつのポインタを含めてください。
 ```
 
 ### base_* 更新後の再生成

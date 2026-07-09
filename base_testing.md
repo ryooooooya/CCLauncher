@@ -144,7 +144,42 @@ CLAUDE.md またはタスク指示に次を含める。
 - テストデータの文字列リテラルは、意味がすぐ分かるものを使う（`"foo"` ではなく `"未払いの注文"` など）
 - 何を検証しているかをテスト名（`it` の説明）で日本語で明確にする
 
-なお、テスト以外の一般的な TSDoc・コメント規律はコード品質の関心事であり、このファイルではなくコード品質側のルールで扱う。
+なお、テスト以外の一般的な TSDoc・コメント規律はコード品質の関心事であり、このファイルではなく `base_harness.md` のコード品質ルール（セクション 7-2）で扱う。
+
+---
+
+## 5-2. CI でテストを強制する
+
+カバレッジ閾値は `pnpm test:coverage` を実行したときにしか働かない。実行を強制する層として、
+PR ごとにテストを回す GitHub Actions を1本入れる。これにより「新規ロジックにテストがない」状態が
+閾値割れとして機械的に検知される。
+
+`.github/workflows/test.yml`:
+
+```yaml
+name: Test
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4        # 適用時にフルレングス SHA へピン留めする
+      - uses: pnpm/action-setup@v4       # 同上（base_security_npm_setup.md のルール）
+      - uses: actions/setup-node@v4      # 同上
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:coverage
+```
+
+- Actions は `base_security_npm_setup.md` のルールに従い、適用時にフルレングスのコミット SHA でピン留めする（上記 `@v4` はプレースホルダ）
+- lefthook（pre-commit / pre-push）にはテストを入れない。コミット・プッシュの速度を保ち、強制は CI に一本化する
+- `vitest.config.ts` は protect-config.sh の保護対象（閾値の改ざん防止）。CI が赤のとき閾値を下げて緑にする提案はしない
 
 ---
 
@@ -169,6 +204,7 @@ pnpm test:coverage  # カバレッジ計測
 - `CRITICAL TEST` マーカーの付いたテストは、ユーザーの明示的な指示なしに削除・スキップ・アサーション緩和をしてはならない。仕様変更で落ちる場合はまず確認する
 - ソースコードの変更とテストの変更は同じフェーズで同時に行わない。両方必要ならフェーズを分け、各境界でテストの緑/赤を報告する
 - テストには前提条件・事前条件・検証項目をコメントで書く。テストデータは意味の分かる文字列を使う
+- 新しいページ・ルートを追加したら、Playwright の対象ページリスト（PAGES 配列等）への追加を同じタスク内で行う
 
 ## 完了の定義（テスト）
 
@@ -185,6 +221,7 @@ pnpm test:coverage  # カバレッジ計測
 - [ ] `CRITICAL TEST` マーカーのルールが CLAUDE.md に入っている
 - [ ] テスト/実装のフェーズ分離ルールが CLAUDE.md に入っている
 - [ ] E2E が必要なプロジェクトで Playwright（`base_a11y.md`）が併用されている
+- [ ] PR でテスト CI（test.yml）が実行され、カバレッジ閾値がチェックされる
 
 ---
 
@@ -200,3 +237,7 @@ pnpm test:coverage  # カバレッジ計測
 
 - Next.js 公式 Vitest ガイド: https://nextjs.org/docs/app/guides/testing/vitest
 - Next.js 公式 Testing 概要: https://nextjs.org/docs/app/guides/testing
+
+---
+
+最終検証日: 2026-07-08

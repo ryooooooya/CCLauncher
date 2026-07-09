@@ -66,25 +66,18 @@ Docker コマンドはサンドボックス外で実行する必要がある。s
 
 ---
 
-## Step 1: .claudeignore を作成する
+## Step 1: 機密ファイル保護の方式を確認する
 
-プロジェクトルートに `.claudeignore` を作成する。
+注意: `.claudeignore` は Claude Code ではサポートされておらず、作成しても機能しない。
+過去にこの手順で `.claudeignore` を作成していた場合は削除してよい（残っていても無害だが、
+「保護されている」という誤解のもとになる）。
 
-```
-.env*
-*.pem
-*.key
-*.p12
-*.pfx
-credentials/
-secrets/
-.ssh/
-.aws/
-.config/gh/
-*.token
-*secret*
-*credential*
-```
+機密ファイル（`.env*` / 鍵ファイル / 認証情報）の保護は、次の2層で確定的に担保する:
+
+- `settings.json` の `permissions.deny`（Step 2 / Step 4 の Read deny ルール）
+- `protect-files.py` フック（Step 5 の PreToolUse）
+
+このため Step 1 での作業はない。Step 2 に進む。
 
 ---
 
@@ -243,17 +236,17 @@ if echo "$COMMAND" | grep -qE '(curl|wget).*\|.*(sh|bash|zsh)'; then
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE 'rm\s+-[a-z]*[rf]'; then
+if echo "$COMMAND" | grep -qE 'rm[[:space:]]+-[a-z]*[rf]'; then
   echo "Blocked: rm with recursive/force flags is prohibited. Use trash or mv instead." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qP 'git\s+push\s+(origin\s+)?(main|master)\b'; then
+if echo "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+(origin[[:space:]]+)?(main|master)([[:space:]]|$)'; then
   echo "Blocked: direct push to main/master is prohibited. Use a feature branch." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE '^\s*sudo\s+'; then
+if echo "$COMMAND" | grep -qE '^[[:space:]]*sudo[[:space:]]+'; then
   echo "Blocked: sudo is prohibited inside Claude Code sessions." >&2
   exit 2
 fi
@@ -320,7 +313,7 @@ chmod +x .claude/hooks/protect-files.py
 以下を確認してユーザーに報告する。
 
 - [ ] サンドボックスが有効化されている（`/sandbox` で確認）
-- [ ] `.claudeignore` が存在し、機密ファイルパターンが記載されている
+- [ ] `.claudeignore` に依存していない（deny ルールと protect-files.py で機密ファイルが保護されている）
 - [ ] `~/.claude/settings.json` の JSON 構文が正しい
 - [ ] `disableBypassPermissionsMode` が `"disable"` になっている
 - [ ] `enableAllProjectMcpServers` が `false` になっている
@@ -329,3 +322,6 @@ chmod +x .claude/hooks/protect-files.py
 
 全て完了したら「セキュリティセットアップが完了しました」とユーザーに伝える。
 
+---
+
+最終検証日: 2026-07-08

@@ -39,11 +39,19 @@ pnpm add -D @biomejs/biome oxlint lefthook
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": { "maxAllowedComplexity": 15 }
+        }
+      }
     }
   }
 }
 ```
+
+可読性系のルールは warn にとどめ、正当な例外は許容する（後述のコード品質ルールを参照）。
 
 ---
 
@@ -55,7 +63,10 @@ pnpm add -D @biomejs/biome oxlint lefthook
 {
   "rules": {
     "no-explicit-any": "error",
-    "no-unused-vars": "error"
+    "no-unused-vars": "error",
+    "max-lines-per-function": ["warn", { "max": 100, "skipBlankLines": true, "skipComments": true }],
+    "max-depth": ["warn", 4],
+    "max-nested-callbacks": ["warn", 3]
   }
 }
 ```
@@ -206,6 +217,22 @@ chmod +x .claude/hooks/protect-config.sh
 
 ---
 
+## 7-2. コード品質ルール（可読性）
+
+機械的に判定できる可読性はリンターに任せる（複雑度・関数長・ネスト深度は上記 warn ルール）。
+閾値は絶対の上限ではなく検知のトリガーであり、正当な理由がある場合は例外を許容する。
+
+- warn を無視して積み上げない。超過したらまず分割・早期リターンを検討する
+- 例外にする場合は `biome-ignore` / `oxlint-disable` コメントに理由を1行書く。理由のない抑制コメントは Codex レビューの指摘対象
+- コメントは WHAT ではなく WHY を書く。コードを読めば分かることを繰り返さない
+- 重複コードは3回目で共通化を検討する。2回の重複を先回りして抽象化しない
+- 使われなくなったコード・export は削除する。コメントアウトで残さない
+
+TSDoc は公開 API（lib/ の export 関数等）にのみ書き、内部関数には強制しない。
+テストコードの可読性ルールは `base_testing.md` を参照。
+
+---
+
 ## 8. CLAUDE.md の最小構成
 
 以下がハーネスに必要な CLAUDE.md の最小セクション。フレームワーク固有の内容は別途追加する。
@@ -250,3 +277,7 @@ pnpm format       # フォーマット（Biome）
 
 エージェントが新しい種類のミスをしたとき、それを防ぐテストまたはリンタールールを追加する。
 一度追加したルールはすべての将来のセッションに適用される。これがハーネスの複利効果の源泉。
+
+---
+
+最終検証日: 2026-07-08

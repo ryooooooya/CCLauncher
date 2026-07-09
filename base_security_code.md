@@ -283,7 +283,34 @@ res.status(500).json({ error: err.message, stack: err.stack })
 
 ---
 
-## 15. セキュリティレビューの実施
+## 15. 認可・アクセス制御（strict）
+
+認証（本人確認）と認可（その人がその操作をしてよいか）は別物。ログイン済みであることの確認だけで
+データアクセスを許可するコードは生成しない（IDOR / オブジェクトレベル認可の欠如）。
+
+- ユーザー入力（URL パラメータ・body の id 等）で特定されるリソースへのアクセスは、
+  必ず「そのリソースの所有者・許可された役割か」をデータアクセス点で検証する
+
+```typescript
+// DO: 取得条件に所有者を含める
+const doc = await db.document.findFirst({
+  where: { id: params.id, userId: session.user.id },
+})
+
+// DON'T: ログイン確認だけで id 直指定を許す
+const doc = await db.document.findUnique({ where: { id: params.id } })
+```
+
+- 認可チェックは middleware やレイアウト層に集約せず、Server Action / Route Handler /
+  データアクセス関数の各実行点で行う。middleware は画面誘導の補助であり認可の境界にしない
+- 一覧取得はフィルタ（where 句・RLS）で絞る。全件取得後にアプリ側で filter しない
+- 役割（admin 等）による分岐は、クライアントから送られた値ではなくサーバー側で取得した
+  セッション・DB 上の役割を根拠にする
+- Supabase を使う場合、認可境界は RLS（`base_security_supabase.md`）。アプリ側チェックは多層防御の追加層として扱う
+
+---
+
+## 16. セキュリティレビューの実施
 
 以下のタイミングで `/security-review` を実行してユーザーに報告する。
 
@@ -310,4 +337,9 @@ alg: 'none'
 md5 / sha1 でのパスワードハッシュ
 const secret = '...'  // ハードコードされた認証情報
 `SELECT ... WHERE id = ${userInput}`  // 文字列結合クエリ
+findUnique({ where: { id: params.id } })  // 所有者条件のない id 直指定アクセス
 ```
+
+---
+
+最終検証日: 2026-07-08
