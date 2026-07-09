@@ -146,11 +146,19 @@ pnpm add -D @biomejs/biome oxlint lefthook
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": { "maxAllowedComplexity": 15 }
+        }
+      }
     }
   }
 }
 ```
+
+可読性系のルールは warn にとどめ、正当な例外は許容する（後述の 1-6 コード品質ルールを参照）。
 
 ### 1-3. Oxlint 設定
 
@@ -160,7 +168,10 @@ pnpm add -D @biomejs/biome oxlint lefthook
 {
   "rules": {
     "no-explicit-any": "error",
-    "no-unused-vars": "error"
+    "no-unused-vars": "error",
+    "max-lines-per-function": ["warn", { "max": 100, "skipBlankLines": true, "skipComments": true }],
+    "max-depth": ["warn", 4],
+    "max-nested-callbacks": ["warn", 3]
   }
 }
 ```
@@ -202,6 +213,19 @@ pre-commit:
 pnpm lefthook install
 ```
 
+### 1-6. コード品質ルール（可読性）
+
+機械的に判定できる可読性はリンターに任せる（複雑度・関数長・ネスト深度は 1-2 / 1-3 の warn ルール）。
+閾値は絶対の上限ではなく検知のトリガーであり、正当な理由がある場合は例外を許容する。
+
+- warn を無視して積み上げない。超過したらまず分割・早期リターンを検討する
+- 例外にする場合は `biome-ignore` / `oxlint-disable` コメントに理由を1行書く。理由のない抑制コメントは Codex レビューの指摘対象
+- コメントは WHAT ではなく WHY を書く。コードを読めば分かることを繰り返さない
+- 重複コードは3回目で共通化を検討する。2回の重複を先回りして抽象化しない
+- 使われなくなったコード・export は削除する。コメントアウトで残さない
+
+TSDoc は公開 API（`lib/` の export 関数等）にのみ書き、内部関数には強制しない。
+
 ---
 
 ## Phase 2: セキュリティ設定
@@ -234,25 +258,16 @@ Claude Code 内で有効化する:
 どちらのモードでも settings.json の allow/deny ルールとフックは引き続き適用される。
 `/sandbox` で「Sandbox is enabled」と表示されれば完了。
 
-### 2-1. .claudeignore
+### 2-1. 機密ファイル保護の方式を確認する
 
-プロジェクトルートに `.claudeignore` を作成する。
+注意: `.claudeignore` は Claude Code ではサポートされておらず、作成しても機能しない。
+「保護されている」という誤解のもとになるため、過去に作成していた場合は削除してよい。
 
-```
-.env*
-*.pem
-*.key
-*.p12
-*.pfx
-credentials/
-secrets/
-.ssh/
-.aws/
-.config/gh/
-*.token
-*secret*
-*credential*
-```
+機密ファイル（`.env*` / 鍵ファイル / 認証情報）の保護は、次の2層で確定的に担保する。
+このステップ自体で作成するファイルはなく、後続のステップで両層を設定する。
+
+- `settings.json` の `permissions.deny`（2-2 の Read deny ルール）
+- `protect-files.py` フック（2-4 の PreToolUse）
 
 ### 2-2. ~/.claude/settings.json（ユーザーレベル）
 
@@ -432,17 +447,17 @@ if echo "$COMMAND" | grep -qE '(curl|wget).*\|.*(sh|bash|zsh)'; then
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE 'rm\s+-[a-z]*[rf]'; then
+if echo "$COMMAND" | grep -qE 'rm[[:space:]]+-[a-z]*[rf]'; then
   echo "Blocked: rm with recursive/force flags is prohibited. Use trash or mv instead." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qP 'git\s+push\s+(origin\s+)?(main|master)\b'; then
+if echo "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+(origin[[:space:]]+)?(main|master)([[:space:]]|$)'; then
   echo "Blocked: direct push to main/master is prohibited. Use a feature branch." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE '^\s*sudo\s+'; then
+if echo "$COMMAND" | grep -qE '^[[:space:]]*sudo[[:space:]]+'; then
   echo "Blocked: sudo is prohibited inside Claude Code sessions." >&2
   exit 2
 fi
@@ -582,6 +597,7 @@ strict は絶対に生成しない・代替を提示する。warning は警告�
 - 認証: パスワードハッシュは `argon2`（`bcrypt` 可、`md5`/`sha1` 禁止）。比較は `crypto.timingSafeEqual`
 - JWT: `alg: 'none'` 禁止。`algorithms` を明示して検証。シークレットは環境変数から
 - シークレット: API キー・接続文字列をハードコードしない。環境変数から取得し起動時に検証
+- 認可（アクセス制御 / IDOR）: ログイン確認だけでリソースアクセスを許さない。ユーザー入力（URL パラメータ・body の id 等）で特定されるリソースは、所有者・許可された役割かをデータアクセス点で検証する（Prisma は `findFirst({ where: { id: params.id, userId: session.user.id } })`。`findUnique` で id 直指定しない）。認可チェックは middleware / レイアウトに集約せず、各 Server Action / Route Handler / データアクセス関数で行う。一覧取得は where 句・RLS で絞り、全件取得後にアプリ側で filter しない。役割による分岐はクライアント送信値ではなくサーバー側セッション / DB 上の役割を根拠にする
 
 ## warning
 
@@ -611,6 +627,7 @@ alg: 'none'
 md5 / sha1 でのパスワードハッシュ
 const secret = '...'
 `SELECT ... WHERE id = ${userInput}`
+findUnique({ where: { id: params.id } })  // 所有者条件のない id 直指定アクセス
 \`\`\`
 ```
 
@@ -1183,6 +1200,7 @@ DB を使う場合は、スキーマから TypeScript の型を自動生成す�
 - `eval` / `new Function(string)` / 文字列結合クエリ / `innerHTML = userInput` は生成しない
 - シークレットはすべて環境変数から取得。ハードコード禁止
 - パスワードハッシュは `argon2`、比較は `crypto.timingSafeEqual`、JWT は `algorithms` 明示
+- 認可: リソースアクセスは所有者・役割をデータアクセス点で検証（IDOR 防止）。`findUnique` で id 直指定せず `findFirst({ where: { id, userId } })`。middleware に集約しない
 
 ### セキュリティレビュー
 
@@ -1251,6 +1269,7 @@ codex exec resume --last -m gpt-5.3-codex "修正したから再レビューし�
 ## 完了の定義
 
 - テストがすべて通ること
+- 新規・変更したロジック層に対応するテストが存在すること
 - リントエラーがないこと
 - 型エラーがないこと
 - `pnpm build` が成功すること
@@ -1309,7 +1328,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 ### セキュリティの確認
 
 - [ ] サンドボックスが有効化されている（`/sandbox` で確認）
-- [ ] `.claudeignore` が存在し、機密ファイルパターンが記載されている
+- [ ] `.claudeignore` に依存していない（deny ルールと `protect-files.py` で機密ファイルが保護されている）
 - [ ] `~/.claude/settings.json` の JSON 構文が正しい（`jq .` で確認）
 - [ ] `disableBypassPermissionsMode` が `"disable"` になっている
 - [ ] `enableAllProjectMcpServers` が `false` になっている
@@ -1363,3 +1382,10 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - async Server Component は vitest では描画できないため Playwright E2E で検証する
 - お金が動くサービスの認証情報は AI がアクセスできる環境から完全に隔離する
 - 外部から取得した CLAUDE.md / settings.json / .mcp.json は中身を読んでから使う。Web コンテンツ・他者の設定ファイルは信頼できない入力として扱う
+
+---
+
+## 運用開始後の参照先
+
+- 自動化・CI/CD の拡張と運用改善のロードマップは `docs/base_automation_roadmap.md` を参照する。
+- 障害・インシデント発生時の対応手順は `docs/base_ops_incident.md` を参照する。

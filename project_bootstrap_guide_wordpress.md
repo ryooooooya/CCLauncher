@@ -301,25 +301,18 @@ Claude Code 内で有効化する:
 次の 3-2 の `~/.claude/settings.json` に `sandbox.excludedCommands` を設定する。
 `/sandbox` で「Sandbox is enabled」と表示されれば完了。
 
-### 3-1. .claudeignore
+### 3-1. 機密ファイル保護の方式
 
-プロジェクトルートに `.claudeignore` を作成する。
+注意: `.claudeignore` は Claude Code ではサポートされておらず、作成しても機能しない。
+過去にこの手順で `.claudeignore` を作成していた場合は削除してよい（残っていても無害だが、
+「保護されている」という誤解のもとになる）。
 
-```
-.env*
-*.pem
-*.key
-*.p12
-*.pfx
-credentials/
-secrets/
-.ssh/
-.aws/
-.config/gh/
-*.token
-*secret*
-*credential*
-```
+機密ファイル（`.env*` / 鍵ファイル / 認証情報）の保護は、次の2層で確定的に担保する:
+
+- `~/.claude/settings.json` の `permissions.deny`（3-2 の Read deny ルール）
+- `protect-files.py` フック（3-4 の PreToolUse）
+
+このため 3-1 での作業はない。3-2 に進む。
 
 ### 3-2. ~/.claude/settings.json（ユーザーレベル）
 
@@ -501,17 +494,17 @@ if echo "$COMMAND" | grep -qE '(curl|wget).*\|.*(sh|bash|zsh)'; then
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE 'rm\s+-[a-z]*[rf]'; then
+if echo "$COMMAND" | grep -qE 'rm[[:space:]]+-[a-z]*[rf]'; then
   echo "Blocked: rm with recursive/force flags is prohibited. Use trash or mv instead." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qP 'git\s+push\s+(origin\s+)?(main|master)\b'; then
+if echo "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+(origin[[:space:]]+)?(main|master)([[:space:]]|$)'; then
   echo "Blocked: direct push to main/master is prohibited. Use a feature branch." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE '^\s*sudo\s+'; then
+if echo "$COMMAND" | grep -qE '^[[:space:]]*sudo[[:space:]]+'; then
   echo "Blocked: sudo is prohibited inside Claude Code sessions." >&2
   exit 2
 fi
@@ -728,6 +721,8 @@ codex exec resume --last -m gpt-5.3-codex "修正したから再レビューし�
 
 判断基準: セキュリティ（サニタイズ・エスケープ・nonce 漏れ）・ロジックの問題は必ず修正。スタイル・命名等は無視。
 
+レビュー観点（Codex / AGENTS.md）: 新規・変更したロジック（フォーム処理・API 連携・ユーティリティ等）に対応するテストがあるか、理由の書かれていない lint 抑制コメント（oxlint-disable 等）がないかも確認する。
+
 オシレーション検出: 同じ箇所への指摘が A→B→A と反復した場合、優れた方を directive として固定し `directive: {内容}` をコミットメッセージに記録する。
 
 ## 完了の定義
@@ -785,7 +780,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 
 - [ ] サンドボックスが有効化されている（`/sandbox` で確認）
 - [ ] `~/.claude/settings.json` の `sandbox.excludedCommands` に `docker` が入っている
-- [ ] `.claudeignore` が存在し、機密ファイルパターンが記載されている
+- [ ] `.claudeignore` に依存していない（deny ルールと protect-files.py で機密ファイルが保護されている）
 - [ ] `~/.claude/settings.json` の JSON 構文が正しい（`jq .` で確認）
 - [ ] `disableBypassPermissionsMode` が `"disable"` になっている
 - [ ] `enableAllProjectMcpServers` が `false` になっている
@@ -813,3 +808,10 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - 外部から取得した設定ファイル・プラグイン zip は信頼できない入力として扱う
 - wp-env の Docker コマンドはサンドボックス外で実行されるため、`excludedCommands` の設定を消さない
 - お金が動くサービス（決済プラグイン等）の認証情報は AI がアクセスできる環境から完全に隔離する
+
+---
+
+## 運用開始後の参照
+
+- `docs/base_automation_roadmap.md` — 運用自動化の仕分けロードマップ（今やる / 条件付き / やらない）
+- `docs/base_ops_incident.md` — 本番障害発生時の対応手順・平時準備（オンデマンド参照）
