@@ -324,4 +324,90 @@ chmod +x .claude/hooks/protect-files.py
 
 ---
 
-最終検証日: 2026-07-08
+## Step 5: Codex CLI 経路の防御設定（Codex を実装エージェントに使う場合のみ）
+
+Step 0〜4 の防御層（サンドボックス・settings.json の deny・bash-firewall.sh・protect-files.py）は
+すべて Claude Code のフック機構に乗っており、`codex exec` で動く実装経路には一切効かない。
+開発パイプライン（`base_dev_pipeline.md`）で Codex を実装エージェントに使う場合は、以下を追加で設定する。
+AGENTS.md の文言は guidance であって enforcement ではない。守りは必ず以下の機構側に置く。
+
+### 防御の考え方（何をどの層で守るか）
+
+| 守る対象 | Claude Code 経路の担当 | Codex 経路の担当 |
+|---|---|---|
+| ワークスペース外への書き込み | ネイティブサンドボックス | Codex サンドボックス workspace-write（macOS: Seatbelt / Linux: bubblewrap の OS 層強制） |
+| ネットワーク（流出・pipe-to-shell） | deny ルール + bash-firewall.sh | workspace-write はネットワーク遮断がデフォルト（`network_access = false`） |
+| `.git` の改変・履歴破壊 | bash-firewall.sh | サンドボックスが `.git` / `.codex` / `.agents` を常時 read-only 化 |
+| 機密ファイル（.env・鍵類） | permissions.deny + protect-files.py | permissions プロファイルのパス権限（`"**/*.env*" = "none"`） |
+| 変更禁止領域（.claude/・ハーネス設定） | protect-config.sh | permissions プロファイル（read 指定）+ CI の禁止パスチェック + branch protection |
+| main への直接 push | bash-firewall.sh | GitHub branch protection（サーバー側で決定論的）。ネットワーク遮断下ではそもそも push 不可 |
+| 環境変数のシークレット | シェルに露出させない運用 | `shell_environment_policy`（KEY / SECRET / TOKEN を含む変数はデフォルト除外） |
+
+### ~/.codex/config.toml の設定
+
+重要: `approval_policy` / `sandbox_mode` / `sandbox_workspace_write` はプロジェクト側の
+`.codex/config.toml` ではオーバーライドできない（ユーザーレベル専用の仕様）。このため
+リポジトリ内容（プロンプトインジェクション）経由で防御を緩めることはできない。設定は必ず
+`~/.codex/config.toml` に置く。
+
+```toml
+# 実装エージェントとしての既定: ワークスペース内のみ書き込み可・ネットワーク遮断
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = false   # デフォルトだが明示する
+
+[shell_environment_policy]
+inherit = "core"         # サブプロセスへ渡す環境変数を最小化
+# KEY / SECRET / TOKEN を含む変数はデフォルトで除外される。ignore_default_excludes を true にしない
+```
+
+パス単位の制御（機密ファイルの読み取り禁止・変更禁止領域の書き込み禁止）まで倒す場合は、
+permissions プロファイルを使う（`sandbox_mode` / `[sandbox_workspace_write]` との併用は不可。どちらか一方）:
+
+```toml
+default_permissions = "ccsd"
+
+[permissions.ccsd.filesystem]
+":project_roots" = { "." = "write", "**/*.env*" = "none", ".claude/**" = "read", "lefthook.yml" = "read", "biome.json" = "read", ".oxlintrc.json" = "read", "tsconfig.json" = "read", "vitest.config.ts" = "read", ".github/**" = "read" }
+
+[permissions.ccsd.network]
+enabled = false
+```
+
+注意: permissions プロファイルの構文はバージョンで変わる可能性がある。適用時に
+`codex --version` と公式 config リファレンス（https://learn.chatgpt.com/docs/config-file/config-reference）を突き合わせること。
+
+### codex exec（非対話実行）の扱い
+
+- `codex exec` もユーザーレベル設定のサンドボックスに従う。`--dangerously-bypass-approvals-and-sandbox` と `--sandbox danger-full-access` は使用禁止
+- `.git` が read-only のため、サンドボックス内の Codex は commit できない。コミットはエスカレーション承認（対話実行時）または人間・Claude Code 側で行う
+- 非対話実行ではエスカレーション承認者が不在のため、サンドボックス外へ出る操作は失敗する。これは安全側の挙動としてそのまま受け入れる
+
+### GitHub 側の設定（エージェント非依存の決定論層）
+
+どのエージェントが実装しても効く最終防衛線として、リポジトリ側に以下を設定する:
+
+1. main の branch protection: 直接 push 禁止・PR 必須・required status checks
+2. CI の禁止パスチェック: PR の diff に変更禁止領域（`.claude/**`・ハーネス設定等）が含まれたら fail させる job を 1 本入れ、required check に指定する
+
+### Codex サンドボックスで守れないもの（残リスクと受容判断）
+
+| リスク | 判断 |
+|---|---|
+| ワークスペース内ファイルの破壊（`rm -rf` 等はワークスペース内なら許可される） | git 履歴＋こまめなコミットで復元可能。受容 |
+| permissions の glob に該当しないワークスペース内の秘密情報の読み取り | 秘密情報はワークスペース内に置かない運用（環境変数管理サービス等）で回避。受容 |
+| 実装コード自体への悪性・誤りの混入 | enforcement の守備範囲外。@codex review + 別インスタンスでの仕様突合（`base_dev_pipeline.md`）で担保 |
+| lefthook（pre-commit）の `--no-verify` 回避 | pre-commit は第一線扱いにとどめ、決定論的な強制は CI + branch protection に置く |
+| 人間が誤って danger-full-access で起動する | 運用禁止ルールとして `base_dev_pipeline.md` に明記 |
+
+### 確認
+
+- [ ] `~/.codex/config.toml` に workspace-write（または同等の permissions プロファイル）とネットワーク遮断が設定されている
+- [ ] プロジェクトの `.codex/config.toml` にセキュリティ設定を置いていない（置いても無効だが、誤解のもとになる）
+- [ ] main の branch protection と禁止パスチェック CI が設定されている
+
+---
+
+最終検証日: 2026-07-14
