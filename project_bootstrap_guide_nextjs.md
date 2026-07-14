@@ -1,7 +1,7 @@
 # project_bootstrap_guide_nextjs
 
 空のリポジトリから Next.js (App Router) プロジェクトを立ち上げ、
-Claude Code のハーネス・セキュリティ・テスト・アクセシビリティ・Storybook・UI モーション・Codex 連携まで
+Claude Code のハーネス・セキュリティ・テスト・アクセシビリティ・Storybook・UI モーション・開発パイプライン（Codex 連携）まで
 一気にセットアップする手順。Phase 0 から順番に実行すれば完了する。
 
 各設定の背景・理由は以下を参照:
@@ -12,7 +12,8 @@ Claude Code のハーネス・セキュリティ・テスト・アクセシビ�
 - アクセシビリティ → `base_a11y.md`
 - UI モーション → `base_ui_motion.md`
 - Storybook → `base_storybook.md`
-- Codex 連携 → `base_codex_review.md`
+- 開発パイプライン → `base_dev_pipeline.md`
+- Codex CLI・@codex review の機構 → `base_codex_review.md`
 - フレームワーク固有 → `framework_nextjs.md`
 
 ---
@@ -631,6 +632,34 @@ findUnique({ where: { id: params.id } })  // 所有者条件のない id 直指�
 \`\`\`
 ```
 
+### 2-6. Codex CLI 経路の防御設定
+
+2-0〜2-5 の防御層はすべて Claude Code のフック機構に乗っており、`codex exec` で動く実装経路には効かない。
+Phase 7 の開発パイプライン（Codex を実装エージェントに使う）を採用する場合は、
+`base_security_env_setup.md` Step 5 に従って以下を設定する。
+
+`~/.codex/config.toml`（ユーザーレベル。プロジェクト側の `.codex/config.toml` ではセキュリティ設定を
+オーバーライドできない仕様のため、必ずユーザーレベルに置く）:
+
+```toml
+# 実装エージェントとしての既定: ワークスペース内のみ書き込み可・ネットワーク遮断
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = false   # デフォルトだが明示する
+
+[shell_environment_policy]
+inherit = "core"         # サブプロセスへ渡す環境変数を最小化
+```
+
+- Codex サンドボックスは `.git` / `.codex` / `.agents` を常時 read-only 化する。コミットは人間または Claude Code 側で行う
+- `--dangerously-bypass-approvals-and-sandbox` と `--sandbox danger-full-access` での実装実行は禁止
+- パス単位の制御（`.env*` の読み取り禁止・変更禁止領域の書き込み禁止）まで倒す場合の
+  permissions プロファイルは `base_security_env_setup.md` Step 5 を参照
+- GitHub 側の最終防衛線として、main の branch protection（直接 push 禁止・PR 必須・required checks）と
+  CI の禁止パスチェック（変更禁止領域に diff があれば fail）を設定する
+
 ---
 
 ## Phase 3: テスト
@@ -1128,7 +1157,46 @@ import { motion, AnimatePresence } from "motion/react";
 
 ---
 
-## Phase 7: CLAUDE.md
+## Phase 7: 開発パイプライン（spec 駆動 + Codex 連携）
+
+`base_dev_pipeline.md` の開発フロー（spec 作成 → 設計レビュー → 凍結 → 実装 → 品質レビュー → 仕様突合）を
+運用するためのファイルを配置する。パイプラインの本体・各 Phase の詳細は `base_dev_pipeline.md` を参照。
+
+### 7-1. spec テンプレートの配置
+
+`docs/specs/_template.md` を作成する（内容は `base_dev_pipeline.md` の「spec テンプレート」をコピー）。
+機能ごとに `docs/specs/{機能名}.md` へコピーして使う。
+
+### 7-2. AGENTS.md の配置
+
+プロジェクトルートに `AGENTS.md` を作成する（内容は `base_dev_pipeline.md` の「AGENTS.md 雛形」をコピーし、
+Review guidelines をプロジェクトの技術スタックに合わせて調整する）。
+
+- 実装の原則: 凍結済み spec を正とする / テストファースト / judgment call で停止
+- 変更禁止領域: `.claude/` `.github/` ハーネス設定 / 凍結済み spec / `.env*`
+- Review guidelines: @codex review が参照するプロジェクト固有のレビュー観点
+
+AGENTS.md は guidance であって enforcement ではない。守りの実体が 2-6 の設定
+（Codex サンドボックス・branch protection・CI 禁止パスチェック）にあることを確認する。
+
+### 7-3. @codex review の有効化（推奨: 二重化）
+
+`base_codex_review.md` の「GitHub PR での @codex review」に従い設定する。
+
+1. Codex cloud を有効化（ChatGPT アカウントと GitHub リポジトリを接続）
+2. [Codex の設定画面](https://chatgpt.com/codex/settings/code-review)でリポジトリの "Code review" をオン
+3. "Automatic reviews" をオンにして PR オープン時に自動で走らせる（パイプラインの「品質レビュー」フェーズの実体）
+
+### 7-4. 品質レビューと仕様突合の分離（運用ルール）
+
+- 品質レビュー（バグ・セキュリティ・保守性）は実装と別インスタンスで行う。@codex review は
+  PR 単位で新しいインスタンスが走るためこの原則を満たす
+- 仕様突合（受け入れ条件の充足確認）は設計エージェント（Claude Code）が spec を正として行う
+- Codex CLI のレビューコマンド・指摘の判断基準・オシレーション検出は `base_codex_review.md` に従う
+
+---
+
+## Phase 8: CLAUDE.md
 
 以下の内容をプロジェクトルートの `CLAUDE.md` として配置する。
 `{project-name}-sb-mcp` は Phase 5 で決めた MCP server 名に書き換えること。
@@ -1234,37 +1302,14 @@ Storybook のコンポーネント・ドキュメント情報を確認してか�
 - Server Action → 依存をモックして vitest で単体テスト
 - `next/image`, `next/navigation` は vitest 側でモックする
 
-## 実装計画レビュー（Codex 連携）
+## 開発パイプライン（必須ゲート）
 
-実装計画をユーザーに提示する前に、必ず Codex でレビューを行う。
-
-```bash
-codex exec -m gpt-5.3-codex "このプランをレビューして。瑣末な点へのクソリプはしないで。致命的な点だけ指摘して: {plan_full_path} (ref: {CLAUDE.md full_path})"
-```
-
-修正後の再レビュー:
-
-```bash
-codex exec resume --last -m gpt-5.3-codex "プランを更新したからレビューして。瑣末な点へのクソリプはしないで。致命的な点だけ指摘して: {plan_full_path} (ref: {CLAUDE.md full_path})"
-```
-
-## コードレビュー（Codex 連携）
-
-実装完了後、ユーザーに報告する前に Codex でコードレビューを行う。
-
-```bash
-codex exec -m gpt-5.3-codex "このコードをレビューして。瑣末な点へのクソリプはしないで。致命的な点だけ指摘して: {commit_hash} (ref: {CLAUDE.md full_path})"
-```
-
-修正後の再レビュー:
-
-```bash
-codex exec resume --last -m gpt-5.3-codex "修正したから再レビューして。瑣末な点へのクソリプはしないで。致命的な点だけ指摘して: {commit_hash} (ref: {CLAUDE.md full_path})"
-```
-
-判断基準: セキュリティ・ロジックの問題は必ず修正。スタイル・命名等は無視。
-
-オシレーション検出: 同じ箇所への指摘が A→B→A と反復した場合、優れた方を directive として固定し `directive: {内容}` をコミットメッセージに記録する。
+- 受け入れ条件が3件以上になる機能・変更は、`.claude/docs/base_dev_pipeline.md` のパイプライン
+  （spec 作成 → 設計レビュー → 凍結 → 実装 → 品質レビュー → 仕様突合）に従う
+- 受け入れ条件が3件未満の小さな変更はパイプラインをスキップしてよい。ただしスキップした事実を
+  コミットメッセージまたは PR に明記する
+- 凍結後の spec 変更はユーザーの明示的な承認が必要
+- Codex CLI のレビューコマンド・指摘の判断基準・オシレーション検出は `.claude/docs/base_codex_review.md` を読んで従う
 
 ## 完了の定義
 
@@ -1285,7 +1330,8 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | テストの作成・修正 | `.claude/docs/base_testing.md` |
 | Story の作成・修正 | `.claude/docs/base_storybook.md` |
 | a11y 対応・検証 | `.claude/docs/base_a11y.md` |
-| 実装計画・コミット前のレビュー | `.claude/docs/base_codex_review.md` |
+| 機能実装の開始（spec 作成〜仕様突合） | `.claude/docs/base_dev_pipeline.md` |
+| Codex CLI のコマンド・レビュー判断基準 | `.claude/docs/base_codex_review.md` |
 | フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_nextjs.md` |
 | ブラウザでの実行時デバッグ・パフォーマンス計測 | `.claude/docs/base_chrome_devtools.md` |
 | SEO・メタデータの実装 | `.claude/docs/base_seo.md` |
@@ -1310,7 +1356,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 
 ---
 
-## Phase 8: 動作確認
+## Phase 9: 動作確認
 
 ### Next.js の確認
 
@@ -1366,11 +1412,19 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - [ ] `~/.claude.json` に不要な MCP サーバーが登録されていない
 - [ ] `.mcp.json` に不審な MCP サーバーがない（Storybook 以外）
 
+### 開発パイプラインの確認
+
+- [ ] `docs/specs/_template.md` が配置されている
+- [ ] プロジェクトルートに `AGENTS.md` が配置されている（Review guidelines をプロジェクトに合わせて調整済み）
+- [ ] @codex review の "Automatic reviews" がオンになっている
+- [ ] `~/.codex/config.toml` に workspace-write とネットワーク遮断が設定されている（2-6）
+- [ ] main の branch protection と CI 禁止パスチェックが設定されている
+
 ### CLAUDE.md の確認
 
 - [ ] プロジェクトルートに `CLAUDE.md` が配置されている（`{project-name}-sb-mcp` を書き換え済み）
 - [ ] 参照ドキュメント索引の、配置していないファイルの行を削除済み
-- [ ] Codex 連携のセクションが含まれている
+- [ ] 開発パイプラインの必須ゲートが含まれている
 
 ---
 

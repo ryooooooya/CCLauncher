@@ -139,7 +139,7 @@ bootstrap guide は `base_*` と `framework_*` を組み合わせた成果物と
 
 ```
 base_harness.md, base_security_env_setup.md, base_security_env.md, base_security_code.md,
-base_codex_review.md, base_a11y.md, base_ui_motion.md, base_storybook.md, framework_nextjs.md を参照して、
+base_dev_pipeline.md, base_codex_review.md, base_a11y.md, base_ui_motion.md, base_storybook.md, framework_nextjs.md を参照して、
 Next.js プロジェクトのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_nextjs.md を生成してください。
 ガイドの末尾に、運用開始後の参照先として docs/base_automation_roadmap.md と
