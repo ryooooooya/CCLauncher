@@ -2,7 +2,7 @@
 
 パフォーマンスの基準（予算）と、劣化を CI で自動検知する仕組み。
 計測手段は `base_chrome_devtools.md`（対話的な計測・デバッグ）が担い、このファイルは「基準の定義」と「回帰の自動検知」を担う。
-対象は Next.js / Astro。WordPress は対象外。
+対象は Next.js。
 
 ---
 
@@ -54,7 +54,6 @@ pnpm add -D @lhci/cli
 }
 ```
 
-- Astro（静的出力）の場合は `startServerCommand` を `pnpm preview`、URL をプレビューのポートにする
 - 対象 URL はトップだけでなく、代表的な動的ページ（記事詳細等）を1〜2本含める
 - `lighthouserc.json` は `base_harness.md` の protect-config.sh の保護対象に追加する（閾値を勝手に緩めて緑にするのを防ぐ。`base_testing.md` の vitest.config と同じ理屈）
 
@@ -92,22 +91,12 @@ jobs:
 
 ## 3. 実装ルール（コード生成時に常に適用）
 
-### Next.js
-
 - 画像は `next/image` を使う。`<img>` 直書きは生成しない。width / height（または fill）を必ず指定して CLS を防ぐ
 - Web フォントは `next/font` で読み込む。`<link>` での外部フォント読み込みは生成しない
 - 重いクライアントコンポーネント（エディタ・チャート・地図等）は `next/dynamic` で遅延読み込みする
 - Server Components を既定とし、`"use client"` はクライアント状態が必要な末端に限る（framework_nextjs.md のルールを性能面から補強）
 - 調査が必要なときは `@next/bundle-analyzer` を一時導入して原因を特定し、結果をユーザーに報告する
-
-### Astro
-
-- クライアント JS はゼロを既定とし、`client:*` ディレクティブはインタラクションが必要なアイランドに限る。`client:load` より `client:visible` / `client:idle` を優先する
-- 画像は `astro:assets` の `Image` を使う
-
-### 共通
-
-- LCP 要素（ファーストビューの主画像）には優先読み込みを指定する（Next.js: `priority`、Astro: `loading="eager"` + `fetchpriority="high"`）
+- LCP 要素（ファーストビューの主画像）には優先読み込み（`priority`）を指定する
 - サイズの大きい依存を追加する前に軽量な代替を検討し、追加時はユーザーに報告する（`base_security_npm.md` の依存ツリー確認と併せて行う）
 
 ---

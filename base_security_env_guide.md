@@ -77,7 +77,7 @@ Anthropic の内部利用データでは、サンドボックスの導入によ�
 
 Auto-allow モードでは、サンドボックス境界内のコマンドは自動承認される。境界外へのアクセスのみ確認が出る仕組み。settings.json の allow/deny ルールはサンドボックスの内外を問わず適用されるため、既存の設定と競合しない。
 
-Docker を使うプロジェクト（wp-env など）では、Docker コマンドを `excludedCommands` に追加する必要がある。
+Docker を使うプロジェクトでは、Docker コマンドを `excludedCommands` に追加する必要がある。
 
 ### .claudeignore
 
@@ -287,7 +287,7 @@ CVE-2025-59536 では `.claude/settings.json` を通じて、リポジトリを�
 ```
 [ ] サンドボックスが有効化されている（/sandbox で確認）
 [ ] Linux/WSL2: bubblewrap と socat がインストール済み
-[ ] wp-env 等 Docker 使用時: excludedCommands に docker を追加済み
+[ ] Docker 使用時: excludedCommands に docker を追加済み
 ```
 
 ### 初期設定

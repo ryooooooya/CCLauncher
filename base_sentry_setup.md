@@ -13,25 +13,17 @@ Sentry によるエラー監視のセットアップ手順。プロジェクト�
 
 ## 1. SDK の導入
 
-### Next.js
-
 ```bash
 pnpm dlx @sentry/wizard@latest -i nextjs
 ```
 
 ウィザードが `sentry.*.config.ts` / `instrumentation.ts` / `next.config.js` の書き換えを行う。差分をすべて提示してユーザーの承認を得ること（`base_security_env.md` のルール）。
 
-### Astro
-
-```bash
-pnpm astro add @sentry/astro
-```
-
 ## 2. キーと環境変数の扱い
 
 | 値 | 性質 | 置き場所 |
 |---|---|---|
-| DSN | 公開可（送信先の識別子。秘密ではない） | `NEXT_PUBLIC_SENTRY_DSN` / `PUBLIC_SENTRY_DSN` |
+| DSN | 公開可（送信先の識別子。秘密ではない） | `NEXT_PUBLIC_SENTRY_DSN` |
 | SENTRY_AUTH_TOKEN | 秘密（sourcemap アップロード用） | CI の Secrets とローカル `.env.sentry-build-plugin` のみ |
 
 - DSN は公開可能だが、知っていれば誰でもイベントを送れる。スパムイベントが問題になったら Sentry 側の Inbound Filters / rate limit で対処する

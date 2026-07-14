@@ -1,15 +1,13 @@
 # base_seo
 
 SEO・メタデータの実装ルール。公開ページを持つプロジェクトで、SEO 対応が必要な場合に参照する。
-対象は Next.js / Astro。WordPress は SWELL・プラグインの領分のため対象外。
+対象は Next.js（App Router）。
 
 ---
 
 ## 1. ページ単位のメタデータ（必須）
 
 すべての公開ページに title と description を固有の内容で設定する。共通文言の使い回しは不可。
-
-### Next.js
 
 ```tsx
 // layout.tsx（サイト共通）
@@ -36,35 +34,16 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
 `metadataBase` を必ず設定する（OGP 画像等の相対 URL 解決に必要）。
 
-### Astro
-
-レイアウトコンポーネントで props として受け取り `<head>` に出力する。各ページから title / description を渡すことを必須にする。
-
-```astro
----
-// src/layouts/Base.astro
-const { title, description } = Astro.props
-const canonical = new URL(Astro.url.pathname, Astro.site)
----
-<head>
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  <link rel="canonical" href={canonical} />
-</head>
-```
-
-`astro.config.mjs` の `site` を必ず設定する（canonical・sitemap の基点）。
-
 ---
 
 ## 2. OGP（必須）
 
 - og:title / og:description / og:image / og:url / og:type を設定する
-- og:image は 1200x630。Next.js は `opengraph-image.tsx`（または public の静的画像）、Astro は絶対 URL で指定
+- og:image は 1200x630。`opengraph-image.tsx`（または public の静的画像）で指定
 - Twitter カードは `summary_large_image` を既定にする
 
 ```tsx
-// Next.js: Metadata に追加
+// Metadata に追加
 openGraph: {
   title: 'ページ名',
   description: '説明',
@@ -76,8 +55,6 @@ twitter: { card: 'summary_large_image' },
 ---
 
 ## 3. sitemap / robots（必須）
-
-### Next.js
 
 `app/sitemap.ts` と `app/robots.ts` を作成する。動的ページは CMS / DB から一覧を取得して含める。
 
@@ -93,14 +70,6 @@ export default function robots(): MetadataRoute.Robots {
 }
 ```
 
-### Astro
-
-`@astrojs/sitemap` を導入し、`public/robots.txt` に sitemap の URL を記載する。
-
-```bash
-pnpm astro add sitemap
-```
-
 ---
 
 ## 4. 構造化データ（該当時のみ）
@@ -113,7 +82,7 @@ pnpm astro add sitemap
 - 組織・サイト: Organization / WebSite
 
 ```tsx
-// Next.js: page 内で script タグとして出力
+// page 内で script タグとして出力
 <script
   type="application/ld+json"
   dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

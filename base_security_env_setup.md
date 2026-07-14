@@ -42,7 +42,7 @@ Claude Code 内で以下を実行する:
 
 どちらのモードでも settings.json の allow/deny ルールとフックは引き続き適用される。
 
-### wp-env（Docker）を使うプロジェクトの場合
+### Docker を使うプロジェクトの場合
 
 Docker コマンドはサンドボックス外で実行する必要がある。settings.json に以下を追加する:
 

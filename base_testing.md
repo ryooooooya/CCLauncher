@@ -3,7 +3,7 @@
 Claude Code + TypeScript プロジェクトにおけるテスト戦略。
 何を・どのツールで・どこまでテストするかを定義し、AI コーディング特有の「テストを勝手に消す/弱める」問題への対処を含む。
 
-対象は TypeScript フレームワーク（Next.js / Astro）。WordPress（PHP）は対象外で、必要なら別途 PHPUnit 等で扱う。
+対象は Next.js（TypeScript）。
 E2E は `base_a11y.md` が導入する Playwright を流用する（テストランナーを二重に増やさない）。
 
 ---

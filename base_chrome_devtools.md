@@ -47,13 +47,6 @@ Chrome DevTools for agents（chrome-devtools-mcp）を Claude Code の開発フ�
 
 ---
 
-## 適用フレームワーク
-
-- Next.js / Astro: 適用する（localhost の dev サーバに対して使う）
-- WordPress: 対象外（wp-env の Docker 構成に素直に乗らない。必要なら手動の DevTools で足りる）
-
----
-
 ## 要件
 
 - Node.js LTS
@@ -153,4 +146,3 @@ LCP / CLS / INP と主要な改善提案を出して
 
 - 計測値はローカル環境・実行ごとにぶれる。CI の合否基準には使わない。
 - a11y の質的な問題（読み上げの妥当性、フォーカス順序の論理）は検出できない。`base_a11y.md` の手動確認が引き続き必要。
-- WordPress 構成では非対応。
