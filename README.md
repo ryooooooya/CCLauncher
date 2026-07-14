@@ -48,7 +48,7 @@ curl -sL "${BASE_URL}/base_ops_incident.md" -o docs/base_ops_incident.md
     base_ux_checklist_high.md / base_ux_checklist_medium.md / base_ui_motion.md / base_chrome_devtools.md（.claude/docs/）
 - アクセシビリティ対応が必要 → base_a11y.md（.claude/docs/）
 - テスト戦略がほしい → base_testing.md（.claude/docs/）
-- Codex でレビューしたい → base_codex_review.md（.claude/docs/）
+- Codex を実装・レビューに使う（開発パイプライン） → base_dev_pipeline.md / base_codex_review.md（.claude/docs/）
 - 外部 npm パッケージを多用する
   → base_security_npm.md（.claude/rules/）
     base_security_npm_setup.md / base_security_npm_incident.md（.claude/docs/）
@@ -97,7 +97,8 @@ curl -sL "${BASE_URL}/base_ops_incident.md" -o docs/base_ops_incident.md
 | `base_security_npm_setup.md` | CI/GitHub 側の自動防御層（Dependabot, Dependency Review, CI audit）のセットアップ手順（初期化時に一度だけ実行） |
 | `base_security_npm_incident.md` | npm インシデント情報を受けたときの影響確認・対処手順（オンデマンド参照） |
 | `base_security_supabase.md` | Supabase セキュリティルール（RLS・キー管理・セッション検証・Storage）。Supabase 採用時のみ |
-| `base_codex_review.md` | Codex による計画レビュー・コードレビュー連携（ChatGPT ログイン認証） |
+| `base_dev_pipeline.md` | 開発パイプライン（spec 作成→設計レビュー→凍結→実装→品質レビュー→仕様突合）。spec テンプレート・AGENTS.md 雛形を含む |
+| `base_codex_review.md` | Codex CLI・@codex review の機構（認証・コマンド・レビュー判断基準） |
 | `base_a11y.md` | アクセシビリティセットアップ（Playwright + jest-axe） |
 | `base_testing.md` | テスト戦略（vitest 単体 + Playwright E2E の層設計） |
 | `base_ux_checklist_critical.md` | UX チェックリスト（CRITICAL: 常時適用） |

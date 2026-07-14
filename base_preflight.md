@@ -69,6 +69,7 @@ Claude Code はプロジェクト初期化時（または新機能追加時）�
 - ロールバック戦略：悪いデータをどう巻き戻すか
 - 予測されるインデックス
 
+開発パイプライン（`base_dev_pipeline.md`）採用時は、書き出し先を spec（`docs/specs/{機能名}.md`）の技術設計節にする。
 実装詳細は `base_security_code.md` の SQL 取り扱いルールを参照。
 
 ### Step 6. 先行事例の調査
