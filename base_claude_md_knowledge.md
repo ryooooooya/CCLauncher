@@ -240,7 +240,7 @@ lefthook 等でコミット前に typecheck、lint、format-check を並列実�
 | コードフォーマット | PostToolUse フック | 決定論的に処理 |
 | 設定ファイル保護 | PreToolUse フック | 物理的にブロック |
 | コミット前検証 | lefthook.yml | Claude の判断に依存しない |
-| 機密ファイル除外 | .claudeignore | コンテキストに入れない |
+| 機密ファイル保護 | settings.json の deny + PreToolUse フック | 読み取り・編集を物理的にブロック |
 | 権限制御 | settings.json | deny + フックの多層防御 |
 
 
@@ -375,19 +375,17 @@ Claude Code のビルトインスキル `/simplify` は、3つの並列サブエ
 適切な使いどころは、機能の実装が一段落してテストが通った後のリファクタリングフェーズ、PR 作成前の最終チェック、技術的負債が溜まったときのスポット適用。CLAUDE.md の完了の定義には入れず、必要なときに手動で実行する。
 
 
-## セキュリティ: 3層の防御構造
+## セキュリティ: 多層の防御構造
 
-Claude Code の環境セキュリティは .claudeignore、settings.json の deny、PreToolUse フックの3層で構成する。
+Claude Code の環境セキュリティはサンドボックス、settings.json の deny、PreToolUse フックの多層で構成する。
+（`.claudeignore` はサポートされておらず、作成しても機能しない。過去の記事で言及されていても採用しないこと）
 
 ### なぜ settings.json の deny だけでは不十分か
 
 - deny ルールが正しく機能しないバグが複数報告されている（GitHub Issue #6699, #8961 等）
-- `Read(.env)` を deny しても `grep "" .env` は Bash ツール経由なので Read の deny が効かない
+- `Read(.env)` を deny しても `grep "" .env` は Bash ツール経由なので Read の deny が効かない。
+  Bash 側にも `Bash(* .env*)` のような deny と、PreToolUse フックによる補完が必要
 - `python3 *` や `node *` を allow に入れると urllib や fetch() で curl/wget の deny を迂回できる
-
-### .claudeignore
-
-最上流の対策。指定したファイルはコンテキストに入らないため、grep・cat・awk 経由の間接読み取りを含めてゼロにできる。
 
 ### セキュアコーディングルール
 
@@ -458,7 +456,7 @@ HumanLayer の Dex 氏が提案した手法。Claude Code は CLAUDE.md を `<sy
 - コードフォーマットはフックに、セキュリティルールは .claude/rules/ に、進捗は GitHub Issue に。CLAUDE.md は「目次」に徹する
 - Codex との併用で計画レビューとコードレビューを自動化。手順は CLAUDE.md に含める
 - `/simplify` は都度ではなく、テスト通過後のリファクタリングフェーズでスポット実行
-- セキュリティは .claudeignore + settings.json deny + フックの3層防御。deny 単独には頼らない
+- セキュリティはサンドボックス + settings.json deny + フックの多層防御。deny 単独には頼らない（.claudeignore は機能しないので使わない）
 - 遵守率が低い場合は `<important if>` タグを試せるが、まず CLAUDE.md を短くすることが先
 - コンテキストは最重要リソース。同じ問題で2回以上修正が出たら `/clear` して再開する。無関係なタスクの切り替えにも `/clear` を使う
 

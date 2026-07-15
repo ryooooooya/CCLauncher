@@ -410,4 +410,80 @@ enabled = false
 
 ---
 
-最終検証日: 2026-07-14
+## Step 6: シークレットスキャンと SAST を CI に設定する
+
+ここまでの防御層は「生成・実行時」のもの。コミットされたコードに対する決定論的な検査として、
+gitleaks（シークレットスキャン）と Semgrep（SAST）を CI に置く。どのエージェント・人間が
+コードを書いても効く、エージェント非依存の層になる。
+
+### .github/workflows/security-scan.yml
+
+```yaml
+name: security-scan
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 履歴全体をスキャンするため
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 組織（Organization）リポジトリでは GITLEAKS_LICENSE の設定が必要。個人リポジトリは不要
+
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - run: semgrep scan --config p/default --config p/typescript --error
+        env:
+          SEMGREP_SEND_METRICS: "off"
+```
+
+注意: Actions は SHA でピン留めする（`base_security_npm_setup.md` セクション5）。上記の
+`@v4` / `@v2` は可読性のための表記で、実際に配置するときはコミット SHA に置き換える。
+
+設定後、両ジョブを main の branch protection の required status checks に追加する
+（Step 5 の禁止パスチェックと同じ扱い）。
+
+### lefthook（pre-commit）でのシークレットスキャン（任意の第一線）
+
+CI より前にローカルで気づけるよう、lefthook に gitleaks を追加してもよい:
+
+```yaml
+# lefthook.yml の pre-commit に追加
+pre-commit:
+  commands:
+    gitleaks:
+      run: gitleaks git --pre-commit --staged --redact
+```
+
+`gitleaks` CLI のローカルインストール（`brew install gitleaks` 等）が前提。
+pre-commit は `--no-verify` で回避できるため第一線扱いにとどめ、決定論的な強制は CI 側に置く。
+
+### 誤検知への対応
+
+- 誤検知は行末コメント `# gitleaks:allow`（gitleaks）/ `// nosemgrep: <ルールID>`（Semgrep）で
+  個別に抑制する。ファイル・ディレクトリ単位の除外は原則使わない
+- 実際にシークレットが検出された場合は、コミット履歴からの除去だけでは不十分。
+  該当シークレットを必ず失効・ローテーションする
+
+### 確認
+
+- [ ] `.github/workflows/security-scan.yml` が存在し、gitleaks / semgrep 両ジョブが PR で動く
+- [ ] 両ジョブが main の required status checks に登録されている
+
+---
+
+最終検証日: 2026-07-15

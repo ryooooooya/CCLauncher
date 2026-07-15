@@ -23,18 +23,21 @@ claude
 
 ## なぜこの設定が必要か
 
-### 防御の4層構造
+### 防御の3層構造
 
 ```
 層               役割                                    限界
 ──────────────────────────────────────────────────────────────────────
 サンドボックス     OS レベルでファイルシステム・ネットワークを隔離   WSL1 非対応、Docker は除外設定が必要
-.claudeignore     機密ファイルをコンテキストから除外             プロジェクト単位
 settings.json     コマンド・ファイルアクセスを制限               deny にバグあり（後述）
 PreToolUse フック  確定的にブロック（exit 2）                   ガードレール、壁ではない
 ```
 
-サンドボックスは他の3層よりも下のレイヤーで動作する。
+補足: 過去の記事では `.claudeignore` が防御層として紹介されることがあるが、
+Claude Code ではサポートされておらず作成しても機能しない。機密ファイルの保護は
+settings.json の deny と PreToolUse フック（protect-files.py）で担保する。
+
+サンドボックスは他の2層よりも下のレイヤーで動作する。
 macOS では Seatbelt、Linux では bubblewrap という OS レベルのプリミティブを使い、
 Claude Code が生成したコマンドだけでなく、そこから生まれる子プロセス（npm の postinstall スクリプトなど）にも
 同じ制限が継承される。settings.json の deny やフックでは子プロセスまでは制御できないため、
@@ -46,7 +49,7 @@ settings.json の deny だけでは不十分な理由が2つある。
 
 二つ目は grep / awk 経由のバイパス。`Read(.env)` を deny しても `grep "" .env` は Bash ツール経由なので Read の deny が効かない。フックがないとすり抜ける。
 
-この4層を組み合わせて「深さのある防御」にする。
+この3層を組み合わせて「深さのある防御」にする。
 
 ---
 
@@ -57,7 +60,7 @@ settings.json の deny だけでは不十分な理由が2つある。
 | 1 | 間接プロンプトインジェクション | Webページに人間には見えないが AI が読める隠し指示が埋め込まれている | ネットワーク系コマンドの deny + サンドボックスのネットワーク隔離 |
 | 2 | プロンプトサプライチェーン攻撃 | 共有された CLAUDE.md や settings.json に悪意ある指示が混入している（CVE-2025-59536） | 外部設定ファイルの目視確認 |
 | 3 | Tool Poisoning / MCP 権限悪用 | MCP ツールの description に AI への隠し指示を埋め込む。後からアップデートで悪意あるコードに差し替える Rug Pull も | MCP サーバーの事前審査 |
-| 4 | クレデンシャルリーク | トークンや API キーがログ・git 履歴・テンプレートファイルに残って流出 | .claudeignore / git 管理の徹底 + サンドボックスのファイルシステム隔離 |
+| 4 | クレデンシャルリーク | トークンや API キーがログ・git 履歴・テンプレートファイルに残って流出 | deny ルール + protect-files.py + git 管理の徹底 + サンドボックスのファイルシステム隔離 + gitleaks（CI） |
 
 共通する構造は「Claude Code に渡した権限がそのまま攻撃面になる」。
 
@@ -78,12 +81,6 @@ Anthropic の内部利用データでは、サンドボックスの導入によ�
 Auto-allow モードでは、サンドボックス境界内のコマンドは自動承認される。境界外へのアクセスのみ確認が出る仕組み。settings.json の allow/deny ルールはサンドボックスの内外を問わず適用されるため、既存の設定と競合しない。
 
 Docker を使うプロジェクトでは、Docker コマンドを `excludedCommands` に追加する必要がある。
-
-### .claudeignore
-
-deny や Read ルールよりも上流の対策。指定したファイルはコンテキストに入らないため、
-grep・cat・awk 経由の間接読み取りを含めてゼロにできる。
-変数展開（`$(echo ~/.ssh/id_rsa)`）を使ったバイパスも、そもそも内容を知らなければ成立しない。
 
 ### enableAllProjectMcpServers: false
 
@@ -275,7 +272,7 @@ CVE-2025-59536 では `.claude/settings.json` を通じて、リポジトリを�
 | MCP サーバーの Tool Poisoning | いいえ | MCP サーバーのソースコード確認 |
 | ブラウザセッション / Cookie の窃取 | いいえ | OS レベルのセキュリティ・ブラウザ分離 |
 | 広告アカウント等の正規権限での操作 | いいえ | AI がアクセスできない環境に隔離 |
-| 変数展開によるバイパス（`$(echo ~/.env)`） | 部分的 | .claudeignore で補完 |
+| 変数展開によるバイパス（`$(echo ~/.env)`） | 部分的 | protect-files.py フック + サンドボックスで補完 |
 | 子プロセス（postinstall 等）の暴走 | いいえ | サンドボックスで OS レベル制御 |
 
 ---
@@ -293,7 +290,7 @@ CVE-2025-59536 では `.claude/settings.json` を通じて、リポジトリを�
 ### 初期設定
 
 ```
-[ ] .claudeignore を作成し .env* / *.pem / *.key / credentials/ 等を指定済み
+[ ] .claudeignore に依存していない（サポート外。deny + protect-files.py で保護する）
 [ ] disableBypassPermissionsMode が "disable" になっている
 [ ] enableAllProjectMcpServers が false になっている
 [ ] defaultMode が "ask" になっている

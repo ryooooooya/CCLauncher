@@ -25,7 +25,7 @@ Layer 1（Claude Code 自体の制御）とは独立した問題。
 |--|---------|---------|
 | 何を守るか | Claude Code の実行環境 | Claude Code が書くコード |
 | 脅威 | プロンプトインジェクション・権限悪用 | SQL インジェクション・XSS・認証不備 など |
-| 対策の場所 | settings.json・フック・.claudeignore | CLAUDE.md のコーディングルール・SAST |
+| 対策の場所 | サンドボックス・settings.json・フック | CLAUDE.md のコーディングルール・SAST |
 | 効果が出るタイミング | Claude Code の起動時 | コード生成時 |
 
 ---
@@ -34,14 +34,15 @@ Layer 1（Claude Code 自体の制御）とは独立した問題。
 
 | OWASP カテゴリ | TypeScript / Node.js での主な脅威 | 対応するルール |
 |--------------|----------------------------------|--------------|
-| A01 アクセス制御の不備 | RBAC の抜け漏れ・認可チェックの欠落 | JWT・認証セクション |
+| A01 アクセス制御の不備 | IDOR・認可チェックの欠落・CSRF | セクション 15・16 |
 | A02 暗号化の失敗 | MD5/SHA1 でのパスワードハッシュ・平文保存 | パスワードハッシュ |
 | A03 インジェクション | SQL インジェクション・コマンドインジェクション・XSS | セクション 3・4・6 |
 | A04 安全でない設計 | バリデーション欠落・信頼境界の未定義 | セクション 2 |
-| A05 セキュリティの設定ミス | helmet 未適用・CORS `*`・エラー情報漏洩 | セクション 11・13 |
+| A05 セキュリティの設定ミス | ヘッダー未設定・CORS `*`・エラー情報漏洩 | セクション 11・13 |
 | A06 脆弱なコンポーネント | npm 脆弱パッケージ・lockfile なし | セクション 14 |
 | A07 認証の失敗 | JWT の alg:none・タイミング攻撃 | セクション 8・9 |
 | A09 ログ・監視の失敗 | スタックトレースの公開・機密情報のログ出力 | セクション 13 |
+| A10 SSRF | ユーザー指定 URL のサーバーサイド取得 | セクション 18 |
 
 ---
 
@@ -141,8 +142,35 @@ JWT の `alg: "none"` は「署名なし」を意味する。
 
 ### 11〜13. HTTP セキュリティ・レート制限・エラーハンドリング
 
-`helmet` は10以上のセキュリティヘッダーを一括で設定する。
+Next.js には helmet のような一括設定がないため、`next.config.ts` の `headers()` で明示的に設定する。
+HSTS は HTTPS へのダウングレード攻撃、`nosniff` は MIME スニッフィング、
+`X-Frame-Options` / `frame-ancestors` はクリックジャッキングをそれぞれ防ぐ。
+Express / Fastify では `helmet` が10以上のセキュリティヘッダーを一括で設定する。
 スタックトレースをレスポンスに含めると、攻撃者にフレームワーク・パス・コード構造を教えることになる。
+
+### 15. 認可・アクセス制御
+
+「ログインしているか」（認証）と「その操作をしてよいか」（認可）は別問題。
+AI 生成コードで最も漏れやすいのが後者で、`findUnique({ where: { id: params.id } })` のような
+所有者条件のないクエリは、URL の id を書き換えるだけで他人のデータが読める（IDOR）。
+
+### 16. Cookie・CSRF
+
+`httpOnly` がない Cookie は XSS で `document.cookie` から窃取される。localStorage のトークンも同様。
+CSRF は「ログイン済みブラウザが攻撃者のページから正規サイトへ勝手にリクエストを送らされる」攻撃で、
+Cookie 認証 + 組み込み保護のない Route Handler の組み合わせで成立する。
+
+### 17. ファイルアップロード
+
+拡張子や Content-Type はクライアントが自由に偽装できるため、実バイト列（マジックバイト）で検証する。
+ユーザー由来のファイル名をそのまま使うとパストラバーサル・上書き攻撃につながり、
+SVG/HTML を同一オリジンで配信すると Stored XSS になる。
+
+### 18. SSRF
+
+サーバーは内部ネットワークやクラウドメタデータ（`169.254.169.254`）に到達できるため、
+ユーザー指定 URL をそのまま fetch すると内部リソースへの踏み台になる。
+deny リストは表記揺れ（10進 IP・IPv6 マップドアドレス・リダイレクト）で必ず抜けられるので、allowlist が原則。
 
 ---
 
@@ -178,6 +206,7 @@ Semgrep（SAST）や OWASP ZAP（DAST）との組み合わせが推奨される�
 | XSS サニタイズ | DOMPurify | フロントエンド |
 | 環境変数検証 | envalid | シークレット管理 |
 | SAST | Semgrep | 静的解析 |
+| シークレットスキャン | gitleaks | コミット・履歴からの認証情報検出 |
 | 依存関係監査 | npm audit / Snyk | 脆弱パッケージ検出 |
 | DAST | OWASP ZAP | 動的解析 |
 
@@ -185,18 +214,9 @@ Semgrep（SAST）や OWASP ZAP（DAST）との組み合わせが推奨される�
 
 ## CI/CD への組み込み
 
-PR 時に自動で以下を走らせると、生成コードの問題を早期に検出できる。
-
-```yaml
-# .github/workflows/security.yml
-- name: npm audit
-  run: npm audit --audit-level=high
-
-- name: Semgrep
-  uses: semgrep/semgrep-action@v1
-  with:
-    config: p/owasp-top-ten p/typescript
-```
+PR 時に自動で Semgrep（SAST）と gitleaks（シークレットスキャン）を走らせると、
+生成コードの問題を早期に検出できる。具体的なワークフロー定義と required checks への
+組み込みは `base_security_env_setup.md` の Step 6 を参照。
 
 ---
 

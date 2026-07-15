@@ -107,7 +107,7 @@ Step 1〜6 の結果は `CLAUDE.md` の末尾に「プロジェクト属性」�
 ## 重要な境界線
 
 - 技術的なセキュリティ実装ルール（SQLi・XSS・JWT・シークレット管理等）は `base_security_code.md` に全委譲
-- Claude Code の実行環境（`.claudeignore` / `settings.json` / フック）は `base_security_env.md` に全委譲
+- Claude Code の実行環境（サンドボックス / `settings.json` / フック）は `base_security_env.md` に全委譲
 - npm サプライチェーン対策は `base_security_npm.md` に全委譲
 - この `base_preflight.md` は「実装前に決めるべき非技術的前提」に限る
 

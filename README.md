@@ -89,7 +89,7 @@ curl -sL "${BASE_URL}/base_ops_incident.md" -o docs/base_ops_incident.md
 | `base_harness.md` | Biome + Oxlint + Lefthook + フック設定 |
 | `base_preflight.md` | 実装前の前提確認（スコープ・LLM・コスト・法務・個人情報） |
 | `base_security_env.md` | セキュリティ環境の禁止事項（常時適用ルール） |
-| `base_security_env_setup.md` | サンドボックス, settings.json, セキュリティフック, Codex CLI 経路の防御のセットアップ手順（初期化時に一度だけ実行） |
+| `base_security_env_setup.md` | サンドボックス, settings.json, セキュリティフック, Codex CLI 経路の防御, gitleaks/Semgrep CI のセットアップ手順（初期化時に一度だけ実行） |
 | `base_security_env_guide.md` | セキュリティ設定の背景・理由（人間向け解説） |
 | `base_security_code.md` | TypeScript / Node.js セキュアコーディングルール（Claude Code への指示） |
 | `base_security_code_guide.md` | セキュアコーディングルールの背景・理由（人間向け解説） |

@@ -1,7 +1,7 @@
 # base_security_env
 
 セキュリティ環境に関する常時適用ルール。毎セッション自動で読み込まれる。
-サンドボックス・.claudeignore・settings.json・フックのセットアップ手順は
+サンドボックス・settings.json・フックのセットアップ手順は
 `.claude/docs/base_security_env_setup.md` を参照（プロジェクト初期化時に一度だけ実行する）。
 
 ## 禁止事項（常時適用）

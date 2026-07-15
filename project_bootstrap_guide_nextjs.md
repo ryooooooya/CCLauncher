@@ -598,10 +598,15 @@ strict は絶対に生成しない・代替を提示する。warning は警告�
 - 認証: パスワードハッシュは `argon2`（`bcrypt` 可、`md5`/`sha1` 禁止）。比較は `crypto.timingSafeEqual`
 - JWT: `alg: 'none'` 禁止。`algorithms` を明示して検証。シークレットは環境変数から
 - シークレット: API キー・接続文字列をハードコードしない。環境変数から取得し起動時に検証
+- クライアント露出: `NEXT_PUBLIC_` にシークレットを入れない（ビルド成果物に埋め込まれ全公開される）。サーバー専用モジュールには `import 'server-only'`。Server Component から Client Component への props にシークレット・内部情報を含めない
 - 認可（アクセス制御 / IDOR）: ログイン確認だけでリソースアクセスを許さない。ユーザー入力（URL パラメータ・body の id 等）で特定されるリソースは、所有者・許可された役割かをデータアクセス点で検証する（Prisma は `findFirst({ where: { id: params.id, userId: session.user.id } })`。`findUnique` で id 直指定しない）。認可チェックは middleware / レイアウトに集約せず、各 Server Action / Route Handler / データアクセス関数で行う。一覧取得は where 句・RLS で絞り、全件取得後にアプリ側で filter しない。役割による分岐はクライアント送信値ではなくサーバー側セッション / DB 上の役割を根拠にする
+- Cookie・CSRF: セッション Cookie は `httpOnly: true` / `secure: true` / `sameSite: 'lax'`。トークンの localStorage / sessionStorage 保存禁止。状態変更は Server Actions か POST の Route Handler で行い、Cookie 認証の Route Handler には Origin 検証か CSRF トークンを実装。GET / HEAD で状態変更しない
+- ファイルアップロード: 拡張子・Content-Type は信頼せずマジックバイトで検証（`file-type` 等）。保存名はサーバーで生成（UUID）。サイズ上限必須。`public/` に直接保存せずオブジェクトストレージへ。ユーザー由来の SVG / HTML を同一オリジンでそのまま配信しない
+- SSRF: ユーザー入力 URL のサーバーサイド fetch は allowlist（許可ドメイン列挙）で検証。プライベート IP・`169.254.169.254`・localhost を遮断。リダイレクトは `redirect: 'manual'` で止めるか追跡後に再検証
 
 ## warning
 
+- HTTP セキュリティヘッダー: `next.config.ts` の `headers()` で HSTS / `X-Content-Type-Options: nosniff` / `X-Frame-Options: DENY` / `Referrer-Policy` / `Permissions-Policy` を全ルートに設定。CSP は nonce ベース推奨、最低限 `frame-ancestors 'none'` / `object-src 'none'`
 - Express/Fastify には `helmet`。CORS は `origin: '*'` 禁止、許可オリジンを列挙
 - 認証エンドポイントにはレート制限
 - スタックトレース・内部パス・DB エラーをクライアントに返さない
@@ -629,6 +634,9 @@ md5 / sha1 でのパスワードハッシュ
 const secret = '...'
 `SELECT ... WHERE id = ${userInput}`
 findUnique({ where: { id: params.id } })  // 所有者条件のない id 直指定アクセス
+NEXT_PUBLIC_XXX=<シークレット>  // 公開プレフィックスへのシークレット格納
+localStorage.setItem('token', ...)  // 認証トークンの localStorage 保存
+fetch(userProvidedUrl)  // 検証なしのユーザー指定 URL 取得（SSRF）
 \`\`\`
 ```
 
@@ -659,6 +667,54 @@ inherit = "core"         # サブプロセスへ渡す環境変数を最小化
   permissions プロファイルは `base_security_env_setup.md` Step 5 を参照
 - GitHub 側の最終防衛線として、main の branch protection（直接 push 禁止・PR 必須・required checks）と
   CI の禁止パスチェック（変更禁止領域に diff があれば fail）を設定する
+
+### 2-7. シークレットスキャンと SAST の CI
+
+コミットされたコードに対する決定論的な検査として、gitleaks（シークレットスキャン）と
+Semgrep（SAST）を CI に置く。どのエージェント・人間がコードを書いても効く層になる。
+
+`.github/workflows/security-scan.yml`:
+
+```yaml
+name: security-scan
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 履歴全体をスキャンするため
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 組織（Organization）リポジトリでは GITLEAKS_LICENSE の設定が必要。個人リポジトリは不要
+
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - run: semgrep scan --config p/default --config p/typescript --error
+        env:
+          SEMGREP_SEND_METRICS: "off"
+```
+
+- Actions は SHA でピン留めする（`base_security_npm_setup.md` セクション5）。`@v4` / `@v2` は
+  可読性のための表記で、配置時にコミット SHA に置き換える
+- 設定後、両ジョブを main の branch protection の required status checks に追加する
+- ローカルの第一線として lefthook の pre-commit に `gitleaks git --pre-commit --staged --redact` を
+  追加してもよい（`--no-verify` で回避できるため、強制は CI 側に置く）
+- 誤検知は `# gitleaks:allow` / `// nosemgrep: <ルールID>` で個別に抑制。実際に検出された
+  シークレットは履歴除去だけでなく必ず失効・ローテーションする
 
 ---
 
@@ -1380,6 +1436,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - [ ] `enableAllProjectMcpServers` が `false` になっている
 - [ ] `.claude/hooks/` の4ファイルが存在し、実行権限がある
 - [ ] `.claude/rules/security_code.md` が配置されている
+- [ ] `.github/workflows/security-scan.yml`（gitleaks / Semgrep）が配置され、required checks に登録されている（2-7）
 
 ### テストの確認
 
