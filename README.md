@@ -9,10 +9,10 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。対象�
 
 ドキュメントは GitHub リポジトリで管理・配布する。
 
-- リポジトリ: https://github.com/ryooooooya/ClaudeCodeLauncherDocs
+- リポジトリ: https://github.com/ryooooooya/CCLauncher
 
 ドキュメントの正本はこのリポジトリ。Claude のプロジェクトナレッジにはファイルを置かず、
-参照・編集の際は raw URL（https://raw.githubusercontent.com/ryooooooya/ClaudeCodeLauncherDocs/main/<ファイル名>）
+参照・編集の際は raw URL（https://raw.githubusercontent.com/ryooooooya/CCLauncher/main/<ファイル名>）
 から常に最新版を取得する。
 
 新規プロジェクトの開始は、次節の固定 bootstrap プロンプトを Claude Code に貼り付けるだけでよい。
@@ -28,7 +28,7 @@ bootstrap guide の生成・更新と、各種設定の参照に使う。対象�
 
 1. 必須ドキュメントを取得して配置する:
 
-BASE_URL="https://raw.githubusercontent.com/ryooooooya/ClaudeCodeLauncherDocs/main"
+BASE_URL="https://raw.githubusercontent.com/ryooooooya/CCLauncher/main"
 mkdir -p .claude/rules .claude/docs docs
 curl -sL "${BASE_URL}/base_security_env.md" -o .claude/rules/base_security_env.md
 curl -sL "${BASE_URL}/base_security_code.md" -o .claude/rules/base_security_code.md
@@ -205,7 +205,7 @@ README のファイル一覧のうち「最終検証日」が90日以上前ま�
 
 ```
 このプロジェクトの .claude/rules/ .claude/docs/ docs/ に配置済みの base_*・framework_* ファイルについて、
-https://raw.githubusercontent.com/ryooooooya/ClaudeCodeLauncherDocs/main/<ファイル名> から最新版を取得し、
+https://raw.githubusercontent.com/ryooooooya/CCLauncher/main/<ファイル名> から最新版を取得し、
 ローカル版と差分があるファイルを一覧で提示してください。
 私が承認したファイルだけ上書きしてください。ローカル側に独自変更があるファイルは上書きせず、
 差分を示して相談してください。更新後のファイルに新しいセットアップ手順が含まれる場合は、
