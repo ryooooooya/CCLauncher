@@ -185,9 +185,14 @@ jobs:
 
 ---
 
-## 6. CLAUDE.md に追記するセクション
+## 6. 追記するセクション
 
-以下を CLAUDE.md の適切な箇所に追記する。既存のコマンド・ルール・完了の定義のセクションがあれば統合する。
+配置先は内容で分ける。
+
+- **コマンド・完了の定義** → `CLAUDE.md`（既存のセクションに統合する）
+- **テストのルール** → `.claude/rules/project_conventions.md`（常時適用ルールは CLAUDE.md 本体に書かない）
+
+CLAUDE.md 側には、読み分け表に「テストの作成・修正 → `.claude/docs/base_testing.md`」の行を持たせる。
 
 ```markdown
 ## コマンド（テスト）

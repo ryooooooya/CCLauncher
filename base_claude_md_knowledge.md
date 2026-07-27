@@ -235,7 +235,9 @@ lefthook 等でコミット前に typecheck、lint、format-check を並列実�
 
 | 内容 | 配置先 | 理由 |
 |------|--------|------|
-| コマンド、アーキテクチャ概要、完了の定義 | CLAUDE.md | 毎セッション必要 |
+| タスク種別→参照ファイルの読み分け表 | CLAUDE.md | CLAUDE.md 本体の主たる役割。地図であってマニュアルではない |
+| コマンド、アーキテクチャ概要、完了の定義、手編集禁止ファイル一覧 | CLAUDE.md | 毎セッション必要かつ短い |
+| 常時適用のコーディング規約・変更禁止・必須ゲート | .claude/rules/project_conventions.md | ルールは rules/ の管轄。CLAUDE.md に書くと二重管理になる |
 | セキュアコーディングルール | .claude/rules/security.md | 長いため分離 |
 | コードフォーマット | PostToolUse フック | 決定論的に処理 |
 | 設定ファイル保護 | PreToolUse フック | 物理的にブロック |

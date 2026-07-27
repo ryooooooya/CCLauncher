@@ -105,80 +105,14 @@ Storybook のコンポーネント・ドキュメント情報を確認してか�
 
 ---
 
-## 6. Story 作成ルール（.claude/rules/storybook.md）
+## 6. Story 作成ルール
 
-`.claude/rules/storybook.md` として配置する。Claude Code がコンポーネント実装時に常時参照するルール。
+Story の書き方（基本方針・JSDoc・Manifest 管理・プロトタイプの story 化）は Blueprint 側が持つ。
+`docs/product/stories/_rules.md`（正本: CCLauncher の `blueprint_stories_rules.md`）を参照すること。
+このファイルの責務は Storybook 環境のセットアップまでで、story の内容規約には踏み込まない。
 
-```markdown
-# Storybook Story ルール
-
-## Story の基本方針
-
-- 1 Story = 1 概念。複数のバリエーションを1つの Story にまとめない
-- CSF 3 形式で書く（`satisfies Meta<typeof Component>` + `StoryObj`）
-- named export を使う（default export は meta のみ）
-- Story 名は状態やユースケースを表す名前にする（`Primary`, `Disabled`, `WithIcon` 等）
-
-## JSDoc コメント（必須）
-
-AI エージェントが Manifest 経由でコンポーネントを理解するための最重要情報源。
-
-### コンポーネントの JSDoc
-
-コンポーネントの export に description と summary を書く。
-summary はエージェントが最初に受け取る情報なので、用途を簡潔に伝える。
-
-\`\`\`tsx
-/**
- * ユーザー操作に使うボタン。ページ遷移には Link を使うこと。
- *
- * @summary ユーザー操作用のボタン（遷移には Link を使う）
- */
-export const Button = // ...
-\`\`\`
-
-### Props の JSDoc
-
-すべての Props に description を書く。
-
-\`\`\`tsx
-export interface ButtonProps {
-  /** ボタンテキストの前に表示するアイコン */
-  icon?: ReactNode;
-  /** ボタンを無効化する */
-  disabled?: boolean;
-}
-\`\`\`
-
-### Story の JSDoc
-
-各 Story にも description と summary を書く。
-「何を」ではなく「なぜこの状態を使うか」を記述する。
-
-\`\`\`tsx
-/**
- * Primary ボタンは画面のメインアクションに使う。
- * 1画面に複数の Primary ボタンを配置しない。
- *
- * @summary 画面のメインアクションに使う
- */
-export const Primary: Story = {
-  args: { primary: true },
-};
-\`\`\`
-
-## Manifest の管理
-
-- エージェントに見せる必要がない Story（アンチパターン例・deprecated 等）には `tags: ['!manifest']` を付ける
-- MDX ドキュメントも同様に `<Meta tags={['!manifest']} />` で除外できる
-- 不要な情報が多すぎるとエージェントのパフォーマンスが落ちる。必要なものだけ含める
-
-## テストの活用
-
-- インタラクションテストは play function で書く
-- Story を書いたら `run-story-tests` で動作確認する
-- a11y テストが設定されている場合、アクセシビリティの問題も自動検出される
-```
+理由: プロトタイプを `src/prototypes/{slug}/` に story として置く運用と密結合しており、
+slug・adopted・受け入れ条件といったプロダクト固有の概念に依存するため。
 
 ---
 
@@ -219,7 +153,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 - [ ] `http://localhost:6006/mcp` にアクセスすると MCP server のページが表示される
 - [ ] `http://localhost:6006/manifests/components.html` で Manifest デバッガーが表示される
 - [ ] Claude Code から `list-all-documentation` ツールを呼び出してコンポーネント一覧が返る
-- [ ] `.claude/rules/storybook.md` が配置されている
+- [ ] `docs/product/stories/_rules.md` が配置されている（Story 作成ルールの参照先）
 
 ---
 

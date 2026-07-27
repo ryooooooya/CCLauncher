@@ -1063,39 +1063,17 @@ npx mcp-add --type http --url "http://localhost:6006/mcp" --scope project
 }
 ```
 
-### 5-6. .claude/rules/storybook.md
+### 5-6. Story 作成ルール（Blueprint 側）
 
-```markdown
-# Storybook Story ルール
+Story の書き方（基本方針・JSDoc・Manifest 管理・プロトタイプの story 化）は Blueprint 層が持つ。
+このリポジトリでは `.claude/rules/storybook.md` を作らない。
 
-## Story の基本方針
+- 参照先: `docs/product/stories/_rules.md`（正本: CCLauncher の `blueprint_stories_rules.md`）
+- withAI 開発手法を採用していて上記が未配置の場合は、固定 bootstrap プロンプトの 2-1 を実行して配置する
+- 採用しない場合は、Storybook の MCP ツール `get-storybook-story-instructions` が返す規約に従う
 
-- 1 Story = 1 概念。複数のバリエーションを1つの Story にまとめない
-- CSF 3 形式で書く（`satisfies Meta<typeof Component>` + `StoryObj`）
-- named export を使う（default export は meta のみ）
-- Story 名は状態やユースケースを表す名前にする（`Primary`, `Disabled`, `WithIcon` 等）
-- コンポーネントと同じディレクトリに `.stories.tsx` を配置する（コロケーション）
-
-## JSDoc コメント（必須）
-
-AI エージェントが Manifest 経由でコンポーネントを理解するための最重要情報源。
-
-- コンポーネントの export に description と `@summary` を書く（用途を簡潔に）
-- すべての Props に description を書く
-- 各 Story にも description と `@summary` を書く。「何を」ではなく「なぜこの状態を使うか」
-
-## Manifest の管理
-
-- エージェントに見せる必要がない Story（アンチパターン例・deprecated 等）には `tags: ['!manifest']`
-- MDX も `<Meta tags={['!manifest']} />` で除外できる
-- 不要な情報が多すぎるとエージェントのパフォーマンスが落ちる。必要なものだけ含める
-
-## テストの活用
-
-- インタラクションテストは play function で書く
-- Story を書いたら `run-story-tests` で動作確認する
-- a11y テストが設定されていればアクセシビリティの問題も自動検出される
-```
+理由: プロトタイプを `src/prototypes/{slug}/` に story として置く運用と密結合しており、
+slug・adopted・受け入れ条件といったプロダクト固有の概念に依存するため。
 
 ### 5-7. shadcn/ui コンポーネントの Story
 
@@ -1111,7 +1089,7 @@ Phase 2-4 の `protect-config.sh` の保護対象に `.storybook/main.ts` が含
 
 ---
 
-## Phase 6: UI モーション
+## Phase 6: UI モーションと UX 監査
 
 `base_ui_motion.md` に従う。アニメーションは「見せるもの」ではなく「感じさせるもの」。
 すべてのアニメーションは因果関係を表現し、`prefers-reduced-motion` を常に尊重する。
@@ -1211,6 +1189,22 @@ import { motion, AnimatePresence } from "motion/react";
 </AnimatePresence>
 ```
 
+
+### 6-5. .claude/commands/ux-audit.md
+
+汎用 UX ヒューリスティック（HIGH / MEDIUM）は常時適用ではなく、節目に走らせる監査として運用する。
+再実行できる形にしておかないと変更後の劣化を検知できないため、スラッシュコマンドとして設置する。
+コマンド本体と運用ルールは `.claude/docs/base_ux_audit.md` に記載されているので、
+そのファイルの「セットアップ」節の内容をそのまま `.claude/commands/ux-audit.md` として配置する。
+
+```bash
+mkdir -p .claude/commands docs/ux-audit
+```
+
+- 実行: `/ux-audit [対象 or all]`
+- 出力: `docs/ux-audit/{scope}.md`（上書き再生成。git 差分が劣化の検出結果になる）
+- 実行タイミング（adopted 決定時・実装完了時など）は CLAUDE.md の読み分け表が持つ
+
 ---
 
 ## Phase 7: 開発パイプライン（spec 駆動 + Codex 連携）
@@ -1252,7 +1246,53 @@ AGENTS.md は guidance であって enforcement ではない。守りの実体�
 
 ---
 
-## Phase 8: CLAUDE.md
+## Phase 8: 常時適用ルールと CLAUDE.md
+
+分担の原則:
+
+- **常時適用されるルールは `.claude/rules/`** に置く（毎セッション自動で読まれる）
+- **CLAUDE.md 本体は「タスク種別 → 参照ファイル」の読み分け表**。手順やルールを直接書かない
+
+CLAUDE.md にルールを書き込むと、量が増えるほど毎セッションのコンテキストを圧迫し、
+かつ `.claude/rules/` 側と二重管理になって片方が古くなる。CLAUDE.md は地図であって、マニュアルではない。
+
+### 8-1. .claude/rules/project_conventions.md
+
+セキュリティ・a11y・モーション以外の、プロジェクト共通の常時適用ルール。
+
+```markdown
+# プロジェクト規約
+
+## コーディング
+
+- `any` 型の使用禁止。不明な場合は `unknown` を使い型ガードで絞り込む
+- named export を使う（default export は避ける。ただし Next.js の page / layout / route は除く）
+- コンポーネントは `src/components/` に配置する。shadcn/ui のコンポーネントは `src/components/ui/`
+- Server Components をデフォルトとし、クライアント状態が必要な場合のみ `"use client"` をつける
+- 新しいコンポーネントを作ったら Story と jest-axe テストを書く（shadcn/ui の素のコンポーネントは除く）
+- DB を使う場合、スキーマから型を自動生成する仕組みを必ず入れる（手書きの型とスキーマの二重管理をしない）
+
+## 変更禁止
+
+- `eslint.config.*`、`biome.json`、`tsconfig.json`、`next.config.*`、`.storybook/main.ts`、`vitest.config.*` などの設定ファイルは編集禁止
+- 生成物は手編集しない（`src/styles/theme.css`、`tests/coverage-map.md`）。ソースを直して再生成する
+- `git commit --no-verify` 禁止
+
+## 開発パイプライン（必須ゲート）
+
+- 受け入れ条件が3件以上になる機能・変更は、`.claude/docs/base_dev_pipeline.md` のパイプライン
+  （spec 作成 → 設計レビュー → 凍結 → 実装 → 品質レビュー → 仕様突合）に従う
+- 受け入れ条件が3件未満の小さな変更はパイプラインをスキップしてよい。ただしスキップした事実を
+  コミットメッセージまたは PR に明記する
+- 凍結後の spec 変更はユーザーの明示的な承認が必要
+
+## セキュリティレビュー
+
+認証・認可コード / 外部入力を DB・shell に渡す処理 / 新規 API エンドポイント /
+依存パッケージの追加・更新 のタイミングで `/security-review` を実行して報告する。
+```
+
+### 8-2. CLAUDE.md
 
 以下の内容をプロジェクトルートの `CLAUDE.md` として配置する。
 `{project-name}-sb-mcp` は Phase 5 で決めた MCP server 名に書き換えること。
@@ -1260,9 +1300,25 @@ AGENTS.md は guidance であって enforcement ではない。守りの実体�
 ````markdown
 # CLAUDE.md
 
+このファイルは読み分け表。作業を始める前に、対応するファイルを必ず読むこと。
+ルールそのものはここに書かない（常時適用ルールは `.claude/rules/`、手順は `.claude/docs/`）。
+
 ## プロジェクト概要
 
 Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui
+
+```
+src/
+├── app/              # App Router（page, layout, route）
+├── components/       # UI コンポーネント
+│   └── ui/           # shadcn/ui コンポーネント
+├── prototypes/       # 検討用プロトタイプ（Storybook story）
+├── lib/              # ユーティリティ・ヘルパー
+├── hooks/            # カスタムフック
+└── types/            # 型定義
+```
+
+決定の経緯は `/docs/adr/` の ADR を参照。
 
 ## コマンド
 
@@ -1277,103 +1333,23 @@ pnpm test         # テスト（vitest run）
 pnpm storybook    # Storybook 起動
 ```
 
-タスク完了時は `pnpm lint && pnpm typecheck && pnpm build` をすべて実行し、エラーがない状態でコミットすること。
-
-## ルール
-
-- `any` 型の使用禁止。不明な場合は `unknown` を使い型ガードで絞り込む
-- named export を使う（default export は避ける。ただし Next.js の page / layout / route は除く）
-- コンポーネントは `src/components/` に配置する。shadcn/ui のコンポーネントは `src/components/ui/`
-- Server Components をデフォルトとし、クライアント状態が必要な場合のみ `"use client"` をつける
-- `eslint.config.*`、`biome.json`、`tsconfig.json`、`next.config.*`、`.storybook/main.ts`、`vitest.config.*` などの設定ファイルは編集禁止
-- `git commit --no-verify` 禁止
-- 新しいコンポーネントを作ったら Story も書く（shadcn/ui の素のコンポーネントは除く）
-
-## アーキテクチャ
-
-```
-src/
-├── app/              # App Router（page, layout, route）
-├── components/       # UI コンポーネント
-│   └── ui/           # shadcn/ui コンポーネント
-├── lib/              # ユーティリティ・ヘルパー
-├── hooks/            # カスタムフック
-└── types/            # 型定義
-```
-
-決定の経緯は `/docs/adr/` の ADR を参照。
-
-## データベース（DB を使う場合）
-
-DB を使う場合は、スキーマから TypeScript の型を自動生成する仕組みを必ず入れる。
-手動で型を書いてスキーマと二重管理する構成は採らない。手段はプロジェクトに合わせて選ぶ:
-
-- Prisma（デフォルト推奨）: `prisma generate` でスキーマから型を生成
-- Supabase: `supabase gen types typescript` で型を生成（Prisma を重ねない）
-- Drizzle: スキーマ定義自体が TypeScript で、型が直接得られる
-
-スキーマ変更のたびに型を再生成して差分をコミットし、コンパイラが不整合を検出できる状態を保つ。
-スキーマ変更のレビュー観点は `.claude/docs/base_codex_review.md`、Supabase を使う場合の固有ルールは `.claude/rules/base_security_supabase.md` を参照。
-
-## セキュアコーディングルール
-
-生成するすべてのコードに適用する。詳細は `.claude/rules/security_code.md` を参照。
-
-- TypeScript strict（`strict` / `noUncheckedIndexedAccess`）。`any` 禁止
-- すべての外部入力はエントリーポイントで Zod の `safeParse` でバリデーション
-- `eval` / `new Function(string)` / 文字列結合クエリ / `innerHTML = userInput` は生成しない
-- シークレットはすべて環境変数から取得。ハードコード禁止
-- パスワードハッシュは `argon2`、比較は `crypto.timingSafeEqual`、JWT は `algorithms` 明示
-- 認可: リソースアクセスは所有者・役割をデータアクセス点で検証（IDOR 防止）。`findUnique` で id 直指定せず `findFirst({ where: { id, userId } })`。middleware に集約しない
-
-### セキュリティレビュー
-
-認証・認可コード / 外部入力を DB・shell に渡す処理 / 新規 API エンドポイント /
-依存パッケージの追加・更新 のタイミングで `/security-review` を実行して報告する。
-
-## アクセシビリティルール
-
-UIコンポーネントを生成・編集するときに適用する。詳細は `.claude/rules/a11y.md` を参照。
-新規コンポーネントには jest-axe のテストを必ず追加する。
-
-## UI モーションルール
-
-アニメーションを実装するときに適用する。詳細は `.claude/rules/ui_motion.md` を参照。
-transform と opacity のみアニメーションし、`prefers-reduced-motion` を尊重する。
-
-## Storybook
-
-UI コンポーネントの実装・修正時は `{project-name}-sb-mcp` MCP ツールを使って
-Storybook のコンポーネント・ドキュメント情報を確認してから作業すること。
-
-- コンポーネントのプロパティを使う前に必ず `get-documentation` で確認する。推測で Props を使わない
-- `list-all-documentation` で利用可能なコンポーネント一覧を取得できる
-- Story の書き方は `get-storybook-story-instructions` で最新のルールを取得する
-- 作業後は `run-story-tests` でテストを実行し、失敗があれば修正してから完了とする
-
-## テスト
-
-- 同期 Server Component / Client Component → vitest + RTL で検証
-- async Server Component → Playwright E2E（vitest では描画できない）
-- Server Action → 依存をモックして vitest で単体テスト
-- `next/image`, `next/navigation` は vitest 側でモックする
-
-## 開発パイプライン（必須ゲート）
-
-- 受け入れ条件が3件以上になる機能・変更は、`.claude/docs/base_dev_pipeline.md` のパイプライン
-  （spec 作成 → 設計レビュー → 凍結 → 実装 → 品質レビュー → 仕様突合）に従う
-- 受け入れ条件が3件未満の小さな変更はパイプラインをスキップしてよい。ただしスキップした事実を
-  コミットメッセージまたは PR に明記する
-- 凍結後の spec 変更はユーザーの明示的な承認が必要
-- Codex CLI のレビューコマンド・指摘の判断基準・オシレーション検出は `.claude/docs/base_codex_review.md` を読んで従う
-
 ## 完了の定義
 
-- テストがすべて通ること
-- 新規・変更したロジック層に対応するテストが存在すること
-- リントエラーがないこと
-- 型エラーがないこと
+- テストがすべて通ること／新規・変更したロジック層に対応するテストが存在すること
+- リントエラー・型エラーがないこと
 - `pnpm build` が成功すること
+
+タスク完了時は `pnpm lint && pnpm typecheck && pnpm build` をすべて実行し、エラーがない状態でコミットする。
+
+## 手編集禁止ファイル
+
+| ファイル | ソース |
+|---|---|
+| `src/styles/theme.css` | `docs/design/tokens/tokens.json`（`pnpm tokens:build`） |
+| `tests/coverage-map.md` | テストコードのアノテーション |
+| `docs/ux-audit/*.md` | `/ux-audit` の実行結果 |
+| `docs/design/` 配下 | 上流（Printer）。逸脱は `docs/design/_override.md` に書く |
+| 設定ファイル一式 | `.claude/rules/project_conventions.md` の変更禁止リストを参照 |
 
 ## 参照ドキュメント索引
 
@@ -1381,13 +1357,20 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 
 | 作業 | 読むファイル |
 |---|---|
-| UI コンポーネントの実装・レビュー | `.claude/docs/base_ux_checklist_high.md` |
-| アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
-| テストの作成・修正 | `.claude/docs/base_testing.md` |
-| Story の作成・修正 | `.claude/docs/base_storybook.md` |
-| a11y 対応・検証 | `.claude/docs/base_a11y.md` |
 | 機能実装の開始（spec 作成〜仕様突合） | `.claude/docs/base_dev_pipeline.md` |
 | Codex CLI のコマンド・レビュー判断基準 | `.claude/docs/base_codex_review.md` |
+| ストーリーの作成・変更 | `docs/product/stories/_rules.md` と `_template.md` |
+| ページ・機能の増減 | `docs/product/content-list.md`（挙動は書かない） |
+| どのドキュメントを書き換えるかの判断 | `docs/_rules.md` |
+| コンポーネントの使いどころ・見た目の決定 | `docs/design/ui/{component}.md`、`docs/design/_rules.md` |
+| 画面構成・レスポンシブの決定 | `docs/design/layout/{pattern}.md` |
+| トークンの追加・変更 | `docs/design/tokens/_rules.md` |
+| UI コンポーネントの実装・レビュー | 該当する `docs/design/ui/{component}.md`（固有仕様）と `.claude/docs/base_ux_checklist_high.md`（一般原則）の両方 |
+| UX ヒューリスティック監査の実行 | `/ux-audit`（運用は `.claude/docs/base_ux_audit.md`） |
+| Story の作成・修正 | `docs/product/stories/_rules.md`（Storybook 環境は `.claude/docs/base_storybook.md`） |
+| アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
+| テストの作成・修正 | `.claude/docs/base_testing.md` |
+| a11y 対応・検証 | `.claude/docs/base_a11y.md` |
 | フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_nextjs.md` |
 | ブラウザでの実行時デバッグ・パフォーマンス計測 | `.claude/docs/base_chrome_devtools.md` |
 | SEO・メタデータの実装 | `.claude/docs/base_seo.md` |
@@ -1396,6 +1379,23 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md` |
 
 配置していないファイルの行はセットアップ時に削除する。
+
+## 節目に実行すること
+
+| タイミング | 実行 |
+|---|---|
+| プロトタイプの adopted を決めたとき | `/ux-audit {slug}` |
+| 機能の実装完了時 | `/ux-audit {slug}` と仕様突合（`base_dev_pipeline.md`） |
+| リリース前 | `/ux-audit all` |
+
+## Storybook
+
+UI コンポーネントの実装・修正時は `{project-name}-sb-mcp` MCP ツールで
+コンポーネント・ドキュメント情報を確認してから作業する。
+
+- Props を使う前に必ず `get-documentation` で確認する。推測で使わない
+- `list-all-documentation` で利用可能なコンポーネント一覧を取得できる
+- 作業後は `run-story-tests` を実行し、失敗があれば修正してから完了とする
 
 ## プロジェクト属性（preflight の結果）
 
@@ -1409,6 +1409,9 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - プロトタイプ省略項目: prototype で省略した Step があれば列挙
 - preflight 実行日: YYYY-MM-DD
 ````
+
+withAI 開発手法（Blueprint / Printer）を採用していない場合、`docs/product/` `docs/design/` の行と
+「節目に実行すること」の adopted 行は削除する。
 
 ---
 
@@ -1456,13 +1459,19 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - [ ] `@storybook/nextjs` または `@storybook/nextjs-vite` がフレームワークとして設定されている
 - [ ] `http://localhost:6006/mcp` にアクセスすると MCP server のページが表示される
 - [ ] Claude Code から `list-all-documentation` ツールを呼び出してコンポーネント一覧が返る
-- [ ] `.claude/rules/storybook.md` が配置されている
+- [ ] Story 作成ルールの参照先（`docs/product/stories/_rules.md`）が存在する、または MCP の `get-storybook-story-instructions` が使える
 
 ### UI モーションの確認
 
 - [ ] `motion`（framer-motion）がインストールされている
 - [ ] `src/app/globals.css` にイージング変数と `prefers-reduced-motion` の指定がある
 - [ ] `.claude/rules/ui_motion.md` が配置されている
+
+### UX 監査の確認
+
+- [ ] `.claude/commands/ux-audit.md` が配置されている
+- [ ] `/ux-audit all` が実行でき、`docs/ux-audit/all.md` が生成される
+- [ ] `.claude/rules/base_ux_checklist_critical.md`（常時適用）と `.claude/docs/base_ux_checklist_high.md`（監査用）が配置先どおりに置かれている
 
 ### MCP サーバーの確認
 
@@ -1477,11 +1486,12 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - [ ] `~/.codex/config.toml` に workspace-write とネットワーク遮断が設定されている（2-6）
 - [ ] main の branch protection と CI 禁止パスチェックが設定されている
 
-### CLAUDE.md の確認
+### 常時適用ルールと CLAUDE.md の確認
 
+- [ ] `.claude/rules/project_conventions.md` が配置されている（開発パイプラインの必須ゲートを含む）
 - [ ] プロジェクトルートに `CLAUDE.md` が配置されている（`{project-name}-sb-mcp` を書き換え済み）
+- [ ] CLAUDE.md 本体に手順やルールを直接書いていない（読み分け表・コマンド・完了の定義・手編集禁止一覧に収まっている）
 - [ ] 参照ドキュメント索引の、配置していないファイルの行を削除済み
-- [ ] 開発パイプラインの必須ゲートが含まれている
 
 ---
 
@@ -1500,3 +1510,33 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 
 - 自動化・CI/CD の拡張と運用改善のロードマップは `docs/base_automation_roadmap.md` を参照する。
 - 障害・インシデント発生時の対応手順は `docs/base_ops_incident.md` を参照する。
+
+---
+
+## セットアップ後に書くもの
+
+ここまでは「プロジェクトを知らなくても書けるもの」の配布と設定。
+以下はプロジェクトを知らないと書けないため配布していない。**この順で**書く。
+順序に意味がある（後のものが前のものを素材にするため、飛ばすと白紙から書くことになる）。
+
+withAI 開発手法（Blueprint / Printer）を採用していない場合は、この節はスキップしてよい。
+
+1. **`docs/product/deck.md`** — 目的・ビジョン・コア価値・ターゲット、コア価値間のトレードオフ序列
+   - 人間が書く。この体系で唯一 AI に委譲できない核。AI は壁打ちとドラフト提示まで
+   - ここが決まらないと以降のすべての判断基準が存在しない
+
+2. **`docs/product/content-list.md`** — ページ一覧と、ページごとにやれること
+   - 各項目はストーリーへの参照（slug）のみ。挙動の定義は書かない
+   - E2E の網羅チェックリストとして使う
+
+3. **最初のストーリー `docs/product/stories/{slug}.md`** — `_template.md` をコピーして書く
+   - 文脈層（ゴール・フリクション）は人間、受け入れ条件のドラフトは AI、棄却は人間
+   - プロトタイプを `src/prototypes/{slug}/` に Storybook story として複数パターン置き、
+     触って adopted を決めてから受け入れ条件を確定する
+   - 規約は `docs/product/stories/_rules.md`
+
+4. **トークンの値生成 `docs/design/tokens/tokens.json`** — `_rules.md` の型（primitive → semantic → component）に従う
+   - 値はプロジェクト固有なので配布されない。層構造・命名規約・設計根拠は配布済み
+   - 生成後 `pnpm tokens:build` で `src/styles/theme.css` を作る（`theme.css` は手編集しない）
+
+以降は 3 と 4 を繰り返しながら実装に入る。実装の進め方は `.claude/docs/base_dev_pipeline.md`。

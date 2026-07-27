@@ -1,8 +1,11 @@
 # ux_checklist_medium
 
 タイポグラフィ、フォーム、チャートに関するルール。
-該当する実装を行うときにオンデマンドで参照する。
 出典: Apple HIG, Material Design, WCAG
+
+`base_ux_checklist_high.md` と同じく、**節目に走らせる監査**の判定ソース。
+対象に該当する UI（フォーム・チャート等）がある場合のみ、`/ux-audit` 実行時に併せて判定する。
+セットアップと運用は `base_ux_audit.md` を参照。
 
 ---
 

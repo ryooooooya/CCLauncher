@@ -3,6 +3,9 @@
 UI/UXの最重要ルール。UIを作成・編集するすべての場面で適用する。
 出典: Apple HIG, Material Design, WCAG
 
+このファイルだけは `.claude/rules/` に置いて**常時適用**する（違反が事故に直結するため監査を待たない）。
+HIGH / MEDIUM は節目の監査として実行する（`base_ux_audit.md`）。
+
 ---
 
 ## Accessibility（CRITICAL）
