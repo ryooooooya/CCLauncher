@@ -1207,6 +1207,29 @@ mkdir -p .claude/commands docs/ux-audit
 - 出力: `docs/ux-audit/{scope}.md`（上書き再生成。git 差分が劣化の検出結果になる）
 - 実行タイミング（adopted 決定時・実装完了時など）は CLAUDE.md の読み分け表が持つ
 
+### 6-6. .claude/commands/print.md（withAI 開発手法を採用する場合のみ）
+
+ストーリーを入力に `src/prototypes/{slug}/` へデザイン案を複数生成する印刷コマンドを設置する。
+コマンド本体と運用ルールは `.claude/docs/base_print.md` に記載されているので、
+そのファイルの「セットアップ」節の内容をそのまま `.claude/commands/print.md` として配置する。
+
+```bash
+mkdir -p .claude/commands src/prototypes
+```
+
+- 実行: `/print <slug> [パターン数]`
+- 入力: story の文脈層＋規範層 / 該当 layout spec / usage から選定した ui spec 群 / tokens
+  （`target: modify` なら `pages` の対象ページの既存実装を追加）
+- 出力: `src/prototypes/{slug}/` の複数パターン（Storybook stories。本番と同一リソースのみ、
+  データは props / `args` 注入）
+- 中間の計画確認を挟まず一発で最後まで走らせるコマンドとして定義してある。確認を足さない
+- 実行の前提: Storybook（Phase 5）が動くこと、`docs/design/tokens/tokens.json` から
+  `theme.css` が生成済みであること（トークンの値はセットアップ後に書くため、
+  ここではコマンドの配置までを行う）
+
+`/ux-audit` と同型の「ドキュメントを入力に取る再実行可能コマンド」。入力（story・ui spec・tokens）が
+変わったら再実行して刷り直す。adopted 決定済みのファイルは再実行でも上書きされない。
+
 ---
 
 ## Phase 7: 開発パイプライン（spec 駆動 + Codex 連携）
@@ -1380,6 +1403,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | 機能実装の開始（spec 作成〜仕様突合） | `.claude/docs/base_dev_pipeline.md` |
 | Codex CLI のコマンド・レビュー判断基準 | `.claude/docs/base_codex_review.md` |
 | ストーリーの作成・変更 | `docs/product/stories/_rules.md` と `_template.md` |
+| 目的・コア価値・優先順位の変更 | `docs/product/deck.md`（問いの台本は `docs/product/_deck_template.md`） |
 | ページ・機能の増減 | `docs/product/content-list.md`（挙動は書かない） |
 | どのドキュメントを書き換えるかの判断 | `docs/_rules.md` |
 | コンポーネントの使いどころ・見た目の決定 | `docs/design/ui/{component}.md`、`docs/design/_rules.md` |
@@ -1387,6 +1411,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | トークンの追加・変更 | `docs/design/tokens/_rules.md` |
 | UI コンポーネントの実装・レビュー | 該当する `docs/design/ui/{component}.md`（固有仕様）と `.claude/docs/base_ux_checklist_high.md`（一般原則）の両方 |
 | ページ・フローの実装 | 該当する `docs/product/stories/{slug}.md`（受け入れ条件が実装対象）と `docs/design/layout/{pattern}.md` |
+| デザイン案の生成（プロトタイプの印刷） | `/print {slug}`（運用は `.claude/docs/base_print.md`） |
 | UX ヒューリスティック監査の実行 | `/ux-audit`（運用は `.claude/docs/base_ux_audit.md`） |
 | Story の作成・修正 | `docs/product/stories/_rules.md`（Storybook 環境は `.claude/docs/base_storybook.md`） |
 | アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
@@ -1406,6 +1431,8 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 
 | タイミング | 実行 |
 |---|---|
+| ストーリーの文脈層を書き終えたとき | `/print {slug}`（受け入れ条件の確定より先に案を出す） |
+| ui spec / layout spec / tokens を大きく更新したとき | 未実装ストーリーの `/print {slug}` 再実行 |
 | プロトタイプの adopted を決めたとき | `/ux-audit {slug}` |
 | 機能の実装完了時 | `/ux-audit {slug}` と仕様突合（`base_dev_pipeline.md`） |
 | リリース前 | `/ux-audit all` |
@@ -1432,8 +1459,8 @@ UI コンポーネントの実装・修正時は `{project-name}-sb-mcp` MCP ツ
 - preflight 実行日: YYYY-MM-DD
 ````
 
-withAI 開発手法（Blueprint / Printer）を採用していない場合、`docs/product/` `docs/design/` の行と
-「節目に実行すること」の adopted 行は削除する。
+withAI 開発手法（Blueprint / Printer）を採用していない場合、`docs/product/` `docs/design/` の行、
+`/print` の行、「節目に実行すること」の `/print`・adopted 行は削除する。
 
 ### 8-3. AGENTS.md の生成
 
@@ -1517,6 +1544,14 @@ Codex は `AGENTS.md` を自動で読むが `.claude/rules/` は読まない。�
 - [ ] `/ux-audit all` が実行でき、`docs/ux-audit/all.md` が生成される
 - [ ] `.claude/rules/base_ux_checklist_critical.md`（常時適用）と `.claude/docs/base_ux_checklist_high.md`（監査用）が配置先どおりに置かれている
 
+### 印刷コマンドの確認（withAI 開発手法を採用した場合）
+
+- [ ] `.claude/commands/print.md` が配置されている
+- [ ] `docs/product/_deck_template.md` `docs/product/stories/_template.md` `docs/design/` 配下の
+      規約・テンプレが配置されている（未配置なら固定 bootstrap プロンプトの 2-1 を実行する）
+- [ ] `src/prototypes/` が存在する
+- [ ] `/print` の実行は最初のストーリーができてから（この時点では配置確認のみ）
+
 ### MCP サーバーの確認
 
 - [ ] `~/.claude.json` に不要な MCP サーバーが登録されていない
@@ -1565,30 +1600,60 @@ Codex は `AGENTS.md` を自動で読むが `.claude/rules/` は読まない。�
 
 ---
 
-## セットアップ後に書くもの
+## Launcher 工程の続き（配置のあとの対話）
 
 ここまでは「プロジェクトを知らなくても書けるもの」の配布と設定。
-以下はプロジェクトを知らないと書けないため配布していない。**この順で**書く。
-順序に意味がある（後のものが前のものを素材にするため、飛ばすと白紙から書くことになる）。
+Launcher 工程は**配置して終わりではなく**、配布したテンプレを埋めるところまでを含む。
+以下はプロジェクトを知らないと書けないため配布していない（空テンプレは置かない）。
+
+**この順で**進める。順序に意味がある（後のものが前のものを素材にするため、飛ばすと白紙から書くことになる）。
+AI の役割は、人間にしか書けない中身を引き出して言語化することで、代わりに決めることではない。
 
 withAI 開発手法（Blueprint / Printer）を採用していない場合は、この節はスキップしてよい。
 
-1. **`docs/product/deck.md`** — 目的・ビジョン・コア価値・ターゲット、コア価値間のトレードオフ序列
-   - 人間が書く。この体系で唯一 AI に委譲できない核。AI は壁打ちとドラフト提示まで
-   - ここが決まらないと以降のすべての判断基準が存在しない
+### 1. deck インタビュー → `docs/product/deck.md`
 
-2. **`docs/product/content-list.md`** — ページ一覧と、ページごとにやれること
-   - 各項目はストーリーへの参照（slug）のみ。挙動の定義は書かない
-   - E2E の網羅チェックリストとして使う
+目的・ビジョン・コア価値・ターゲット、コア価値間のトレードオフ序列。
+この体系で唯一 AI に委譲できない核で、ここが決まらないと以降のすべての判断に基準が存在しない。
 
-3. **最初のストーリー `docs/product/stories/{slug}.md`** — `_template.md` をコピーして書く
-   - 文脈層（ゴール・フリクション）は人間、受け入れ条件のドラフトは AI、棄却は人間
-   - プロトタイプを `src/prototypes/{slug}/` に Storybook story として複数パターン置き、
-     触って adopted を決めてから受け入れ条件を確定する
-   - 規約は `docs/product/stories/_rules.md`
+**やり方**（Claude Code に対して「deck インタビューを始めてください」と言う）:
 
-4. **トークンの値生成 `docs/design/tokens/tokens.json`** — `_rules.md` の型（primitive → semantic → component）に従う
-   - 値はプロジェクト固有なので配布されない。層構造・命名規約・設計根拠は配布済み
-   - 生成後 `pnpm tokens:build` で `src/styles/theme.css` を作る（`theme.css` は手編集しない）
+1. AI が `docs/product/_deck_template.md` の「埋めるための問い」を上から順に聞く
+2. 人間が答える。答えが出ない問いは、出ないという事実を確認して次へ進む（推測で埋めない）
+3. AI は答えを構造（目的 / ビジョン / ターゲット / コア価値 / トレードオフ序列 / やらないこと）に整形して提示する
+4. トレードオフ序列は具体的な場面を1つ挙げてもらってから一般化する。抽象論では決まらない
+5. 人間が採否を確認する
+6. **全項目が埋まった時点で** `docs/product/deck.md` を生成する。空欄・「TBD」が残る状態では作らない
+
+### 2. `docs/product/content-list.md`
+
+ページ一覧と、ページごとにやれること。
+
+- 各項目はストーリーへの参照（slug）のみ。挙動の定義は書かない
+- E2E の網羅チェックリストとして使う。ストーリーの `pages` はここの項目を参照する
+- 新規画面のストーリーを書くときも、先にここへページを追加してから参照する
+
+### 3. 最初のストーリー `docs/product/stories/{slug}.md`
+
+`docs/product/stories/_template.md` をコピーして書く。規約は同ディレクトリの `_rules.md`。
+
+1. 文脈層（ゴール・フリクション）を人間が書く。frontmatter の `target` と `pages` を決める
+2. `/print {slug}` でプロトタイプを複数パターン生成する（Storybook story として並ぶ）
+   - 印刷は semantic トークンだけで組むため、トークンが未生成ならここで 4 を先に済ませる
+     （文脈層を書くところまでは先行できる）
+3. 人間が触って adopted を1つ選び、選定理由を1行書く
+4. 受け入れ条件を、文脈層と adopted プロトタイプを素材に AI がドラフトし、人間が落とす
+5. adopted を決めたら `/ux-audit {slug}` で採用案を監査する
+
+### 4. トークンの値生成 `docs/design/tokens/tokens.json`
+
+`docs/design/tokens/_rules.md` の型（primitive → semantic → component）に従う。
+
+- 値はプロジェクト固有なので配布されない。層構造・命名規約・設計根拠は配布済み
+- semantic の命名が実質の判断点（名前が usage をエンコードする）。命名候補は AI、承認は人間
+- 生成後 `pnpm tokens:build` で `src/styles/theme.css` を作る（`theme.css` は手編集しない）
+- `/print` は semantic トークンしか使わないため、ここが空だと印刷結果が組めない
 
 以降は 3 と 4 を繰り返しながら実装に入る。実装の進め方は `.claude/docs/base_dev_pipeline.md`。
+実装（`src/` / `tests/`）は Codex が担当し、adopted プロトタイプを出発点に本実装へ昇格させる
+（配線は `AGENTS.md`、生成仕様は `.claude/docs/base_agents_md.md`）。

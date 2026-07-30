@@ -65,19 +65,23 @@ curl -sL "${BASE_URL}/base_ops_incident.md" -o docs/base_ops_incident.md
 - withAI 開発手法（Blueprint / Printer）でドキュメント駆動する → 下の 2-1 を実行する
 
 2-1. withAI 開発手法を採用する場合のみ、以下を実行する（規約とテンプレのみ。
-     プロジェクト固有の内容が入るファイルは配置しない）:
+     プロジェクト固有の内容が入るファイルは配置しない）。
+     印刷（/print）の出力が Storybook story なので、Storybook も併せて採用する:
 
 mkdir -p docs/product/stories docs/design/tokens docs/design/ui docs/design/layout
 curl -sL "${BASE_URL}/blueprint_docs_rules.md" -o docs/_rules.md
+curl -sL "${BASE_URL}/blueprint_deck_template.md" -o docs/product/_deck_template.md
 curl -sL "${BASE_URL}/blueprint_stories_rules.md" -o docs/product/stories/_rules.md
 curl -sL "${BASE_URL}/blueprint_stories_template.md" -o docs/product/stories/_template.md
 curl -sL "${BASE_URL}/printer/design_rules.md" -o docs/design/_rules.md
 curl -sL "${BASE_URL}/printer/tokens_rules.md" -o docs/design/tokens/_rules.md
 curl -sL "${BASE_URL}/printer/ui/_template.md" -o docs/design/ui/_template.md
 curl -sL "${BASE_URL}/printer/layout/_template.md" -o docs/design/layout/_template.md
+curl -sL "${BASE_URL}/base_print.md" -o .claude/docs/base_print.md
 
 deck.md / content-list.md / {slug}.md / tokens.json は配置しない（空テンプレは置かない）。
-これらはセットアップ完了後に、bootstrap guide 末尾の「セットアップ後に書くもの」の順で作成する。
+これらはセットアップ完了後に、bootstrap guide 末尾の「Launcher 工程の続き」の順で、
+deck インタビュー（`docs/product/_deck_template.md` の問いを台本にした対話）から作成する。
 
 3. 配置が終わったら .claude/docs/project_bootstrap_guide_nextjs.md を読み、
    Phase 0 から順にセットアップを進めてください。
@@ -131,6 +135,7 @@ Phase 8 で作られる成果物。`AGENTS.md` は `CLAUDE.md` と `.claude/rule
 | `base_ux_checklist_high.md` | UX チェックリスト（HIGH: 節目の監査で判定） |
 | `base_ux_checklist_medium.md` | UX チェックリスト（MEDIUM/LOW: 該当機能があるとき監査で併せて判定） |
 | `base_ux_audit.md` | UX ヒューリスティック監査の運用と `/ux-audit` コマンドの設置（HIGH/MEDIUM の再実行手段） |
+| `base_print.md` | 印刷コマンド `/print` の設置。story ＋ Printer 資産を入力に `src/prototypes/{slug}/` へ複数パターンを生成する（withAI 開発手法採用時） |
 | `base_ui_motion.md` | UIの触感・質感（アニメーション・インタラクションフィードバック・ジェスチャー応答） |
 | `base_storybook.md` | Storybook + AI 連携（MCP server + Manifest）のセットアップ。Story 作成ルールは Blueprint 側 |
 | `base_chrome_devtools.md` | chrome-devtools-mcp の設定と使用方針（実行時デバッグ・パフォーマンス計測。UI 選択時に配布） |
@@ -151,7 +156,8 @@ Phase 8 で作られる成果物。`AGENTS.md` は `CLAUDE.md` と `.claude/rule
 | ファイル | 配置先 | 内容 |
 |---|---|---|
 | `blueprint_docs_rules.md` | `docs/_rules.md` | docs 全体規約（空テンプレ禁止・product/design の境界・仕様変更時の判断フロー） |
-| `blueprint_stories_rules.md` | `docs/product/stories/_rules.md` | ストーリー規約（所有権・条件 ID の粒度・プロトタイプのライフサイクル・Story 作成ルール） |
+| `blueprint_deck_template.md` | `docs/product/_deck_template.md` | deck の構造と問い（deck インタビューの台本）。deck 本体は配布しない |
+| `blueprint_stories_rules.md` | `docs/product/stories/_rules.md` | ストーリー規約（所有権・target/pages・条件 ID の粒度・プロトタイプのライフサイクル・Story 作成ルール） |
 | `blueprint_stories_template.md` | `docs/product/stories/_template.md` | ストーリーのテンプレート（frontmatter・文脈層・規範層） |
 
 ### printer/（Printer 層のデザイン資産）
@@ -166,6 +172,18 @@ Printer 資産の正本。運用と別リポジトリへの切り出し条件は
 | `printer/layout/_template.md` | `docs/design/layout/_template.md` | layout spec（画面パターン）のテンプレート |
 
 ui spec / layout spec / コンポーネントの実体は未収録。プロジェクトで育ったものを還元して収録する。
+
+これらの資産を使って出力する側（印刷コマンド `/print`）は `base_print.md` が持つ。
+配置先が `.claude/commands/` であって `docs/design/` ではないため、`printer/` には入れていない。
+
+### docs/（このリポジトリ内の参照ドキュメント。配布しない）
+
+| ファイル | 参照タイミング |
+|---|---|
+| `docs/philosophy.md` | リポジトリ構成の変更・新しいドキュメント種別の追加・体系に関わる判断を行うとき（オンデマンド。常時読み込みにはしない） |
+
+`docs/philosophy.md` は withAI 開発手法の設計思想（3層構造と各ドキュメントの役割分解）。
+日々の運用手順は README と `base_*` が正で、矛盾した場合はそちらに従い `philosophy.md` を直す。
 
 ### framework_*（フレームワーク固有）
 
@@ -191,7 +209,8 @@ bootstrap guide は `base_*` と `framework_*` を組み合わせた成果物と
 ```
 base_harness.md, base_security_env_setup.md, base_security_env.md, base_security_code.md,
 base_dev_pipeline.md, base_codex_review.md, base_agents_md.md, base_a11y.md, base_ui_motion.md,
-base_storybook.md, base_ux_audit.md, framework_nextjs.md を参照して、
+base_storybook.md, base_ux_audit.md, base_print.md, blueprint_deck_template.md,
+framework_nextjs.md を参照して、
 Next.js プロジェクトのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_nextjs.md を生成してください。
 
@@ -204,7 +223,10 @@ base_agents_md.md に従って生成する手順にしてください（ソー�
 
 ガイドの末尾に、以下を含めてください。
 - 運用開始後の参照先として docs/base_automation_roadmap.md と docs/base_ops_incident.md への1行ずつのポインタ
-- 「セットアップ後に書くもの」リスト（deck.md → content-list.md → 最初の story → tokens の値生成の順）
+- 「Launcher 工程の続き」（配置完了後の対話工程）。deck インタビュー → content-list.md →
+  最初の story → tokens の値生成の順で、テンプレを埋めるサポートまでをガイドの責務に含める。
+  deck は blueprint_deck_template.md の問いを台本にした対話で引き出し、埋め切った時点で
+  deck.md を生成する（空の deck.md は置かない）
 ```
 
 ### base_* / framework_* 更新後の再生成
@@ -221,6 +243,8 @@ base_security_env.md を更新しました。
 ### ファイルの役割分担
 
 - `base_*`、`framework_*`、`blueprint_*`、`printer/` が「ソース」。直接編集してよいファイル群
+- `docs/philosophy.md` は配布しないが正本主義の対象。体系の判断を変えたらここも直す
+  （運用手順が正なので、矛盾に気づいたら README・`base_*` 側を正として philosophy を合わせる）
 - `blueprint_*` と `printer/` は配布先でリネームされる（対応表は「ファイル構成」を参照）。
   配布先プロジェクトでは直接編集せず、`printer/` 由来のものは `_override.md` に逸脱を書く
 - bootstrap guide は「生成物」。直接編集しない。変更は必ず元ファイルに入れてから再生成する
@@ -270,10 +294,10 @@ README のファイル一覧のうち「最終検証日」が90日以上前ま�
 このプロジェクトの .claude/rules/ .claude/docs/ docs/ に配置済みの base_*・framework_* ファイルについて、
 https://raw.githubusercontent.com/ryooooooya/CCLauncher/main/<ファイル名> から最新版を取得し、
 ローカル版と差分があるファイルを一覧で提示してください。
-docs/_rules.md, docs/product/stories/_rules.md, docs/product/stories/_template.md,
-docs/design/_rules.md, docs/design/tokens/_rules.md, docs/design/ui/_template.md,
-docs/design/layout/_template.md が存在する場合は、各ファイル冒頭の「正本」行に書かれた
-上流ファイル名から同様に取得して比較してください。
+docs/_rules.md, docs/product/_deck_template.md, docs/product/stories/_rules.md,
+docs/product/stories/_template.md, docs/design/_rules.md, docs/design/tokens/_rules.md,
+docs/design/ui/_template.md, docs/design/layout/_template.md が存在する場合は、
+各ファイル冒頭の「正本」行に書かれた上流ファイル名から同様に取得して比較してください。
 docs/design/ 配下の逸脱は docs/design/_override.md に記録されているはずなので、
 override に載っている変更は「独自変更」として扱い、上書き候補から外してください。
 私が承認したファイルだけ上書きしてください。ローカル側に独自変更があるファイルは上書きせず、

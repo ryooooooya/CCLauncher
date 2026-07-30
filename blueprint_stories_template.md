@@ -14,7 +14,10 @@
 ---
 title: 商品を検索して絞り込む      # 日本語。人が読んで何の価値かわかる名前
 slug: product-search              # ケバブケース。ファイル名と一致させる
-prototypes:                       # src/prototypes/{slug}/ 配下のパターン
+target: new                       # new（新規画面） / modify（既存画面の改修）
+pages:                            # content-list.md の項目への参照。フリーテキスト不可
+  - 商品一覧
+prototypes:                       # src/prototypes/{slug}/ 配下のパターン（/print が更新する）
   - a-inline-filter
   - b-modal-filter
 adopted: a-inline-filter          # 採用したパターン。未決定なら未記入のまま実装に進まない
@@ -66,7 +69,7 @@ deck.md のどのコア価値に紐づくかに触れる。
 
 | セクション | 人間が書く | AI が書く |
 |---|---|---|
-| frontmatter | adopted の判断と選定理由 | slug・prototypes の整合、status の追随 |
+| frontmatter | target と pages の指定、adopted の判断と選定理由 | slug・prototypes の整合、status の追随 |
 | ゴール | ○（価値判断） | ドラフト提示のみ |
 | フリクション | ○（価値判断） | ドラフト提示のみ |
 | 推奨 UI | 最終選択 | ui spec の usage からの候補導出 |

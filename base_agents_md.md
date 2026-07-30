@@ -59,8 +59,8 @@ Codex は `AGENTS.md` を自動で読むが、`.claude/rules/` を自動では�
 
 - 残す: コンポーネント実装、ページ・フロー実装、テスト作成、アニメーション実装、a11y 対応、
   フレームワーク固有の規約、SEO・パフォーマンス実装（いずれも配置されている行のみ）
-- 落とす: ストーリーの作成・変更、content-list の増減、どのドキュメントを書き換えるかの判断、
-  トークンの追加・変更、UX 監査の実行、`CLAUDE.md` 自体の編集
+- 落とす: ストーリーの作成・変更、content-list の増減、deck の変更、どのドキュメントを書き換えるかの判断、
+  トークンの追加・変更、デザイン案の生成（`/print`）、UX 監査の実行、`CLAUDE.md` 自体の編集
   （いずれも設計エージェントの担当で、Codex には書き込み権限がない）
 
 落とした行の作業を Codex が要求されたら、それは差し戻し対象（ブロック 6）になる。
@@ -128,7 +128,8 @@ description: CLAUDE.md と .claude/rules/ から AGENTS.md を再生成する（
 
 | 対象 | 権限 |
 |---|---|
-| `src/`、`tests/` | 読み書き可（担当範囲） |
+| `src/`、`tests/` | 読み書き可（担当範囲。ただし下の `src/prototypes/` は除く） |
+| `src/prototypes/` | **読み取り専用**。設計エージェントが `/print` で生成する検討物。昇格は `src/` へのコピーで行い、原本は触らない |
 | `docs/` 配下すべて | **読み取り専用**。仕様・規約・デザインの正本 |
 | `.claude/`、`.github/`、`AGENTS.md` | 変更禁止 |
 | ハーネス設定（`biome.json` / `.oxlintrc.json` / `tsconfig.json` / `vitest.config.*` / `next.config.*` / `lefthook.yml` / `.storybook/`） | 変更禁止 |

@@ -38,6 +38,20 @@ Printer（デザイン資産層）の正本。Blueprint を画面として出力
 
 ---
 
+## 印刷（資産を使って出力する側）
+
+資産を置くだけでは画面にならない。ストーリーを入力にこれらの資産で `src/prototypes/{slug}/` へ
+案を出す**印刷コマンド**（`/print`）を、ルート直下の `base_print.md` が持つ。
+
+- 入力: story の文脈層＋規範層 / 該当 layout spec / usage から選定した ui spec 群 / tokens
+  （`target: modify` なら対象ページの既存実装を追加）
+- 出力: Storybook stories 形式の複数パターン（本番と同一リソースのみ。データは props / args 注入）
+
+コマンド本体をここではなく `base_print.md` に置くのは、配置先が `.claude/commands/` であって
+`docs/design/` ではないため。このディレクトリの収録物は「`docs/design/` に配置される資産」に限る。
+
+---
+
 ## 運用ルール
 
 ルート直下の `base_*` と同じ扱いにする。

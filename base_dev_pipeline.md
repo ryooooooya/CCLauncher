@@ -3,7 +3,8 @@
 開発フローの大方針を定義するファイル。設計・実装・レビューを分離し、決定論的な enforcement の上で回す。
 
 - 設計エージェント（Claude Code）: Blueprint 構築（受け入れ条件のドラフト・棄却支援・整合性チェック・
-  プロトタイプ生成）、spec 作成、仕様突合（仕様適合の判定）。書き込む先は `docs/` と `src/prototypes/`
+  プロトタイプ生成＝印刷。`/print`、仕様は `base_print.md`）、spec 作成、仕様突合（仕様適合の判定）。
+  書き込む先は `docs/` と `src/prototypes/`
 - 実装エージェント（Codex CLI）: 設計レビュー・実装。書き込む先は `src/` と `tests/`（`docs/` は読み取り専用）
 - 品質レビュー: @codex review（GitHub、実装とは別インスタンス）
 
