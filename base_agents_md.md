@@ -130,6 +130,7 @@ description: CLAUDE.md と .claude/rules/ から AGENTS.md を再生成する（
 |---|---|
 | `src/`、`tests/` | 読み書き可（担当範囲。ただし下の `src/prototypes/` は除く） |
 | `src/prototypes/` | **読み取り専用**。設計エージェントが `/print` で生成する検討物。昇格は `src/` へのコピーで行い、原本は触らない |
+| `src/app/globals.css` | **変更禁止**。semantic トークンの正本。トークンが足りない場合は追加せず差し戻す |
 | `docs/` 配下すべて | **読み取り専用**。仕様・規約・デザインの正本 |
 | `.claude/`、`.github/`、`AGENTS.md` | 変更禁止 |
 | ハーネス設定（`biome.json` / `.oxlintrc.json` / `tsconfig.json` / `vitest.config.*` / `next.config.*` / `lefthook.yml` / `.storybook/`） | 変更禁止 |
@@ -161,7 +162,6 @@ branch protection・CI の禁止パスチェック側にある。
 
 | ファイル | ソース |
 |---|---|
-| `src/styles/theme.css` | `docs/design/tokens/tokens.json`（`pnpm tokens:build`） |
 | `tests/coverage-map.md` | テストコードのアノテーション |
 | `docs/design/` 配下 | 上流（Printer） |
 | `AGENTS.md`（このファイル） | `CLAUDE.md` + `.claude/rules/`（`/agents-md`） |

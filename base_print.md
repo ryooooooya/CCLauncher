@@ -35,7 +35,8 @@ Printer 資産（tokens / ui spec / layout spec）の正本は CCLauncher の `p
 - Storybook が入っていること（プロトタイプを story として置くため。セットアップは `base_storybook.md`）
 - `docs/product/stories/{slug}.md` が存在し、文脈層が書かれていること
   （受け入れ条件は未確定でよい。印刷の出力を素材に確定させる順序のため）
-- `docs/design/tokens/tokens.json` から `src/styles/theme.css` が生成済みであること
+- `src/app/globals.css` に semantic トークンが定義済みであること
+  （印刷は semantic トークンだけで組む。規約は `docs/design/tokens/_rules.md`）
 
 ---
 
@@ -63,7 +64,7 @@ argument-hint: <slug> [パターン数（既定 3）]
    | `docs/product/stories/$1.md` | frontmatter（`target` / `pages` / `prototypes` / `adopted`）、文脈層（ゴール・フリクション・推奨 UI）、規範層（定義する挙動・参照する挙動・対象外） |
    | `docs/design/layout/{pattern}.md` | 推奨 UI が指すレイアウトパターン。領域分割・レスポンシブ方針・必須の3状態 |
    | `docs/design/ui/{component}.md` | 推奨 UI が指す各コンポーネントの usage / function / surface |
-   | `docs/design/tokens/tokens.json` と `tokens/_rules.md` | 使えるのは semantic 層のみ |
+   | `src/app/globals.css` と `docs/design/tokens/_rules.md` | 使えるのは semantic 層のみ（`--p-*` は参照しない） |
    | `docs/design/_override.md`（あれば） | このプロジェクトの逸脱。上流の spec より優先する |
    | `docs/product/content-list.md` | `pages` の各項目が指す対象ページ |
 
@@ -97,6 +98,8 @@ argument-hint: <slug> [パターン数（既定 3）]
    - 守る制約:
      - 本番と同一リソースのみで組む。`src/components/` の実コンポーネントと semantic トークン
      - 色・間隔・タイポの直書き禁止（`#fff`、`16px`、任意値の Tailwind クラスを書かない）
+     - トークンが足りない場合も `globals.css` を書き換えない。既存の semantic で組み、
+       報告に「トークン不足」として挙げる（値の追加は設計側の判断）
      - モックデータはコンポーネント内にハードコードせず、props か Storybook の `args` で注入する
      - データ取得（fetch / Server Action / DB アクセス）はつなぎ込まない
      - レイアウトパターンが要求する状態（0件・読み込み中・エラー）を story として持たせる

@@ -23,15 +23,14 @@ repo/
 │   └── design/
 │       ├── _rules.md
 │       ├── tokens/
-│       │   ├── _rules.md
-│       │   └── tokens.json
+│       │   └── _rules.md           # 書き方の規約のみ。値はglobals.cssが持つ
 │       ├── ui/
 │       │   └── {component}.md
 │       └── layout/
 │           └── {pattern}.md
 ├── src/
-│   ├── styles/
-│   │   └── theme.css
+│   ├── app/
+│   │   └── globals.css             # トークンの値の正本（:root / .dark / @theme inline）
 │   ├── components/ui/
 │   │   └── {component}.tsx
 │   └── prototypes/
@@ -91,7 +90,7 @@ AGENTS.mdに含める内容は6種：
 1. 役割宣言と書き込み境界：担当は実装（src・tests）、docs/は読み取り専用。仕様の変更が必要でも書き換えず差し戻す
 2. 常時ルールのインライン展開：.claude/rules/ の中身（security群、ux critical）を生成時に埋め込む。Codexはrules/を自動で読まないため、参照リンクではなく展開する
 3. タスク別参照表（実装系の行のみ抽出）：コンポーネント実装時→該当ui spec＋tokens/_rules.md（semantic層のみ使用）／ページ・フロー実装時→該当story（規範層が仕様、文脈層は判断の参考）＋layout spec＋adoptedプロトタイプ／テスト作成時→受け入れ条件とアノテーション規約
-4. 手編集禁止ファイル一覧：theme.css、coverage-map.md、docs/design/一式、AGENTS.md自身
+4. 手編集禁止ファイル一覧：coverage-map.md、docs/design/一式、AGENTS.md自身。加えて書き込み境界として src/prototypes/ と src/app/globals.css（トークンの正本）を変更禁止に置く
 5. キーの辿り方：slug／componentの1:1対応で仕様→実装→テストを辿るルール
 6. 完了条件と差し戻し様式：実装完了の定義（対象条件IDのテストが通る・describeにslug＋条件IDのアノテーションがある・未カバーが増えていない）と、仕様の曖昧・矛盾・条件不足を見つけたときの報告形式（該当条件IDを挙げて質問として返す。推測で実装しない）
 
@@ -208,21 +207,25 @@ AIがレビューすべき観点
 - override外での直接編集の検出
 - 出自との差分の可視化
 
-## docs/design/tokens/（_rules.md ・ tokens.json）
+## docs/design/tokens/_rules.md ・ src/app/globals.css
 
-_rules.mdに層構造（primitive→semantic→component）、参照ルール（コードから使えるのはsemantic層のみ）、設計根拠（スケールの決め方・OKLCH採用理由・コントラスト方針）、tokens.json→theme.cssの生成手順。tokens.jsonが値のソース。per-tokenのusageは持たない（usageはsemantic命名自体にエンコードする）。
+_rules.mdに層構造（primitive→semantic→component）、参照ルール（コードから使えるのはsemantic層のみ）、shadcn/uiの固定変数名に合わせる規約、設計根拠（スケールの決め方・OKLCH採用理由・コントラスト方針）、検証項目。per-tokenのusageは持たない（usageはsemantic命名自体にエンコードする）。
+
+値のソースは src/app/globals.css。中間形式（JSON）とビルド段は置かない。Tailwind v4（CSS-first）とshadcn/uiがこのCSSを直接読むため、別形式の正本を作ると二重管理になる。層は書き場所で表現する：@themeに置いた変数はユーティリティクラスを生成するので、primitiveは:root（生成させない＝コードから使わせない）、semanticは:root/.darkに生値を置き@theme inlineで--color-*に写す。この境界はCSSの機構そのものなので、規約文だけの境界より破れにくい。
+
+生成物にしない代わりに検査する：層構造違反（--p-の直参照・任意値クラス）、:rootと.darkの非対称、対の網羅、コントラストAA、ui specのトークン名の参照切れ。生成をやめても正しさの担保は要る、が結論。
 
 人間が書くべきこと
 - 設計根拠
 - semantic命名の承認（名前がusageなので、ここが実質の判断点）
 
 AIが書いたほうが良いこと
-- tokens.jsonの生成、theme.cssへの変換
-- 命名候補の提示
+- primitiveスケールの生成、.darkのL反転による導出とAA再検証
+- globals.cssへの反映、命名候補の提示
 
 AIがレビューすべき観点
-- 層構造違反（コードからのprimitive直参照）
-- 命名の曖昧さ・重複（用途が判別できない名前）
+- 層構造違反（コードからのprimitive直参照・生の値の直書き）
+- 命名の曖昧さ・重複（用途が判別できない名前）、shadcnの固定名の欠落・改名
 
 ## docs/design/ui/{component}.md
 

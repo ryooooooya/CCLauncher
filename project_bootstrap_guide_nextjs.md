@@ -1223,9 +1223,8 @@ mkdir -p .claude/commands src/prototypes
 - 出力: `src/prototypes/{slug}/` の複数パターン（Storybook stories。本番と同一リソースのみ、
   データは props / `args` 注入）
 - 中間の計画確認を挟まず一発で最後まで走らせるコマンドとして定義してある。確認を足さない
-- 実行の前提: Storybook（Phase 5）が動くこと、`docs/design/tokens/tokens.json` から
-  `theme.css` が生成済みであること（トークンの値はセットアップ後に書くため、
-  ここではコマンドの配置までを行う）
+- 実行の前提: Storybook（Phase 5）が動くこと、`src/app/globals.css` に semantic トークンが
+  定義済みであること（トークンの値はセットアップ後に書くため、ここではコマンドの配置までを行う）
 
 `/ux-audit` と同型の「ドキュメントを入力に取る再実行可能コマンド」。入力（story・ui spec・tokens）が
 変わったら再実行して刷り直す。adopted 決定済みのファイルは再実行でも上書きされない。
@@ -1303,7 +1302,9 @@ CLAUDE.md にルールを書き込むと、量が増えるほど毎セッショ�
 ## 変更禁止
 
 - `eslint.config.*`、`biome.json`、`tsconfig.json`、`next.config.*`、`.storybook/main.ts`、`vitest.config.*` などの設定ファイルは編集禁止
-- 生成物は手編集しない（`src/styles/theme.css`、`tests/coverage-map.md`）。ソースを直して再生成する
+- 生成物は手編集しない（`tests/coverage-map.md`、`docs/ux-audit/*.md`）。ソースを直して再生成する
+- `src/app/globals.css` のトークン定義（`:root` / `.dark` / `@theme inline`）は変更しない。
+  トークンが足りない場合は勝手に足さず、追加の必要を報告する（値は設計側の判断）
 - `git commit --no-verify` 禁止
 
 ## 開発パイプライン（必須ゲート）
@@ -1387,7 +1388,6 @@ pnpm storybook    # Storybook 起動
 
 | ファイル | ソース |
 |---|---|
-| `src/styles/theme.css` | `docs/design/tokens/tokens.json`（`pnpm tokens:build`） |
 | `tests/coverage-map.md` | テストコードのアノテーション |
 | `docs/ux-audit/*.md` | `/ux-audit` の実行結果 |
 | `docs/design/` 配下 | 上流（Printer）。逸脱は `docs/design/_override.md` に書く |
@@ -1408,7 +1408,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | どのドキュメントを書き換えるかの判断 | `docs/_rules.md` |
 | コンポーネントの使いどころ・見た目の決定 | `docs/design/ui/{component}.md`、`docs/design/_rules.md` |
 | 画面構成・レスポンシブの決定 | `docs/design/layout/{pattern}.md` |
-| トークンの追加・変更 | `docs/design/tokens/_rules.md` |
+| トークンの追加・変更 | `docs/design/tokens/_rules.md`（値の置き場は `src/app/globals.css`） |
 | UI コンポーネントの実装・レビュー | 該当する `docs/design/ui/{component}.md`（固有仕様）と `.claude/docs/base_ux_checklist_high.md`（一般原則）の両方 |
 | ページ・フローの実装 | 該当する `docs/product/stories/{slug}.md`（受け入れ条件が実装対象）と `docs/design/layout/{pattern}.md` |
 | デザイン案の生成（プロトタイプの印刷） | `/print {slug}`（運用は `.claude/docs/base_print.md`） |
@@ -1493,6 +1493,8 @@ Codex は `AGENTS.md` を自動で読むが `.claude/rules/` は読まない。�
 - [ ] `pnpm dev` で開発サーバーが起動する
 - [ ] `pnpm build` がエラーなく完了する
 - [ ] shadcn/ui のコンポーネントが `src/components/ui/` に存在する
+- [ ] `src/app/globals.css` に `:root` / `.dark` の CSS 変数と `@theme inline` のブロックがある
+      （トークンの正本。値の記入はセットアップ後）
 
 ### ハーネスの確認
 
@@ -1645,13 +1647,18 @@ withAI 開発手法（Blueprint / Printer）を採用していない場合は、
 4. 受け入れ条件を、文脈層と adopted プロトタイプを素材に AI がドラフトし、人間が落とす
 5. adopted を決めたら `/ux-audit {slug}` で採用案を監査する
 
-### 4. トークンの値生成 `docs/design/tokens/tokens.json`
+### 4. トークンの値を `src/app/globals.css` に書く
 
-`docs/design/tokens/_rules.md` の型（primitive → semantic → component）に従う。
+`docs/design/tokens/_rules.md` の層構造（primitive → semantic → component）に従う。
+中間形式（JSON）とビルド段は持たない。この CSS が値の正本。
 
+- primitive は `:root` に `--p-*` で置く（ユーティリティを生成させない＝コードから使わせない）
+- semantic は `:root` / `.dark` に生値を置き、`@theme inline` で `--color-*` に写す
+- shadcn/ui が読む固定名（`--background`、`--primary`、`--primary-foreground` 等）を必ず含める。
+  独自名だけにすると shadcn/ui のコンポーネントがテーマから外れる
 - 値はプロジェクト固有なので配布されない。層構造・命名規約・設計根拠は配布済み
 - semantic の命名が実質の判断点（名前が usage をエンコードする）。命名候補は AI、承認は人間
-- 生成後 `pnpm tokens:build` で `src/styles/theme.css` を作る（`theme.css` は手編集しない）
+- `.dark` は primitive の L 反転で導き、導出後に AA を再検証する（検証項目は `_rules.md`）
 - `/print` は semantic トークンしか使わないため、ここが空だと印刷結果が組めない
 
 以降は 3 と 4 を繰り返しながら実装に入る。実装の進め方は `.claude/docs/base_dev_pipeline.md`。

@@ -30,7 +30,7 @@
 
 ### 生成物は手編集しない
 
-他のファイルから生成されるドキュメント（`tests/coverage-map.md`、`src/styles/theme.css` など）は
+他のファイルから生成されるドキュメント（`tests/coverage-map.md`、`docs/ux-audit/*.md` など）は
 手で編集しない。ソースを直して再生成する。手編集禁止ファイルの一覧は `CLAUDE.md` が持つ。
 
 ---
@@ -47,8 +47,8 @@
 
 判断に迷ったら「他のプロダクトでもそのまま使えるか」で切る。使えるなら design/、使えないなら product/。
 
-境界に跨るもの（`docs/design/tokens/tokens.json` は Printer の配置だが値はプロジェクト固有）は
-ディレクトリ分類のまま扱う。所有の分類として再定義はしない。
+境界に跨るもの（トークンの規約は Printer 由来だが、値は `src/app/globals.css` にあり
+プロジェクト固有）はディレクトリ分類のまま扱う。所有の分類として再定義はしない。
 
 ---
 
@@ -63,7 +63,8 @@
    （挙動の定義はストーリーだけが持つ。content-list には書かない）
 4. **コンポーネントの使いどころ・見た目が変わった** → `docs/design/ui/{component}.md`
    （汎用資産なので、まず上流に還元すべき変更かを判断する。判断は `docs/design/_rules.md`）
-5. **色・間隔・タイポの値が変わった** → `docs/design/tokens/tokens.json` を直して `theme.css` を再生成
+5. **色・間隔・タイポの値が変わった** → `src/app/globals.css` の該当トークンを直す
+   （`:root` と `.dark` の両方。規約は `docs/design/tokens/_rules.md`）
 6. **受け入れ条件が変わった** → テストを同じ変更の中で追随させる（`tests/coverage-map.md` は再生成）
 
 ドキュメントを書き換えずに実装だけ変えることは許さない。逆も同じ。

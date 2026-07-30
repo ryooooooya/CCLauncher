@@ -79,7 +79,8 @@ curl -sL "${BASE_URL}/printer/ui/_template.md" -o docs/design/ui/_template.md
 curl -sL "${BASE_URL}/printer/layout/_template.md" -o docs/design/layout/_template.md
 curl -sL "${BASE_URL}/base_print.md" -o .claude/docs/base_print.md
 
-deck.md / content-list.md / {slug}.md / tokens.json は配置しない（空テンプレは置かない）。
+deck.md / content-list.md / {slug}.md は配置しない（空テンプレは置かない）。
+トークンの値は src/app/globals.css が正本なので、docs 配下に値のファイルは作らない。
 これらはセットアップ完了後に、bootstrap guide 末尾の「Launcher 工程の続き」の順で、
 deck インタビュー（`docs/product/_deck_template.md` の問いを台本にした対話）から作成する。
 
@@ -167,7 +168,7 @@ Printer 資産の正本。運用と別リポジトリへの切り出し条件は
 | ファイル | 配置先 | 内容 |
 |---|---|---|
 | `printer/design_rules.md` | `docs/design/_rules.md` | 汎用資産の運用規約（同期・override・還元判断・非機能の横断ルール） |
-| `printer/tokens_rules.md` | `docs/design/tokens/_rules.md` | トークンの層構造・参照ルール・設計根拠・theme.css 生成手順 |
+| `printer/tokens_rules.md` | `docs/design/tokens/_rules.md` | トークンの層構造（`:root` / `@theme inline` の使い分け）・参照ルール・shadcn 変数名の規約・設計根拠・検証項目。値は `src/app/globals.css` が持つ |
 | `printer/ui/_template.md` | `docs/design/ui/_template.md` | ui spec（usage / function / surface）のテンプレート |
 | `printer/layout/_template.md` | `docs/design/layout/_template.md` | layout spec（画面パターン）のテンプレート |
 

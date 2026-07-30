@@ -30,17 +30,37 @@ pnpm create next-app@latest . \
 pnpm dlx shadcn@latest init
 ```
 
-対話プロンプトの推奨設定:
+対話プロンプトの項目は CLI のバージョンで変わる。ベースカラーを選ぶ設問は既定のまま進めてよい
+（値は後で `globals.css` のトークンに置き換わる）。
 
-- Style: Default
-- Base color: Slate
-- CSS variables: Yes
+初期化後に以下を確認する:
+
+- `components.json` が生成されている
+- `src/app/globals.css` に `:root` / `.dark` の CSS 変数と `@theme inline` のブロックが入っている
+- 変数名が shadcn の規約（`--background`、`--primary`、`--primary-foreground` など）になっている
 
 初期化後、よく使うコンポーネントを追加する:
 
 ```bash
 pnpm dlx shadcn@latest add button input label card dialog
 ```
+
+### デザイントークンの置き場
+
+Tailwind v4 は CSS-first で、`src/app/globals.css` がテーマの正本になる。
+JSON 等の中間表現とビルド段は置かない（規約は `docs/design/tokens/_rules.md`）。
+
+- `@theme` に置いた変数は**ユーティリティクラスを生成する**（`--color-mint-500` → `bg-mint-500`）
+- `:root` に置いた変数は CSS 変数になるがユーティリティを生成しない
+- 他の変数を参照する値は `@theme inline` に置く（`@theme` だとスコープ解決で
+  意図しないフォールバックが起きる）
+
+この性質を使って層を分ける。primitive は `:root`（コードから使わせない）、
+semantic は `:root` / `.dark` に生値を置いて `@theme inline` で `--color-*` に写す。
+shadcn/ui が初期化時に書き込む形と同じ構造なので、その上に足していく。
+
+`globals.css` はモーションのイージング変数も持つ（`base_ui_motion.md`）。
+トークンとモーション変数が同じファイルに同居する前提で扱う。
 
 ### tsconfig.json の確認
 
@@ -93,8 +113,10 @@ DB を使う場合は、スキーマから TypeScript の型を自動生成す�
 ```
 src/
 ├── app/              # App Router（page, layout, route）
+│   └── globals.css   # デザイントークンの正本 + モーション変数
 ├── components/       # UI コンポーネント
 │   └── ui/           # shadcn/ui コンポーネント
+├── prototypes/       # 検討用プロトタイプ（/print の出力。Storybook story）
 ├── lib/              # ユーティリティ・ヘルパー
 ├── hooks/            # カスタムフック
 └── types/            # 型定義
@@ -328,6 +350,12 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 - [ ] `pnpm dev` で開発サーバーが起動する
 - [ ] `pnpm build` がエラーなく完了する
 - [ ] shadcn/ui のコンポーネントが `src/components/ui/` に存在する
+- [ ] `src/app/globals.css` に `:root` / `.dark` の CSS 変数と `@theme inline` のブロックがある
+      （トークンの正本。値の記入はセットアップ後）
 - [ ] `pnpm storybook` で Storybook が起動する
 - [ ] `@storybook/nextjs` または `@storybook/nextjs-vite` がフレームワークとして設定されている
 - [ ] `pnpm test` で vitest が実行され、同期コンポーネント・Server Action の単体テストが通る
+
+---
+
+最終検証日: 2026-07-30

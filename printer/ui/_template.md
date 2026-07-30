@@ -85,5 +85,5 @@ usage / function / surface の三点セットで書く。運用規約は `docs/d
 
 - コンポーネント間の usage の重複・競合（使い分けの穴、どちらでもよい曖昧地帯）
 - function とユニットテストの対応漏れ
-- surface に登場するトークンが `tokens.json` に存在するか
+- surface に登場するトークンが `src/app/globals.css` に存在するか
 - 非機能（a11y・モーション・パフォーマンス）を個別に書いていないか（`_rules.md` の管轄）

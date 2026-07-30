@@ -83,7 +83,7 @@
 
 ### レスポンシブ
 
-- ブレークポイントは tokens が持つ。ui spec / layout spec で px 直書きしない
+- ブレークポイントは tokens（`--breakpoint-*`）が持つ。ui spec / layout spec で px 直書きしない
 - コンポーネントは自身の幅に応じて振る舞う（ビューポート幅を直接見ない）。
   画面幅による分岐は layout spec の管轄
 
@@ -93,7 +93,7 @@
 
 | | 書く場所 | 書かない場所 |
 |---|---|---|
-| 値（色・間隔・タイポ） | `tokens/tokens.json` | ui spec・実装 |
+| 値（色・間隔・タイポ） | `src/app/globals.css`（規約は `tokens/_rules.md`） | ui spec・コンポーネント実装 |
 | コンポーネントの使いどころ | `ui/{component}.md` の usage | ストーリー |
 | 画面の構成原則 | `layout/{pattern}.md` | ui spec |
 | どの画面で何ができるか | `docs/product/` | design 配下すべて |
@@ -101,11 +101,15 @@
 design 配下からプロダクト固有のドキュメント（stories、content-list、deck）を参照しない。
 参照が発生した時点で、その資産は汎用ではなくなっている。
 
+トークンの**値**だけは例外的に `docs/design/` の外（`src/app/globals.css`）にある。
+Tailwind と shadcn/ui が直接読む形式が正本で、別形式の写しを持たないため（`tokens/_rules.md`）。
+`docs/design/tokens/_rules.md` は書き方の規約だけを持ち、値は持たない。
+
 ---
 
 ## レビュー観点（AI が機械的に検査する）
 
 - `_override.md` を経由しない直接編集の検出（上流との差分を取る）
 - 上流との差分の可視化（同期時に必ず提示する）
-- ui spec に登場するトークン名が `tokens.json` に存在するか
+- ui spec に登場するトークン名が `src/app/globals.css` に存在するか
 - design 配下から `docs/product/` への参照が発生していないか

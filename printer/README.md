@@ -22,7 +22,7 @@ Printer（デザイン資産層）の正本。Blueprint を画面として出力
 | ファイル | プロジェクト側の配置先 | 内容 |
 |---|---|---|
 | `design_rules.md` | `docs/design/_rules.md` | 汎用資産の運用規約（同期・override・非機能の横断ルール） |
-| `tokens_rules.md` | `docs/design/tokens/_rules.md` | 層構造・参照ルール・設計根拠・theme.css 生成手順 |
+| `tokens_rules.md` | `docs/design/tokens/_rules.md` | 層構造・参照ルール・shadcn 変数名の規約・設計根拠・検証項目（値は `src/app/globals.css`） |
 | `ui/_template.md` | `docs/design/ui/_template.md` | ui spec（usage / function / surface）の書き方 |
 | `layout/_template.md` | `docs/design/layout/_template.md` | layout spec（画面パターン）の書き方 |
 
