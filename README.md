@@ -48,7 +48,8 @@ curl -sL "${BASE_URL}/base_ops_incident.md" -o docs/base_ops_incident.md
     base_ux_checklist_high.md / base_ux_checklist_medium.md / base_ux_audit.md / base_ui_motion.md / base_chrome_devtools.md（.claude/docs/）
 - アクセシビリティ対応が必要 → base_a11y.md（.claude/docs/）
 - テスト戦略がほしい → base_testing.md（.claude/docs/）
-- Codex を実装・レビューに使う（開発パイプライン） → base_dev_pipeline.md / base_codex_review.md（.claude/docs/）
+- Codex を実装・レビューに使う（開発パイプライン）
+  → base_dev_pipeline.md / base_codex_review.md / base_agents_md.md（.claude/docs/）
 - 外部 npm パッケージを多用する
   → base_security_npm.md（.claude/rules/）
     base_security_npm_setup.md / base_security_npm_incident.md（.claude/docs/）
@@ -98,6 +99,10 @@ deck.md / content-list.md / {slug}.md / tokens.json は配置しない（空テ�
 
 `docs/` を「人間向け」と定義しない。`docs/product/`（Blueprint）と `docs/design/`（Printer 由来）は AI が参照することが前提で、読み手指定があると AI が `docs/` を読まない事故につながる。
 
+プロジェクトルートに置かれる `CLAUDE.md` と `AGENTS.md` は配布物ではなく、bootstrap guide の
+Phase 8 で作られる成果物。`AGENTS.md` は `CLAUDE.md` と `.claude/rules/` からの生成物で手編集禁止
+（生成仕様は `base_agents_md.md`）。
+
 ---
 
 ## ファイル構成
@@ -117,8 +122,9 @@ deck.md / content-list.md / {slug}.md / tokens.json は配置しない（空テ�
 | `base_security_npm_setup.md` | CI/GitHub 側の自動防御層（Dependabot, Dependency Review, CI audit）のセットアップ手順（初期化時に一度だけ実行） |
 | `base_security_npm_incident.md` | npm インシデント情報を受けたときの影響確認・対処手順（オンデマンド参照） |
 | `base_security_supabase.md` | Supabase セキュリティルール（RLS・キー管理・セッション検証・Storage）。Supabase 採用時のみ |
-| `base_dev_pipeline.md` | 開発パイプライン（spec 作成→設計レビュー→凍結→実装→品質レビュー→仕様突合）。spec テンプレート・AGENTS.md 雛形を含む |
+| `base_dev_pipeline.md` | 開発パイプライン（spec 作成→設計レビュー→凍結→実装→品質レビュー→仕様突合）。spec テンプレート・常時ルールに追記するゲートとレビュー観点を含む |
 | `base_codex_review.md` | Codex CLI・@codex review の機構（認証・コマンド・レビュー判断基準） |
+| `base_agents_md.md` | `AGENTS.md`（実装エージェント＝Codex への指示）の生成仕様・テンプレート・`/agents-md` の設置。CLAUDE.md + `.claude/rules/` からの一方向生成 |
 | `base_a11y.md` | アクセシビリティセットアップ（Playwright + jest-axe） |
 | `base_testing.md` | テスト戦略（vitest 単体 + Playwright E2E の層設計） |
 | `base_ux_checklist_critical.md` | UX チェックリスト（CRITICAL: 常時適用） |
@@ -184,14 +190,17 @@ bootstrap guide は `base_*` と `framework_*` を組み合わせた成果物と
 
 ```
 base_harness.md, base_security_env_setup.md, base_security_env.md, base_security_code.md,
-base_dev_pipeline.md, base_codex_review.md, base_a11y.md, base_ui_motion.md, base_storybook.md,
-base_ux_audit.md, framework_nextjs.md を参照して、
+base_dev_pipeline.md, base_codex_review.md, base_agents_md.md, base_a11y.md, base_ui_motion.md,
+base_storybook.md, base_ux_audit.md, framework_nextjs.md を参照して、
 Next.js プロジェクトのセットアップ手順を Phase 0 から順番に実行できる
 project_bootstrap_guide_nextjs.md を生成してください。
 
 CLAUDE.md の Phase では、手順やルールを本体に直接書き込まないこと。
 CLAUDE.md 本体は「タスク種別 → 参照ファイル」の読み分け表を中心に構成し、
 常時適用ルールは .claude/rules/ 側に置く前提で書いてください。
+
+AGENTS.md は手書きさせず、CLAUDE.md と .claude/rules/ を配置したあとの Phase で
+base_agents_md.md に従って生成する手順にしてください（ソースより先に生成できないため順序に注意）。
 
 ガイドの末尾に、以下を含めてください。
 - 運用開始後の参照先として docs/base_automation_roadmap.md と docs/base_ops_incident.md への1行ずつのポインタ
@@ -270,6 +279,8 @@ override に載っている変更は「独自変更」として扱い、上書�
 私が承認したファイルだけ上書きしてください。ローカル側に独自変更があるファイルは上書きせず、
 差分を示して相談してください。更新後のファイルに新しいセットアップ手順が含まれる場合は、
 実行前に内容を提示してください。
+最後に、上書きしたファイルに .claude/rules/ 配下のものが含まれる場合は、
+AGENTS.md が古くなるので /agents-md で再生成してください（AGENTS.md は手編集せず再生成する生成物）。
 ```
 
 ### このREADMEを更新するタイミング

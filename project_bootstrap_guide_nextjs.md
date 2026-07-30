@@ -14,6 +14,8 @@ Claude Code のハーネス・セキュリティ・テスト・アクセシビ�
 - Storybook → `base_storybook.md`
 - 開発パイプライン → `base_dev_pipeline.md`
 - Codex CLI・@codex review の機構 → `base_codex_review.md`
+- AGENTS.md（実装エージェントへの指示）の生成 → `base_agents_md.md`
+- UX 監査の運用 → `base_ux_audit.md`
 - フレームワーク固有 → `framework_nextjs.md`
 
 ---
@@ -1217,14 +1219,13 @@ mkdir -p .claude/commands docs/ux-audit
 `docs/specs/_template.md` を作成する（内容は `base_dev_pipeline.md` の「spec テンプレート」をコピー）。
 機能ごとに `docs/specs/{機能名}.md` へコピーして使う。
 
-### 7-2. AGENTS.md の配置
+### 7-2. AGENTS.md はここでは作らない（Phase 8-3 で生成する）
 
-プロジェクトルートに `AGENTS.md` を作成する（内容は `base_dev_pipeline.md` の「AGENTS.md 雛形」をコピーし、
-Review guidelines をプロジェクトの技術スタックに合わせて調整する）。
+実装エージェント（Codex）が読む `AGENTS.md` は手書きしない。`CLAUDE.md` の読み分け表と
+`.claude/rules/` の常時ルールから一方向生成する生成物として扱う（手編集禁止）。
 
-- 実装の原則: 凍結済み spec を正とする / テストファースト / judgment call で停止
-- 変更禁止領域: `.claude/` `.github/` ハーネス設定 / 凍結済み spec / `.env*`
-- Review guidelines: @codex review が参照するプロジェクト固有のレビュー観点
+ソースである `CLAUDE.md` と `.claude/rules/project_conventions.md` は Phase 8 で作るため、
+生成は **8-3** で行う。ここでは順序だけ確認しておく。
 
 AGENTS.md は guidance であって enforcement ではない。守りの実体が 2-6 の設定
 （Codex サンドボックス・branch protection・CI 禁止パスチェック）にあることを確認する。
@@ -1246,15 +1247,19 @@ AGENTS.md は guidance であって enforcement ではない。守りの実体�
 
 ---
 
-## Phase 8: 常時適用ルールと CLAUDE.md
+## Phase 8: 常時適用ルールと CLAUDE.md / AGENTS.md
 
 分担の原則:
 
 - **常時適用されるルールは `.claude/rules/`** に置く（毎セッション自動で読まれる）
 - **CLAUDE.md 本体は「タスク種別 → 参照ファイル」の読み分け表**。手順やルールを直接書かない
+- **AGENTS.md は上の2つからの生成物**。手書きせず、手編集もしない（8-3）
 
 CLAUDE.md にルールを書き込むと、量が増えるほど毎セッションのコンテキストを圧迫し、
 かつ `.claude/rules/` 側と二重管理になって片方が古くなる。CLAUDE.md は地図であって、マニュアルではない。
+
+この順序でしか作れない。`AGENTS.md` はソース（8-1・8-2）が揃ってからでないと生成できないため、
+8-1 → 8-2 → 8-3 の順に進める。
 
 ### 8-1. .claude/rules/project_conventions.md
 
@@ -1290,7 +1295,21 @@ CLAUDE.md にルールを書き込むと、量が増えるほど毎セッショ�
 
 認証・認可コード / 外部入力を DB・shell に渡す処理 / 新規 API エンドポイント /
 依存パッケージの追加・更新 のタイミングで `/security-review` を実行して報告する。
+
+## レビュー観点（@codex review が参照）
+
+- Prisma トランザクションが必要な箇所に抜け漏れがないか
+- ファイルアップロード処理でマジックナンバー検証が行われているか
+- PII のログ出力がないか
+- スキーマ / migration 変更がある場合、既存 API・型定義との整合と後方互換性
+- 新規・変更されたロジック層（Server Action / API / ユーティリティ）に対応するテストがあるか
+- 理由の書かれていない lint 抑制コメント（biome-ignore / oxlint-disable）がないか
+- spec の受け入れ条件とスコープに照らして、スコープ外の変更が混ざっていないか
 ```
+
+レビュー観点はプロジェクトの技術スタックに合わせて調整する。`AGENTS.md` に直接書かず
+このファイルに置くのは、`AGENTS.md` が生成物であり、常時ルールが 8-3 の生成で
+インライン展開されるため（ソースを一箇所に保つ）。
 
 ### 8-2. CLAUDE.md
 
@@ -1349,6 +1368,7 @@ pnpm storybook    # Storybook 起動
 | `tests/coverage-map.md` | テストコードのアノテーション |
 | `docs/ux-audit/*.md` | `/ux-audit` の実行結果 |
 | `docs/design/` 配下 | 上流（Printer）。逸脱は `docs/design/_override.md` に書く |
+| `AGENTS.md` | この `CLAUDE.md` + `.claude/rules/`（`/agents-md` で再生成） |
 | 設定ファイル一式 | `.claude/rules/project_conventions.md` の変更禁止リストを参照 |
 
 ## 参照ドキュメント索引
@@ -1366,6 +1386,7 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | 画面構成・レスポンシブの決定 | `docs/design/layout/{pattern}.md` |
 | トークンの追加・変更 | `docs/design/tokens/_rules.md` |
 | UI コンポーネントの実装・レビュー | 該当する `docs/design/ui/{component}.md`（固有仕様）と `.claude/docs/base_ux_checklist_high.md`（一般原則）の両方 |
+| ページ・フローの実装 | 該当する `docs/product/stories/{slug}.md`（受け入れ条件が実装対象）と `docs/design/layout/{pattern}.md` |
 | UX ヒューリスティック監査の実行 | `/ux-audit`（運用は `.claude/docs/base_ux_audit.md`） |
 | Story の作成・修正 | `docs/product/stories/_rules.md`（Storybook 環境は `.claude/docs/base_storybook.md`） |
 | アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
@@ -1376,7 +1397,8 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | SEO・メタデータの実装 | `.claude/docs/base_seo.md` |
 | パフォーマンス改善・予算の確認 | `.claude/docs/base_performance.md` |
 | リント・フォーマット・フックの設定変更 | `.claude/docs/base_harness.md` |
-| CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md` |
+| CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md`（編集後は `/agents-md` で AGENTS.md を再生成する） |
+| AGENTS.md の再生成・生成仕様の確認 | `.claude/docs/base_agents_md.md`（実行は `/agents-md`） |
 
 配置していないファイルの行はセットアップ時に削除する。
 
@@ -1412,6 +1434,28 @@ UI コンポーネントの実装・修正時は `{project-name}-sb-mcp` MCP ツ
 
 withAI 開発手法（Blueprint / Printer）を採用していない場合、`docs/product/` `docs/design/` の行と
 「節目に実行すること」の adopted 行は削除する。
+
+### 8-3. AGENTS.md の生成
+
+実装エージェント（Codex）向けの `AGENTS.md` を、8-2 の `CLAUDE.md` と `.claude/rules/` から生成する。
+手書きしない。生成仕様・テンプレート・抽出ルールは `.claude/docs/base_agents_md.md` が正。
+
+1. `.claude/docs/base_agents_md.md` の「セットアップ」節の内容をそのまま
+   `.claude/commands/agents-md.md` として配置する
+2. `/agents-md` を実行して、プロジェクトルートに `AGENTS.md` を生成する
+3. 生成結果を確認する（`.claude/rules/` の中身がインライン展開されていること、
+   参照表が実装系の行だけになっていること）
+
+```bash
+mkdir -p .claude/commands
+```
+
+- ソース: `CLAUDE.md`（読み分け表・手編集禁止一覧・完了の定義）+ `.claude/rules/` の全ファイル
+- 再生成のトリガー: 上記ソースを変更したとき（上流からの再同期を含む）
+- `AGENTS.md` は手編集しない。内容を変えたいときはソースを直して `/agents-md` を再実行する
+
+Codex は `AGENTS.md` を自動で読むが `.claude/rules/` は読まない。だからルールは参照リンクではなく
+インライン展開する。ここを参照リンクにすると、ルールが読まれないまま実装が始まる。
 
 ---
 
@@ -1481,17 +1525,25 @@ withAI 開発手法（Blueprint / Printer）を採用していない場合、`do
 ### 開発パイプラインの確認
 
 - [ ] `docs/specs/_template.md` が配置されている
-- [ ] プロジェクトルートに `AGENTS.md` が配置されている（Review guidelines をプロジェクトに合わせて調整済み）
 - [ ] @codex review の "Automatic reviews" がオンになっている
 - [ ] `~/.codex/config.toml` に workspace-write とネットワーク遮断が設定されている（2-6）
 - [ ] main の branch protection と CI 禁止パスチェックが設定されている
 
 ### 常時適用ルールと CLAUDE.md の確認
 
-- [ ] `.claude/rules/project_conventions.md` が配置されている（開発パイプラインの必須ゲートを含む）
+- [ ] `.claude/rules/project_conventions.md` が配置されている（開発パイプラインの必須ゲートとレビュー観点を含む）
 - [ ] プロジェクトルートに `CLAUDE.md` が配置されている（`{project-name}-sb-mcp` を書き換え済み）
 - [ ] CLAUDE.md 本体に手順やルールを直接書いていない（読み分け表・コマンド・完了の定義・手編集禁止一覧に収まっている）
 - [ ] 参照ドキュメント索引の、配置していないファイルの行を削除済み
+
+### AGENTS.md の確認
+
+- [ ] `.claude/commands/agents-md.md` が配置されている
+- [ ] `/agents-md` が実行でき、プロジェクトルートに `AGENTS.md` が生成される
+- [ ] `AGENTS.md` に `.claude/rules/` の中身がインライン展開されている（参照リンクで済ませていない）
+- [ ] `AGENTS.md` のタスク別参照表が実装系（`src/` / `tests/` を触る作業）の行だけになっている
+- [ ] `AGENTS.md` 冒頭に生成物ヘッダ（ソース・再生成コマンド・生成日）がある
+- [ ] `CLAUDE.md` の手編集禁止ファイル一覧に `AGENTS.md` の行がある
 
 ---
 

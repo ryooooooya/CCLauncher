@@ -239,6 +239,10 @@ protected="eslint.config biome.json pyproject.toml .prettierrc tsconfig.json lef
 
 ## CLAUDE.md の Next.js 固有セクション
 
+CLAUDE.md 本体は「タスク種別 → 参照ファイル」の読み分け表。常時適用ルールは書かない
+（`.claude/rules/project_conventions.md` の管轄）。ここに置くのは Next.js 固有の断片だけで、
+CLAUDE.md 全体の構成は bootstrap guide の Phase 8-2 が持つ。
+
 ```markdown
 ## プロジェクト概要
 
@@ -259,13 +263,6 @@ pnpm storybook    # Storybook 起動
 
 タスク完了時は `pnpm lint && pnpm typecheck && pnpm build` をすべて実行し、エラーがない状態でコミットすること。
 
-## ルール
-
-- named export を使う（default export は避ける。ただし Next.js の page / layout / route は除く）
-- コンポーネントは `src/components/` に配置する。shadcn/ui のコンポーネントは `src/components/ui/`
-- Server Components をデフォルトとし、クライアント状態が必要な場合のみ `"use client"` をつける
-- 新しいコンポーネントを作ったら Story も書く（shadcn/ui の素のコンポーネントは除く）
-
 ## アーキテクチャ
 
 \`\`\`
@@ -273,6 +270,7 @@ src/
 ├── app/              # App Router（page, layout, route）
 ├── components/       # UI コンポーネント
 │   └── ui/           # shadcn/ui コンポーネント
+├── prototypes/       # 検討用プロトタイプ（Storybook story）
 ├── lib/              # ユーティリティ・ヘルパー
 ├── hooks/            # カスタムフック
 └── types/            # 型定義
@@ -297,15 +295,16 @@ IMPORTANT: 以下の作業を始める前に、対応するファイルを必ず
 | UI コンポーネントの実装・レビュー | `.claude/docs/base_ux_checklist_high.md` |
 | アニメーション・インタラクションの実装 | `.claude/docs/base_ui_motion.md` |
 | テストの作成・修正 | `.claude/docs/base_testing.md` |
-| Story の作成・修正 | `.claude/docs/base_storybook.md` |
+| Story の作成・修正 | `docs/product/stories/_rules.md`（Storybook 環境は `.claude/docs/base_storybook.md`） |
 | a11y 対応・検証 | `.claude/docs/base_a11y.md` |
 | 実装計画・コミット前のレビュー | `.claude/docs/base_codex_review.md` |
+| AGENTS.md の再生成・生成仕様の確認 | `.claude/docs/base_agents_md.md`（実行は `/agents-md`） |
 | フレームワーク固有の規約・設定の確認 | `.claude/docs/framework_nextjs.md` |
 | ブラウザでの実行時デバッグ・パフォーマンス計測 | `.claude/docs/base_chrome_devtools.md` |
 | SEO・メタデータの実装 | `.claude/docs/base_seo.md` |
 | パフォーマンス改善・予算の確認 | `.claude/docs/base_performance.md` |
 | リント・フォーマット・フックの設定変更 | `.claude/docs/base_harness.md` |
-| CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md` |
+| CLAUDE.md 自体の編集 | `.claude/docs/base_claude_md_knowledge.md`（編集後は `/agents-md` で AGENTS.md を再生成する） |
 
 配置していないファイルの行はセットアップ時に削除する。
 

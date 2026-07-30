@@ -196,6 +196,19 @@ CLAUDE.md をテストするには、Claude Code に「CLAUDE.md の指示を5�
 
 チームで複数の AI コーディングツールを使う場合、AGENTS.md に共通指示を書き、CLAUDE.md には Claude 固有の設定だけを書くという運用が現実的。
 
+### このドキュメント体系での扱い（Claude 設計 + Codex 実装の分業）
+
+設計を Claude、実装を Codex に分ける運用では、上記の「共通指示を AGENTS.md に寄せる」形は採らない。
+ソースは CLAUDE.md 側（読み分け表）と `.claude/rules/`（常時ルール）に一本化し、
+AGENTS.md はそこから**一方向生成する生成物**として扱う（手編集禁止）。
+
+理由は、両方を手で保守すると必ず片方が古くなり、古い側を読んだエージェントが「正しいつもりで」
+仕様と違う実装を出すため。Codex は AGENTS.md を自動で読むが `.claude/rules/` は読まないので、
+常時ルールは参照リンクではなく生成時にインライン展開する。
+
+生成仕様・テンプレート・再生成コマンド（`/agents-md`）は `base_agents_md.md` が正。
+このファイルは CLAUDE.md 側の設計思想だけを扱い、AGENTS.md の中身は持たない。
+
 
 ## グローバル CLAUDE.md の活用例
 
@@ -238,6 +251,7 @@ lefthook 等でコミット前に typecheck、lint、format-check を並列実�
 | タスク種別→参照ファイルの読み分け表 | CLAUDE.md | CLAUDE.md 本体の主たる役割。地図であってマニュアルではない |
 | コマンド、アーキテクチャ概要、完了の定義、手編集禁止ファイル一覧 | CLAUDE.md | 毎セッション必要かつ短い |
 | 常時適用のコーディング規約・変更禁止・必須ゲート | .claude/rules/project_conventions.md | ルールは rules/ の管轄。CLAUDE.md に書くと二重管理になる |
+| 実装エージェント（Codex）向けの指示 | AGENTS.md（生成物） | CLAUDE.md の読み分け表と .claude/rules/ から一方向生成する。手編集しない（`base_agents_md.md`） |
 | セキュアコーディングルール | .claude/rules/security.md | 長いため分離 |
 | コードフォーマット | PostToolUse フック | 決定論的に処理 |
 | 設定ファイル保護 | PreToolUse フック | 物理的にブロック |
@@ -349,7 +363,10 @@ GitHub Issue 方式と併用する場合は、HANDOVER.md を `.gitignore` に�
 
 ## Codex との併用
 
-Claude Code と OpenAI の Codex CLI を同一端末にインストールすると、`codex exec` コマンドで相互に呼び出せる。実装計画のレビューとコードレビューを Codex に委任するワークフローが有効。
+Claude Code と OpenAI の Codex CLI を同一端末にインストールすると、`codex exec` コマンドで相互に呼び出せる。設計レビュー・実装・コードレビューを Codex に委任するワークフローが有効。
+
+役割分担（誰が設計し、誰が実装し、誰がレビューするか）は `base_dev_pipeline.md`、
+CLI の認証・コマンド・判断基準は `base_codex_review.md` が正。ここでは CLAUDE.md 側の扱いだけを述べる。
 
 ### 計画レビュー
 
@@ -357,11 +374,17 @@ Claude Code と OpenAI の Codex CLI を同一端末にインストールする�
 
 ### コードレビュー
 
-実装完了後、コミットハッシュを Codex に渡してレビュー。判断基準はセキュリティ・ロジックの問題は必ず修正、スタイル・命名の指摘は無視（リンターの仕事）。
+レビューは実装と別インスタンスで行う（実装セッションの `resume` では走らせない）。判断基準はセキュリティ・ロジックの問題は必ず修正、スタイル・命名の指摘は無視（リンターの仕事）。
 
 ### CLAUDE.md への組み込み方
 
-Codex レビューの手順は「毎セッション必要なワークフロー」なので CLAUDE.md に含める。コマンド例とプレースホルダを書いておけば、Claude が毎回正しい手順で実行する。
+手順そのものは CLAUDE.md に書かない。読み分け表に
+「Codex CLI のコマンド・レビュー判断基準 → `.claude/docs/base_codex_review.md`」の行を持たせ、
+必要になった時点で読みに来させる。
+
+CLAUDE.md 本体は読み分け表であり、ワークフローの手順書ではない。手順を本体に書くと、
+毎セッション使うわけではない長文が常時コンテキストを占め、かつ `.claude/docs/` 側と二重管理になる。
+「毎セッション必要か」ではなく「短い地図か、長い手順か」で配置を決める。
 
 
 ## /simplify の位置づけ
@@ -454,9 +477,9 @@ HumanLayer の Dex 氏が提案した手法。Claude Code は CLAUDE.md を `<sy
 - 大きくなったら `@import` や `.claude/rules/` で分割
 - Auto Memory との併用で、人間が書く指示と Claude が学ぶ知見を補完的に運用
 - Git にコミットしてチームで共有。CLAUDE.local.md で個人差分を管理
-- AGENTS.md との組み合わせでマルチツール環境にも対応
+- AGENTS.md との組み合わせでマルチツール環境にも対応。Claude 設計 + Codex 実装の分業では AGENTS.md を CLAUDE.md + .claude/rules/ からの生成物にする（手編集しない）
 - コードフォーマットはフックに、セキュリティルールは .claude/rules/ に、進捗は GitHub Issue に。CLAUDE.md は「目次」に徹する
-- Codex との併用で計画レビューとコードレビューを自動化。手順は CLAUDE.md に含める
+- Codex との併用で設計レビュー・実装・コードレビューを分担。手順は .claude/docs/ に置き、CLAUDE.md には読み分け表の行だけ持たせる
 - `/simplify` は都度ではなく、テスト通過後のリファクタリングフェーズでスポット実行
 - セキュリティはサンドボックス + settings.json deny + フックの多層防御。deny 単独には頼らない（.claudeignore は機能しないので使わない）
 - 遵守率が低い場合は `<important if>` タグを試せるが、まず CLAUDE.md を短くすることが先

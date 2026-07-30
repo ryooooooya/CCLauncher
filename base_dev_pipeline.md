@@ -2,8 +2,9 @@
 
 開発フローの大方針を定義するファイル。設計・実装・レビューを分離し、決定論的な enforcement の上で回す。
 
-- 設計エージェント（Claude Code）: spec 作成・仕様突合（仕様適合の判定）
-- 実装エージェント（Codex CLI）: 設計レビュー・実装
+- 設計エージェント（Claude Code）: Blueprint 構築（受け入れ条件のドラフト・棄却支援・整合性チェック・
+  プロトタイプ生成）、spec 作成、仕様突合（仕様適合の判定）。書き込む先は `docs/` と `src/prototypes/`
+- 実装エージェント（Codex CLI）: 設計レビュー・実装。書き込む先は `src/` と `tests/`（`docs/` は読み取り専用）
 - 品質レビュー: @codex review（GitHub、実装とは別インスタンス）
 
 役割はエージェントの「役割名」で固定し、特定のモデル名には固定しない（モデルは入れ替わる前提）。
@@ -41,14 +42,17 @@ CLI でレビューする場合も、実装セッションの `resume` ではな
 
 ---
 
-## 常時適用ルールに追記するゲート
+## 常時適用ルールに追記するもの
 
-以下のゲートだけを常時適用ルール（`.claude/rules/project_conventions.md`）に追記する。
+以下の2ブロック（必須ゲートとレビュー観点）だけを常時適用ルール
+（`.claude/rules/project_conventions.md`）に追記する。
 手順の本体はこのファイルに置き、ゲート発動時に読みに来させる。
 
 CLAUDE.md 本体には書かない。CLAUDE.md は「タスク種別 → 参照ファイル」の読み分け表であり、
 ルールは `.claude/rules/` の管轄という分担のため。CLAUDE.md 側には
 「機能実装の開始 → `.claude/docs/base_dev_pipeline.md`」の行だけを持たせる。
+
+### 必須ゲート
 
 ```markdown
 ### 開発パイプライン（必須ゲート）
@@ -59,6 +63,26 @@ CLAUDE.md 本体には書かない。CLAUDE.md は「タスク種別 → 参照�
   コミットメッセージまたは PR に明記する
 - 凍結後の spec 変更はユーザーの明示的な承認が必要
 ```
+
+### レビュー観点
+
+@codex review が参照するプロジェクト固有のレビュー観点も、同じ
+`.claude/rules/project_conventions.md` に置く。`AGENTS.md` に直接書かない。
+`AGENTS.md` は生成物で、常時ルールはそこにインライン展開されるため、ソースを一箇所に保てる。
+
+```markdown
+### レビュー観点（@codex review が参照）
+
+- Prisma トランザクションが必要な箇所に抜け漏れがないか
+- ファイルアップロード処理でマジックナンバー検証が行われているか
+- PII のログ出力がないか
+- スキーマ / migration 変更がある場合、既存 API・型定義との整合と後方互換性
+- 新規・変更されたロジック層（Server Action / API / ユーティリティ）に対応するテストがあるか
+- 理由の書かれていない lint 抑制コメント（biome-ignore / oxlint-disable）がないか
+- spec の受け入れ条件とスコープに照らして、スコープ外の変更が混ざっていないか
+```
+
+観点はプロジェクトの技術スタックに合わせて調整する。調整したら `/agents-md` で `AGENTS.md` を再生成する。
 
 ---
 
@@ -102,7 +126,8 @@ CLAUDE.md 本体には書かない。CLAUDE.md は「タスク種別 → 参照�
 
 ## 変更禁止領域への影響
 
-変更禁止領域（AGENTS.md 参照）に触れる必要があるか。ある場合は理由と、ユーザー承認の記録。
+変更禁止領域（`AGENTS.md` の「役割と書き込み境界」）に触れる必要があるか。
+ある場合は理由と、ユーザー承認の記録。
 
 ## テスト計画
 
@@ -111,46 +136,20 @@ CLAUDE.md 本体には書かない。CLAUDE.md は「タスク種別 → 参照�
 
 ---
 
-## AGENTS.md 雛形
+## AGENTS.md（実装エージェントへの指示）
 
-実装エージェント（Codex）向けの指示。プロジェクトルートに `AGENTS.md` として配置する。
-ここに書く内容は guidance であって enforcement ではない。守りの実体は
+実装エージェント（Codex）はこのファイルを読まない。読むのはプロジェクトルートの `AGENTS.md`。
+
+`AGENTS.md` は**手書きしない生成物**として扱う。`CLAUDE.md` の読み分け表（実装系の行）と
+`.claude/rules/` の常時ルールから一方向で生成する。生成仕様・テンプレート・再生成コマンドは
+`base_agents_md.md` が正。このファイルには雛形を置かない（二重管理を避けるため）。
+
+実装の原則（凍結済み spec を正とする・テストファースト・judgment call で停止する）と
+変更禁止領域は、`base_agents_md.md` の生成テンプレートのブロック 1・6 に含まれている。
+
+`AGENTS.md` に書く内容は guidance であって enforcement ではない。守りの実体は
 `base_security_env_setup.md` Step 5（Codex サンドボックス・permissions プロファイル・
 branch protection・CI 禁止パスチェック）に置く。
-
-```markdown
-# AGENTS.md
-
-## 実装の原則
-
-- `docs/specs/` の凍結済み spec を正とする。spec にない機能を追加しない。spec と矛盾する実装をしない
-- テストファーストで進める: 受け入れ条件に対応するテストを先に書き、赤を確認してから実装する
-- judgment call が必要になったら停止する: spec の隙間・矛盾・不明点を発見したら、自分で埋めずに
-  作業を止めて質問を返す。「妥当そうな解釈」で進めない
-- テストと実装を同じフェーズで同時に変更しない（`base_testing.md` のフェーズ分離ルール）
-
-## 変更禁止領域
-
-以下はいかなる理由でも変更しない。変更が必要だと判断した場合は停止して報告する:
-
-- `.claude/`（設定・フック・ルール）
-- `.github/`（CI ワークフロー）
-- `lefthook.yml` / `biome.json` / `.oxlintrc.json` / `tsconfig.json` / `vitest.config.ts` / `lighthouserc.json`
-- `docs/specs/` の凍結済み spec
-- `.env*` および認証情報ファイル（読み取りも禁止）
-
-## Review guidelines
-
-- Prisma トランザクションが必要な箇所に抜け漏れがないか確認する
-- ファイルアップロード処理でマジックナンバー検証が行われているか
-- PII のログ出力がないか確認する
-- スキーマ / migration 変更がある場合、既存 API・型定義との整合と後方互換性を確認する
-- 新規・変更されたロジック層（Server Action / API / ユーティリティ）に対応するテストがあるか確認する
-- 理由の書かれていない lint 抑制コメント（biome-ignore / oxlint-disable）がないか確認する
-- spec の受け入れ条件とスコープに照らして、スコープ外の変更が混ざっていないか確認する
-```
-
-Review guidelines はプロジェクトの技術スタックに合わせて調整する（@codex review が参照する）。
 
 ---
 
@@ -184,6 +183,7 @@ AGENTS.md・spec の文言はエージェントへの指示にすぎず、破ら
 
 ## 関連ファイル
 
+- `base_agents_md.md`: `AGENTS.md`（実装エージェントへの指示）の生成仕様・テンプレート・再生成コマンド
 - `base_codex_review.md`: Codex CLI の認証・コマンド・レビュー判断基準・@codex review 設定
 - `base_security_env_setup.md` Step 5: Codex 実装経路の enforcement
 - `base_preflight.md`: Phase 0 の前提確認（Step 5 の書き出し先は spec の技術設計節）
