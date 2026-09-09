@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/supabase.md](recipes/supabase.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_security_supabase
 
 このファイルに書かれたルールは、Supabase を使うすべての場面（テーブル作成・クエリ・認証・Storage・スキーマ変更）で常に適用すること。

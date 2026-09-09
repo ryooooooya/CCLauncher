@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/seo.md](recipes/seo.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_seo
 
 SEO・メタデータの実装ルール。公開ページを持つプロジェクトで、SEO 対応が必要な場合に参照する。

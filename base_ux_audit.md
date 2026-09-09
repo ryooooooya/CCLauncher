@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/ux-audit.md](recipes/ux-audit.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_ux_audit
 
 汎用 UX ヒューリスティック（HIGH / MEDIUM）を、節目に走らせる**監査**として運用するための仕組み。

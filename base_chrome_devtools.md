@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/browser-debugging.md](recipes/browser-debugging.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_chrome_devtools
 
 Chrome DevTools for agents（chrome-devtools-mcp）を Claude Code の開発フローに組み込むためのセットアップガイド。

@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/accessibility.md](recipes/accessibility.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_a11y
 
 Next.js + GitHub Actions + Playwright + Jest/Vitest 環境でのアクセシビリティ担保セットアップガイド。

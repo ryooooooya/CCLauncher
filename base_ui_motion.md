@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/ui-motion.md](recipes/ui-motion.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_ui_motion
 
 UIの触感・質感に関するルール。アニメーション、インタラクションフィードバック、ジェスチャー応答を対象とする。

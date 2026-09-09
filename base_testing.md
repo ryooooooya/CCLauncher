@@ -1,3 +1,5 @@
+> Technology-specific guidance: [recipes/nextjs.md](recipes/nextjs.md) and [recipe index](recipes/README.md).
+
 # base_testing
 
 > Legacy移行資料: 新coreの原則は [testing](standards/testing.md) を参照。以下の旧ルール・実装例は新規baselineへ適用せず、技術固有の移行と旧文書削除は後続Issueで行う。

@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/ui-ux-tooling.md](recipes/ui-ux-tooling.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # ui_ux_skills_setup_guide
 
 3つのUI/UXスキルとチェックリストをClaude Codeで併用するためのセットアップガイド。

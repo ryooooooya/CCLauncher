@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/operations.md](recipes/operations.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_ops_incident
 
 Web サービスの本番障害が起きたときに参照する手順書。障害の最中に考える量を最小にするため、判断フローと準備事項を平時に固定しておく。

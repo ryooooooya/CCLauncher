@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/nextjs.md](recipes/nextjs.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_harness
 
 Claude Code + TypeScript プロジェクトにおけるハーネス設定。

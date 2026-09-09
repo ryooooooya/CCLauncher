@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/npm-security.md](recipes/npm-security.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_security_npm_incident
 
 npm サプライチェーンインシデントの影響確認・対処手順。
