@@ -27,7 +27,7 @@ npm pack
 | `methods/` | 任意採用の開発手法。Blueprint / Printerはここへ移行 |
 | `src/cli/` | 決定論的な初期化・知識取得・診断 |
 
-境界と共存方針は [architecture](docs/architecture.md)、旧文書ごとの移行先は [migration map](docs/migration.md) を参照してください。#2では置き場と責務を定義し、本文の整理・移行は#3〜#8で行います。ディレクトリのREADMEは管理者向け索引で、consumerへ配布しません。
+境界と共存方針は [architecture](docs/architecture.md)、旧文書ごとの移行先は [migration map](docs/migration.md) を参照してください。#2では置き場と責務を定義し、本文の整理・移行は#3〜#8で行います。#3の [security / dependencies / testing / privacy標準](standards/README.md) は参照可能です。packageへの収録とconsumer向け検証の実装は後続Issueです。ディレクトリのREADMEは管理者向け索引で、consumerへ配布しません。
 
 ## Legacy documentation — migration reference only
 

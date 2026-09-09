@@ -1,5 +1,7 @@
 # base_security_npm
 
+> Legacy移行資料: 新coreの原則は [dependencies](standards/dependencies.md) を参照。以下の旧ルール・実装例は新規baselineへ適用せず、技術固有の移行と旧文書削除は後続Issueで行う。
+
 このファイルに書かれたルールは、npm パッケージの追加・更新・監査に関わるすべての場面で適用すること。
 `base_security_code.md` セクション14「依存関係」を補完する詳細手順。
 

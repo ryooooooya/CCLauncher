@@ -1,5 +1,7 @@
 # base_testing
 
+> Legacy移行資料: 新coreの原則は [testing](standards/testing.md) を参照。以下の旧ルール・実装例は新規baselineへ適用せず、技術固有の移行と旧文書削除は後続Issueで行う。
+
 Claude Code + TypeScript プロジェクトにおけるテスト戦略。
 何を・どのツールで・どこまでテストするかを定義し、AI コーディング特有の「テストを勝手に消す/弱める」問題への対処を含む。
 

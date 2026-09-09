@@ -1,5 +1,7 @@
 # base_security_code
 
+> Legacy移行資料: 新coreの原則は [web-security](standards/web-security.md) を参照。以下の旧ルール・実装例は新規baselineへ適用せず、技術固有の移行と旧文書削除は後続Issueで行う。
+
 このファイルに書かれたルールは、コードを生成・編集するすべての場面で常に適用すること。
 ユーザーから明示的に例外を求められた場合は、理由を確認してから対応する。
 
