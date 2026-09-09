@@ -16,6 +16,19 @@ npm pack
 
 導入・更新・公開・protected-main運用は [配布方針](docs/distribution.md) を参照してください。新方式ではexact versionとlockfileで配布物を固定します。mainのraw URL取得による新規bootstrapは廃止方針です。
 
+## 新しいディレクトリ構成
+
+| ディレクトリ | 責務 |
+|---|---|
+| `standards/` | フレームワーク非依存の原則 |
+| `recipes/` | 技術別・タスク別に読む知識 |
+| `templates/` | consumerへ生成する最小ファイル |
+| `adapters/` | エージェント・ツール固有の設定 |
+| `methods/` | 任意採用の開発手法。Blueprint / Printerはここへ移行 |
+| `src/cli/` | 決定論的な初期化・知識取得・診断 |
+
+境界と共存方針は [architecture](docs/architecture.md)、旧文書ごとの移行先は [migration map](docs/migration.md) を参照してください。#2では置き場と責務を定義し、本文の整理・移行は#3〜#8で行います。ディレクトリのREADMEは管理者向け索引で、consumerへ配布しません。
+
 ## Legacy documentation — migration reference only
 
 以下は既存プロジェクトの移行用資料です。旧方式の配置・生成・更新ルールを新packageの開発に適用しないでください。旧文書本体は段階的な移行が終わるまで残します。

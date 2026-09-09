@@ -12,7 +12,7 @@ pnpm verify
 npm pack
 ```
 
-`dist/` is regenerated from source. The emitted manifest records the package version and SHA-256 of the CLI. It is an inventory, not an independent trust anchor. Package integrity comes from the consumer lockfile and release provenance. Source manifest entries remain empty until knowledge packaging is implemented in Phase 2; the build rejects nonempty entries to prevent silently omitting assets.
+`dist/` is regenerated from source. The emitted manifest records the package version and SHA-256 of the CLI. It is an inventory, not an independent trust anchor. Package integrity comes from the consumer lockfile and release provenance. Issue #2 defines the directory contracts; source manifest entries remain empty until knowledge packaging is implemented with the CLI in #5. The build rejects nonempty entries to prevent silently omitting assets. See [architecture](architecture.md) for these staged boundaries.
 
 The package allowlist excludes legacy documents, source, tests and maintainer files. There is no network access or installation hook in the CLI. Phase 1 implements only help/version; it cannot initialize a webapp yet.
 

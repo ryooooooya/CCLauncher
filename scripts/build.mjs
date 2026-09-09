@@ -8,7 +8,8 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 const manifest = JSON.parse(readFileSync(resolve(root, 'manifest.json'), 'utf8'));
 if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.entries)) throw new Error('Invalid manifest');
-// Knowledge is introduced in Phase 2. Do not silently publish unhandled entries.
+// Issue #5 adds knowledge packaging after the directory/content migrations.
+// Do not silently publish unhandled entries.
 if (manifest.entries.length !== 0) throw new Error('Knowledge packaging must be implemented before adding manifest entries');
 const source = resolve(root, 'src/cli/index.js');
 execFileSync(process.execPath, ['--check', source]);
