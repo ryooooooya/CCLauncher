@@ -1,114 +1,24 @@
-# README
+# CCLauncher
 
-Claude Code でのプロジェクト開発を支援するドキュメント群。
-bootstrap guide の生成・更新と、各種設定の参照に使う。対象フレームワークは Next.js（App Router）。
+CCLauncher is a model-agnostic development harness for building secure web applications with AI coding agents.
 
----
+AIコーディングエージェントでセキュアなWebアプリを作るための、モデル非依存の開発ハーネスへ移行中です。
 
-## 配布と取得
+## Phase 1: versioned package
 
-ドキュメントは GitHub リポジトリで管理・配布する。
+今回追加したのは配布基盤です。`@ryooooooya/cclauncher@0.1.0` のビルド・tarballインストール・CLIのhelp/versionを提供します。npmへの公開はまだ行っていません。`init / recipe / context / doctor` とWebappテンプレートは後続Issueで実装します。
 
-- リポジトリ: https://github.com/ryooooooya/CCLauncher
-
-ドキュメントの正本はこのリポジトリ。Claude のプロジェクトナレッジにはファイルを置かず、
-参照・編集の際は raw URL（https://raw.githubusercontent.com/ryooooooya/CCLauncher/main/<ファイル名>）
-から常に最新版を取得する。
-
-新規プロジェクトの開始は、次節の固定 bootstrap プロンプトを Claude Code に貼り付けるだけでよい。
-
----
-
-## 固定 bootstrap プロンプト
-
-新規 Next.js プロジェクトのディレクトリで Claude Code を起動し、以下をそのまま貼り付ける。
-
-```
-新規 Next.js プロジェクトをセットアップします。以下を順に実行してください。
-
-1. 必須ドキュメントを取得して配置する:
-
-BASE_URL="https://raw.githubusercontent.com/ryooooooya/CCLauncher/main"
-mkdir -p .claude/rules .claude/docs docs
-curl -sL "${BASE_URL}/base_security_env.md" -o .claude/rules/base_security_env.md
-curl -sL "${BASE_URL}/base_security_code.md" -o .claude/rules/base_security_code.md
-curl -sL "${BASE_URL}/project_bootstrap_guide_nextjs.md" -o .claude/docs/project_bootstrap_guide_nextjs.md
-curl -sL "${BASE_URL}/framework_nextjs.md" -o .claude/docs/framework_nextjs.md
-curl -sL "${BASE_URL}/base_harness.md" -o .claude/docs/base_harness.md
-curl -sL "${BASE_URL}/base_security_env_setup.md" -o .claude/docs/base_security_env_setup.md
-curl -sL "${BASE_URL}/base_preflight.md" -o .claude/docs/base_preflight.md
-curl -sL "${BASE_URL}/base_automation_roadmap.md" -o docs/base_automation_roadmap.md
-curl -sL "${BASE_URL}/base_ops_incident.md" -o docs/base_ops_incident.md
-
-2. 以下のオプション機能の要否を私に確認し、採用するものだけ同じ BASE_URL から追加取得して
-   指定の配置先に置く:
-
-- UI コンポーネントの実装がある
-  → base_ux_checklist_critical.md（.claude/rules/）
-    base_ux_checklist_high.md / base_ux_checklist_medium.md / base_ux_audit.md / base_ui_motion.md / base_chrome_devtools.md（.claude/docs/）
-- アクセシビリティ対応が必要 → base_a11y.md（.claude/docs/）
-- テスト戦略がほしい → base_testing.md（.claude/docs/）
-- Codex を実装・レビューに使う（開発パイプライン）
-  → base_dev_pipeline.md / base_codex_review.md / base_agents_md.md（.claude/docs/）
-- 外部 npm パッケージを多用する
-  → base_security_npm.md（.claude/rules/）
-    base_security_npm_setup.md / base_security_npm_incident.md（.claude/docs/）
-- Supabase を使う → base_security_supabase.md（.claude/rules/）
-- SEO 対応が必要 → base_seo.md（.claude/docs/）
-- パフォーマンス基準を CI で守る → base_performance.md（.claude/docs/）
-- エラー監視（Sentry）を入れる → base_sentry_setup.md（.claude/docs/）
-- 個人情報を扱う → base_privacy_guide.md（docs/）
-- Storybook でコンポーネント管理する → base_storybook.md（.claude/docs/）
-- カスタム Skill を作る予定 → base_skill_md_prompt.md（.claude/docs/）
-- CLAUDE.md の設計知識がほしい → base_claude_md_knowledge.md（docs/）
-- 人間向けのセキュリティ解説もほしい → base_security_env_guide.md / base_security_code_guide.md（docs/）
-- withAI 開発手法（Blueprint / Printer）でドキュメント駆動する → 下の 2-1 を実行する
-
-2-1. withAI 開発手法を採用する場合のみ、以下を実行する（規約とテンプレのみ。
-     プロジェクト固有の内容が入るファイルは配置しない）。
-     印刷（/print）の出力が Storybook story なので、Storybook も併せて採用する:
-
-mkdir -p docs/product/stories docs/design/tokens docs/design/ui docs/design/layout
-curl -sL "${BASE_URL}/blueprint_docs_rules.md" -o docs/_rules.md
-curl -sL "${BASE_URL}/blueprint_deck_template.md" -o docs/product/_deck_template.md
-curl -sL "${BASE_URL}/blueprint_stories_rules.md" -o docs/product/stories/_rules.md
-curl -sL "${BASE_URL}/blueprint_stories_template.md" -o docs/product/stories/_template.md
-curl -sL "${BASE_URL}/printer/design_rules.md" -o docs/design/_rules.md
-curl -sL "${BASE_URL}/printer/tokens_rules.md" -o docs/design/tokens/_rules.md
-curl -sL "${BASE_URL}/printer/ui/_template.md" -o docs/design/ui/_template.md
-curl -sL "${BASE_URL}/printer/layout/_template.md" -o docs/design/layout/_template.md
-curl -sL "${BASE_URL}/base_print.md" -o .claude/docs/base_print.md
-
-deck.md / content-list.md / {slug}.md は配置しない（空テンプレは置かない）。
-トークンの値は src/app/globals.css が正本なので、docs 配下に値のファイルは作らない。
-これらはセットアップ完了後に、bootstrap guide 末尾の「Launcher 工程の続き」の順で、
-deck インタビュー（`docs/product/_deck_template.md` の問いを台本にした対話）から作成する。
-
-3. 配置が終わったら .claude/docs/project_bootstrap_guide_nextjs.md を読み、
-   Phase 0 から順にセットアップを進めてください。
+```sh
+pnpm install --frozen-lockfile --ignore-scripts
+pnpm verify
+npm pack
 ```
 
-### ドキュメントの配置先
+導入・更新・公開・protected-main運用は [配布方針](docs/distribution.md) を参照してください。新方式ではexact versionとlockfileで配布物を固定します。mainのraw URL取得による新規bootstrapは廃止方針です。
 
-固定プロンプトは以下のルールでドキュメントの配置先を決めている。
+## Legacy documentation — migration reference only
 
-配置先は**読み込みタイミングだけ**で定義する。読み手（人間向け／AI 向け）では分けない。
-
-| 配置先 | 読み込みタイミング |
-|---|---|
-| `.claude/rules/` | 毎セッション自動読み込み（常時適用） |
-| `.claude/docs/` | タスク別に参照（セットアップ手順・作業時の参照ドキュメント） |
-| `docs/` | タスク別に参照（プロジェクトの記録・解説・Blueprint / Printer 由来のドキュメント） |
-
-`.claude/rules/` に入るのは禁止事項・セキュアコーディング・npm セキュリティ・UX CRITICAL・Supabase 認可境界など「常時適用」のルールのみ。解説・背景ドキュメント（`*_guide.md` 等）と Blueprint / Printer のドキュメントは `docs/`、その他はすべて `.claude/docs/`。
-
-`docs/` を「人間向け」と定義しない。`docs/product/`（Blueprint）と `docs/design/`（Printer 由来）は AI が参照することが前提で、読み手指定があると AI が `docs/` を読まない事故につながる。
-
-プロジェクトルートに置かれる `CLAUDE.md` と `AGENTS.md` は配布物ではなく、bootstrap guide の
-Phase 8 で作られる成果物。`AGENTS.md` は `CLAUDE.md` と `.claude/rules/` からの生成物で手編集禁止
-（生成仕様は `base_agents_md.md`）。
-
----
+以下は既存プロジェクトの移行用資料です。旧方式の配置・生成・更新ルールを新packageの開発に適用しないでください。旧文書本体は段階的な移行が終わるまで残します。
 
 ## ファイル構成
 
