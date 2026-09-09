@@ -1,5 +1,7 @@
 # base_security_code_guide
 
+> Legacy移行資料: 新coreの原則は [web-security](standards/web-security.md) を参照。以下の旧ルール・実装例は新規baselineへ適用せず、技術固有の移行と旧文書削除は後続Issueで行う。
+
 Claude Code が書くコードに脆弱性を混入させないための対策。
 Layer 1（Claude Code 自体の制御）とは独立した問題。
 

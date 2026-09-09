@@ -1,6 +1,6 @@
 # Legacy migration map
 
-Every document tracked before the package migration has an entry below. Destinations are planned paths, not links to completed files. All rows are **pending content migration**, except the architecture contract and README navigation introduced in #2.
+Every document tracked before the package migration has an entry below. Destinations are planned paths, not links to completed files. Rows remain pending except the architecture contract and README navigation from #2 and the standard portions listed in the progress section below. Legacy removal remains #9.
 
 When completing a row, record its implementation PR and update its status here. A multi-destination row requires splitting responsibilities, not copying the same text to each destination. REMOVE means removal only after the replacement is verified in #9.
 
@@ -62,3 +62,16 @@ The new directory indexes and this migration map are maintainer documentation. T
 The new core does not inherit the legacy rules requiring generated AGENTS.md, full rule inlining, named-model assignment or mutable raw-main retrieval. Existing consumer projects remain untouched during this migration; package updates do not rewrite their decisions.
 
 MIT is the approved future license direction. Content migrations should record provenance and retain required third-party attribution before formal MIT application. npm publication is deferred and does not block these migrations.
+
+## Issue #3 progress
+
+| Source scope | New standard | Remaining work |
+|---|---|---|
+| base_security_code.md + base_security_code_guide.md: generic security | standards/web-security.md | Framework/quality material in #4; legacy removal #9 |
+| base_security_npm.md: generic dependency policy | standards/dependencies.md | npm procedures and incident recipe #4; CI template #6 |
+| base_testing.md: test strategy | standards/testing.md | Runner setup in #4 and executable consumer tests #6 |
+| base_privacy_guide.md: data-handling principles | standards/privacy.md | Service-specific legal decisions stay in consumer docs; legacy removal #9 |
+
+The four standards are newly written concise policies, with primary references checked on 2026-09-09. They contain no copied third-party code samples. This does not complete the repository-wide provenance/license review. Legacy standalone files remain frozen migration references and carry pointers to their replacements; rules are not synchronized back into them or generated bootstrap documents.
+
+Removed from new generic security: self-built JWT/password examples, mandatory sanitizer for ordinary text rendering, tool-specific review commands, naming/lint/type conventions and unsupported vulnerability statistics. Framework-specific quality/setup content remains assigned to #4; it is not silently treated as migrated. No legal-compliance guarantee is made by the privacy standard.

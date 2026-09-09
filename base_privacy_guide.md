@@ -1,5 +1,7 @@
 # base_privacy_guide
 
+> Legacy移行資料: 新coreの原則は [privacy](standards/privacy.md) を参照。以下の旧ルール・実装例は新規baselineへ適用せず、技術固有の移行と旧文書削除は後続Issueで行う。
+
 個人情報・プライバシー対応の実装チェックリスト（人間向けガイド）。
 `base_preflight.md` Step 4 が「適用法に触れるかの判定」を担い、このファイルは「触れると判定した後に何を実装・掲載するか」を扱う。
 
