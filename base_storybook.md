@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/storybook.md](recipes/storybook.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_storybook
 
 Storybook + AI 連携（MCP server + Manifest）のセットアップと運用ルール。

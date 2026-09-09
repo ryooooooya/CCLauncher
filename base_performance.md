@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/performance.md](recipes/performance.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_performance
 
 パフォーマンスの基準（予算）と、劣化を CI で自動検知する仕組み。

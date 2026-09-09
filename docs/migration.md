@@ -1,6 +1,6 @@
 # Legacy migration map
 
-Every document tracked before the package migration has an entry below. Destinations are planned paths, not links to completed files. Rows remain pending except the architecture contract and README navigation from #2 and the standard portions listed in the progress section below. Legacy removal remains #9.
+Every document tracked before the package migration has an entry below. Destinations are planned paths, not links to completed files. Rows remain pending except the architecture contract and README navigation from #2 and the standard/recipe portions listed in the progress sections below. Legacy removal remains #9.
 
 When completing a row, record its implementation PR and update its status here. A multi-destination row requires splitting responsibilities, not copying the same text to each destination. REMOVE means removal only after the replacement is verified in #9.
 
@@ -75,3 +75,23 @@ MIT is the approved future license direction. Content migrations should record p
 The four standards are newly written concise policies, with primary references checked on 2026-09-09. They contain no copied third-party code samples. This does not complete the repository-wide provenance/license review. Legacy standalone files remain frozen migration references and carry pointers to their replacements; rules are not synchronized back into them or generated bootstrap documents.
 
 Removed from new generic security: self-built JWT/password examples, mandatory sanitizer for ordinary text rendering, tool-specific review commands, naming/lint/type conventions and unsupported vulnerability statistics. Framework-specific quality/setup content remains assigned to #4; it is not silently treated as migrated. No legal-compliance guarantee is made by the privacy standard.
+
+## Issue #4 progress
+
+| Source scope | New recipe | Remaining work |
+|---|---|---|
+| framework_nextjs + base_harness + security_code quality | nextjs | Executable webapp harness #6 |
+| base_security_supabase | supabase | Runnable consumer DB fixtures/tests #6 |
+| New provider alternative | authjs | Provider-specific consumer integration when selected |
+| base_security_npm + setup + incident: procedures | npm-security | Consumer CI #6 |
+| base_a11y + base_testing: tool-specific verification | accessibility + nextjs + storybook | Executable consumer tests #6 |
+| base_storybook / base_ui_motion / base_chrome_devtools | storybook / ui-motion / browser-debugging | Agent tool wiring #7 |
+| base_seo / base_performance / base_sentry_setup / base_ops_incident | seo / performance / sentry / operations | Project-specific budgets, credentials and runbooks |
+| base_ux_audit + three UX checklists | ux-audit | Agent command wiring #7 |
+| ui_ux_skills_setup_guide: tool selection | ui-ux-tooling | Agent integration #7; obsolete installation guide removal #9 |
+
+Implementation: Issue #4, branch `codex/issue-4-technology-recipes`. Fourteen concise recipes now have id / verified / applies / topics metadata and primary-source references checked on 2026-09-09. This date records documentation verification, not runtime execution of every integration. Supabase grants/RLS/DB tests, identity APIs, current Next.js lint invocation and reduced lint scope replace the legacy setup assumptions.
+
+Legacy source files stay in place with migration pointers until #9. They are frozen references, not instructions for new consumers. Shared standards remain canonical. Removed from new recipes: unconditional latest-version installers, named-agent commands, default third-party design plugin installation, automatic universal telemetry sampling values, fixed lint stacks and blanket rule-copying. Source references identify provenance; third-party code samples and checklist text were not copied. Repository-wide license review and npm publication remain deferred.
+
+Recipe package inclusion, explicit config/topic mapping, deterministic offline lookup and freshness diagnostics remain #5. This PR does not change package artifacts or manifest entries. Consumer executable integrations remain #6; adapters #7. Guidance is not reported as passing security tests.

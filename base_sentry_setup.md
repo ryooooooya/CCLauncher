@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/sentry.md](recipes/sentry.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # base_sentry_setup
 
 Sentry によるエラー監視のセットアップ手順。プロジェクト初期化時（またはリリース前）に一度だけ実行する。

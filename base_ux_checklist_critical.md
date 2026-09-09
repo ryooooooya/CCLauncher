@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/ux-audit.md](recipes/ux-audit.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # ux_checklist_critical
 
 UI/UXの最重要ルール。UIを作成・編集するすべての場面で適用する。

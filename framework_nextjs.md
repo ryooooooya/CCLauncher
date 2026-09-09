@@ -1,3 +1,5 @@
+> Legacy migration reference. New guidance: [recipes/nextjs.md](recipes/nextjs.md). Agent wiring and executable templates migrate separately; do not use this legacy setup for new consumers. Removal is planned in Issue #9.
+
 # framework_nextjs
 
 Next.js (App Router) + TypeScript + Tailwind CSS + shadcn/ui 固有の設定。
