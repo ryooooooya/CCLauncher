@@ -28,14 +28,14 @@
 - `applies`: 対象技術の非空配列。版を含む項目は適用範囲の説明で、semver rangeではない。
 - `topics`: 関連する作業topicの非空配列。標準topic以外のUI・監視等も使える。
 
-技術名・topicからの選択は#5で明示的なmappingとして実装する。例えばconfigの`framework: nextjs`と`nextjs-16`の対応を定義し、自由文のAI解釈で選ばない。metadataだけで非互換を推測せず、doctorの互換性判定には別途検証済みの条件を使う。
+技術名・topicからの選択は#5のmanifestに明示的なmappingとして実装した。例えばconfigの`framework: nextjs`と`nextjs-16`の対応を定義し、自由文のAI解釈で選ばない。metadataだけで非互換を推測せず、doctorの互換性判定には別途検証済みの条件を使う。
 
 更新時は採用版の公式資料を再確認して本文・verifiedを同じPRで更新する。古さの検知はdoctorで報告し、consumer docsやpackageを自動更新しない。source URLは確認根拠であり、実行時に内容を取得する指示ではない。
 
 ## 移行中の配布境界
 
-Issue #4で本文を整備した。現時点ではrepository内で参照でき、package収録・offline recipe取得・決定論的contextは#5で実装する。今のmanifestは空のまま維持する。
+Issue #4で本文を整備し、#5でpackage収録・offline recipe取得・決定論的contextを実装した。利用方法は [CLI guide](../docs/cli.md) を参照する。
 
-収録後はconsumerが固定したpackage versionの本文をそのまま返す。同じ版の参照中に外部取得やAI要約で本文を変えず、recipe本文をconsumerへ大量コピーしない。公式APIの採用版との差異は明示して判断する。
+consumerが固定したpackage versionの本文をそのまま返す。同じ版の参照中に外部取得やAI要約で本文を変えず、recipe本文をconsumerへ大量コピーしない。公式APIの採用版との差異は明示して判断する。
 
 [Architecture](../docs/architecture.md) / [Migration map](../docs/migration.md)。本索引は管理者向けで、consumer templateには含めない。

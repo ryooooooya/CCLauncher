@@ -4,9 +4,9 @@ CCLauncher is a model-agnostic development harness for building secure web appli
 
 AIコーディングエージェントでセキュアなWebアプリを作るための、モデル非依存の開発ハーネスへ移行中です。
 
-## Phase 1: versioned package
+## Versioned package + CLI
 
-今回追加したのは配布基盤です。`@ryooooooya/cclauncher@0.1.0` のビルド・tarballインストール・CLIのhelp/versionを提供します。npmへの公開はまだ行っていません。`init / recipe / context / doctor` とWebappテンプレートは後続Issueで実装します。
+`@ryooooooya/cclauncher@0.1.0` は開発中・npm未公開です。tarball配布、`init / recipe / context / doctor`、package内のstandards / recipesを実装しました。使い方は [CLI guide](docs/cli.md) を参照してください。initはproject docsと検証の土台を作り、実アプリ・provider別security testsのテンプレートは#6で追加します。
 
 ```sh
 pnpm install --frozen-lockfile --ignore-scripts
@@ -27,7 +27,7 @@ npm pack
 | `methods/` | 任意採用の開発手法。Blueprint / Printerはここへ移行 |
 | `src/cli/` | 決定論的な初期化・知識取得・診断 |
 
-境界と共存方針は [architecture](docs/architecture.md)、旧文書ごとの移行先は [migration map](docs/migration.md) を参照してください。#2では置き場と責務を定義し、本文の整理・移行は#3〜#8で行います。#3の [security / dependencies / testing / privacy標準](standards/README.md) と#4の [技術別recipes](recipes/README.md) は参照可能です。packageへの収録とconsumer向け検証の実装は後続Issueです。ディレクトリのREADMEは管理者向け索引で、consumerへ配布しません。
+境界と共存方針は [architecture](docs/architecture.md)、旧文書ごとの移行先は [migration map](docs/migration.md) を参照してください。#2では置き場と責務を定義し、本文の整理・移行は#3〜#8で行います。#3の [security / dependencies / testing / privacy標準](standards/README.md) と#4の [技術別recipes](recipes/README.md) は参照可能です。package収録とCLI取得は#5、consumer向け実行可能な検証は#6です。ディレクトリのREADMEは管理者向け索引で、consumerへ配布しません。
 
 ## Legacy documentation — migration reference only
 

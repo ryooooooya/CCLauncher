@@ -57,7 +57,7 @@ When completing a row, record its implementation PR and update its status here. 
 
 Files introduced by #10 keep their current paths: package.json, pnpm-lock.yaml, .npmrc, .gitignore, tsconfig.json, manifest.json, src/cli/index.js, scripts/, tests/, .github/ and docs/distribution.md. They are the new package foundation, not legacy documents.
 
-The new directory indexes and this migration map are maintainer documentation. They are not entries in the package manifest or consumer templates. The build's empty-entry guard stays in place until content packaging is implemented.
+The new directory indexes and this migration map are maintainer documentation. They are not entries in the package manifest or consumer templates. Issue #5 replaces the original empty-entry guard with explicit content and selector validation.
 
 The new core does not inherit the legacy rules requiring generated AGENTS.md, full rule inlining, named-model assignment or mutable raw-main retrieval. Existing consumer projects remain untouched during this migration; package updates do not rewrite their decisions.
 
@@ -90,8 +90,14 @@ Removed from new generic security: self-built JWT/password examples, mandatory s
 | base_ux_audit + three UX checklists | ux-audit | Agent command wiring #7 |
 | ui_ux_skills_setup_guide: tool selection | ui-ux-tooling | Agent integration #7; obsolete installation guide removal #9 |
 
-Implementation: Issue #4, branch `codex/issue-4-technology-recipes`. Fourteen concise recipes now have id / verified / applies / topics metadata and primary-source references checked on 2026-09-09. This date records documentation verification, not runtime execution of every integration. Supabase grants/RLS/DB tests, identity APIs, current Next.js lint invocation and reduced lint scope replace the legacy setup assumptions.
+Implementation: PR #15, branch `codex/issue-4-technology-recipes`. Fourteen concise recipes now have id / verified / applies / topics metadata and primary-source references checked on 2026-09-09. This date records documentation verification, not runtime execution of every integration. Supabase grants/RLS/DB tests, identity APIs, current Next.js lint invocation and reduced lint scope replace the legacy setup assumptions.
 
 Legacy source files stay in place with migration pointers until #9. They are frozen references, not instructions for new consumers. Shared standards remain canonical. Removed from new recipes: unconditional latest-version installers, named-agent commands, default third-party design plugin installation, automatic universal telemetry sampling values, fixed lint stacks and blanket rule-copying. Source references identify provenance; third-party code samples and checklist text were not copied. Repository-wide license review and npm publication remain deferred.
 
 Recipe package inclusion, explicit config/topic mapping, deterministic offline lookup and freshness diagnostics remain #5. This PR does not change package artifacts or manifest entries. Consumer executable integrations remain #6; adapters #7. Guidance is not reported as passing security tests.
+
+## Issue #5 progress
+
+The four CLI commands and explicit package inventory are implemented. Init deterministically renders project docs from maintained templates, preserves existing files, and includes verification scaffolding with fail-on-missing checks. It does not copy generic knowledge or initialize a working framework/auth provider. Recipe returns exact offline content; context selects explicit entries/H2 sections from validated config; doctor reports setup and freshness issues without running or modifying the project.
+
+The preflight questions and initial project-specific security fields now belong to init. Security test runners, application/provider fixtures and full CI setup remain #6; agent adapters and workflow #7; legacy guide removal #9. Tests verify offline installed-tarball operation, deterministic output, input/path safety, preservation, diagnostics and verifier failure propagation. See [CLI guide](cli.md). PR #15 is the stacked dependency until merged.

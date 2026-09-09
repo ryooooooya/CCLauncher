@@ -4,7 +4,7 @@ Phase 1 introduces the package `@ryooooooya/cclauncher` at `0.1.0`. The personal
 
 ## Reproducibility
 
-Node 24 and pnpm 11.19.0 are the development baseline. There are no external build or runtime dependencies in this skeleton. The CLI is plain ESM JavaScript; `tsconfig.json` prepares module settings for later TypeScript work, but Phase 1 does not claim TypeScript type checking.
+Node 24 and pnpm 11.19.0 are the development baseline. There are no external build or runtime dependencies in the CLI. The CLI is plain ESM JavaScript; `tsconfig.json` prepares module settings for later TypeScript work, but Phase 1 does not claim TypeScript type checking.
 
 ```sh
 pnpm install --frozen-lockfile --ignore-scripts
@@ -12,9 +12,9 @@ pnpm verify
 npm pack
 ```
 
-`dist/` is regenerated from source. The emitted manifest records the package version and SHA-256 of the CLI. It is an inventory, not an independent trust anchor. Package integrity comes from the consumer lockfile and release provenance. Issue #2 defines the directory contracts; source manifest entries remain empty until knowledge packaging is implemented with the CLI in #5. The build rejects nonempty entries to prevent silently omitting assets. See [architecture](architecture.md) for these staged boundaries.
+`dist/` is regenerated from source. The emitted manifest records the package version and SHA-256 of every CLI module, selected knowledge file and scaffold template. It is an inventory, not an independent trust anchor. Package integrity comes from the consumer lockfile and release provenance. Issue #5 implements explicit knowledge entries, metadata validation and context selection. See [architecture](architecture.md) and [CLI](cli.md).
 
-The package allowlist excludes legacy documents, source, tests and maintainer files. There is no network access or installation hook in the CLI. Phase 1 implements only help/version; it cannot initialize a webapp yet.
+The package allowlist excludes legacy documents, source, tests and maintainer files. There is no network access or installation hook in the CLI. The CLI implements init / recipe / context / doctor. Init generates project scaffolding; runnable application/provider templates remain Issue #6.
 
 After a reviewed release is actually published:
 
@@ -51,4 +51,4 @@ Official references (checked 2026-09-09): [npm trusted publishing](https://docs.
 
 ## Migration boundary
 
-Legacy `base_*`, framework and Blueprint/Printer documents remain in Git for existing projects. Their automatic generation and raw-main retrieval rules apply only to that legacy system and are not the new package architecture. Do not bootstrap new projects from those raw-main instructions. Later issues migrate knowledge, implement CLI commands and templates, then remove the legacy distribution.
+Legacy `base_*`, framework and Blueprint/Printer documents remain in Git for existing projects. Their automatic generation and raw-main retrieval rules apply only to that legacy system and are not the new package architecture. Do not bootstrap new projects from those raw-main instructions. Standards, recipes and CLI lookup are implemented. Later issues complete runnable consumer templates, adapters and methods, then remove the legacy distribution.

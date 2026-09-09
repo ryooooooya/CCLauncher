@@ -1,0 +1,20 @@
+name: CCLauncher verification
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.19.0'
+      - run: npm install --global pnpm@11.19.0 --ignore-scripts
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      # Provision required local test services (e.g. Supabase) before verification.
+      # Missing services/tests must fail. Complete the service-specific setup.
+      - run: sh scripts/verify.sh

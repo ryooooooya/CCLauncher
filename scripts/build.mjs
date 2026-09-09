@@ -1,27 +1,68 @@
-import { mkdirSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
-import { createHash } from 'node:crypto';
+import { mkdirSync, readFileSync, rmSync, writeFileSync, chmodSync, readdirSync, lstatSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { resolve, dirname } from 'node:path';
+import { resolve, dirname, relative } from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { digest, sectionsOf } from '../src/cli/knowledge.js';
+import { choices } from '../src/cli/config.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 const manifest = JSON.parse(readFileSync(resolve(root, 'manifest.json'), 'utf8'));
-if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.entries)) throw new Error('Invalid manifest');
-// Issue #5 adds knowledge packaging after the directory/content migrations.
-// Do not silently publish unhandled entries.
-if (manifest.entries.length !== 0) throw new Error('Knowledge packaging must be implemented before adding manifest entries');
-const source = resolve(root, 'src/cli/index.js');
-execFileSync(process.execPath, ['--check', source]);
-const cli = readFileSync(source);
+if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.entries) || !manifest.contexts) throw new Error('Invalid manifest');
+const files = new Map();
+const ids = new Set();
+for (const entry of manifest.entries) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error('Invalid or duplicate entry ID');
+  ids.add(entry.id);
+  if (!['recipe', 'standard'].includes(entry.kind) || entry.path !== `${entry.kind === 'recipe' ? 'recipes' : 'standards'}/${entry.id}.md`) throw new Error('Invalid entry path');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.verified) || !Number.isFinite(Date.parse(entry.verified)) || new Date(entry.verified).toISOString().slice(0, 10) !== entry.verified) throw new Error('Invalid verification date');
+  const path = resolve(root, entry.path);
+  if (!lstatSync(path).isFile()) throw new Error('Knowledge must be a regular file');
+  const bytes = readFileSync(path);
+  if (entry.kind === 'recipe') {
+    const source = bytes.toString('utf8');
+    const metadata = /^---\n([\s\S]+?)\n---\n/.exec(source)?.[1];
+    if (!metadata || !metadata.split('\n').includes(`id: ${entry.id}`) || !metadata.split('\n').includes(`verified: ${entry.verified}`)) throw new Error('Recipe metadata mismatch');
+    for (const field of ['applies', 'topics']) {
+      if (!Array.isArray(entry[field]) || !entry[field].length || entry[field].some(v => typeof v !== 'string')) throw new Error('Invalid recipe metadata list');
+      const values = new RegExp(`^${field}:\\n((?:  - [a-z0-9-]+(?:\\n|$))+)`, 'm').exec(metadata)?.[1].trim().split('\n').map(v => v.trim().slice(2));
+      if (JSON.stringify(values) !== JSON.stringify(entry[field])) throw new Error('Recipe metadata list mismatch');
+    }
+  }
+  files.set(entry.path, bytes);
+}
+for (const [topic, rules] of Object.entries(manifest.contexts)) {
+  if (!/^[a-z][a-z0-9-]*$/.test(topic) || !Array.isArray(rules)) throw new Error('Invalid topic');
+  for (const rule of rules) {
+    const entry = manifest.entries.find(e => e.id === rule.id);
+    if (!entry || (rule.sections && (!Array.isArray(rule.sections) || !rule.sections.length))) throw new Error('Invalid context rule');
+    for (const [key, values] of Object.entries(rule.when ?? {})) {
+      if (!choices[key] || !Array.isArray(values) || !values.length || values.some(v => !choices[key].includes(v))) throw new Error('Invalid config selector');
+    }
+    sectionsOf(files.get(entry.path).toString('utf8'), rule.sections);
+  }
+}
+function collect(dir, prefix) {
+  for (const item of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name < b.name ? -1 : 1)) {
+    const path = resolve(dir, item.name);
+    if (item.isSymbolicLink()) throw new Error('Package sources must not be symlinks');
+    if (item.isDirectory()) collect(path, prefix);
+    else if (item.isFile()) {
+      const name = relative(prefix, path).replaceAll('\\', '/');
+      if (path.endsWith('.js') || path.endsWith('.mjs')) execFileSync(process.execPath, ['--check', path]);
+      files.set(name, readFileSync(path));
+    }
+  }
+}
+collect(resolve(root, 'src/cli'), resolve(root, 'src'));
+collect(resolve(root, 'templates/webapp'), root);
 rmSync(resolve(root, 'dist'), { recursive: true, force: true });
-const target = resolve(root, 'dist/cli/index.js');
-mkdirSync(dirname(target), { recursive: true });
-writeFileSync(target, cli);
-chmodSync(target, 0o755);
-writeFileSync(resolve(root, 'dist/manifest.json'), JSON.stringify({
-  ...manifest,
-  packageName: pkg.name,
-  packageVersion: pkg.version,
-  files: { 'cli/index.js': createHash('sha256').update(cli).digest('hex') }
-}, null, 2) + '\n');
+const hashes = {};
+for (const [name, bytes] of [...files].sort(([a], [b]) => a < b ? -1 : 1)) {
+  const path = resolve(root, 'dist', name);
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, bytes);
+  hashes[name] = digest(bytes);
+}
+chmodSync(resolve(root, 'dist/cli/index.js'), 0o755);
+writeFileSync(resolve(root, 'dist/manifest.json'), JSON.stringify({ ...manifest, packageName: pkg.name, packageVersion: pkg.version, files: hashes }, null, 2) + '\n');

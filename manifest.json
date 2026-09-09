@@ -1,4 +1,499 @@
 {
   "schemaVersion": 1,
-  "entries": []
+  "entries": [
+    {
+      "id": "dependencies",
+      "kind": "standard",
+      "path": "standards/dependencies.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "privacy",
+      "kind": "standard",
+      "path": "standards/privacy.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "testing",
+      "kind": "standard",
+      "path": "standards/testing.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "web-security",
+      "kind": "standard",
+      "path": "standards/web-security.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "accessibility",
+      "kind": "recipe",
+      "path": "recipes/accessibility.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "web",
+        "react",
+        "playwright"
+      ],
+      "topics": [
+        "accessibility",
+        "ui",
+        "testing"
+      ]
+    },
+    {
+      "id": "authjs",
+      "kind": "recipe",
+      "path": "recipes/authjs.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "authjs",
+        "nextjs"
+      ],
+      "topics": [
+        "auth",
+        "testing"
+      ]
+    },
+    {
+      "id": "browser-debugging",
+      "kind": "recipe",
+      "path": "recipes/browser-debugging.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "chrome",
+        "web"
+      ],
+      "topics": [
+        "debugging",
+        "testing",
+        "performance"
+      ]
+    },
+    {
+      "id": "nextjs",
+      "kind": "recipe",
+      "path": "recipes/nextjs.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "nextjs-16",
+        "react",
+        "tailwindcss-4"
+      ],
+      "topics": [
+        "framework",
+        "testing",
+        "deployment",
+        "quality"
+      ]
+    },
+    {
+      "id": "npm-security",
+      "kind": "recipe",
+      "path": "recipes/npm-security.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "npm",
+        "pnpm"
+      ],
+      "topics": [
+        "dependencies",
+        "testing",
+        "deployment",
+        "incident"
+      ]
+    },
+    {
+      "id": "operations",
+      "kind": "recipe",
+      "path": "recipes/operations.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "web-service"
+      ],
+      "topics": [
+        "operations",
+        "incident",
+        "deployment"
+      ]
+    },
+    {
+      "id": "performance",
+      "kind": "recipe",
+      "path": "recipes/performance.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "web",
+        "nextjs",
+        "chrome"
+      ],
+      "topics": [
+        "performance",
+        "testing"
+      ]
+    },
+    {
+      "id": "sentry",
+      "kind": "recipe",
+      "path": "recipes/sentry.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "sentry",
+        "nextjs"
+      ],
+      "topics": [
+        "observability",
+        "privacy",
+        "deployment"
+      ]
+    },
+    {
+      "id": "seo",
+      "kind": "recipe",
+      "path": "recipes/seo.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "web",
+        "nextjs-16"
+      ],
+      "topics": [
+        "seo",
+        "ui",
+        "deployment"
+      ]
+    },
+    {
+      "id": "storybook",
+      "kind": "recipe",
+      "path": "recipes/storybook.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "storybook",
+        "nextjs",
+        "vitest"
+      ],
+      "topics": [
+        "ui",
+        "testing",
+        "accessibility"
+      ]
+    },
+    {
+      "id": "supabase",
+      "kind": "recipe",
+      "path": "recipes/supabase.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "supabase",
+        "supabase-js-2",
+        "nextjs-16"
+      ],
+      "topics": [
+        "auth",
+        "database",
+        "upload",
+        "testing"
+      ]
+    },
+    {
+      "id": "ui-motion",
+      "kind": "recipe",
+      "path": "recipes/ui-motion.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "web",
+        "react",
+        "motion"
+      ],
+      "topics": [
+        "ui",
+        "accessibility",
+        "performance"
+      ]
+    },
+    {
+      "id": "ui-ux-tooling",
+      "kind": "recipe",
+      "path": "recipes/ui-ux-tooling.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "web",
+        "react"
+      ],
+      "topics": [
+        "ui",
+        "ux",
+        "dependencies"
+      ]
+    },
+    {
+      "id": "ux-audit",
+      "kind": "recipe",
+      "path": "recipes/ux-audit.md",
+      "verified": "2026-09-09",
+      "applies": [
+        "web"
+      ],
+      "topics": [
+        "ui",
+        "ux",
+        "testing"
+      ]
+    }
+  ],
+  "contexts": {
+    "auth": [
+      {
+        "id": "web-security",
+        "sections": [
+          "Authorization — 最優先",
+          "Authentication",
+          "Session / Cookie / CSRF"
+        ]
+      },
+      {
+        "id": "supabase",
+        "sections": [
+          "IdentityとSSR"
+        ],
+        "when": {
+          "auth": [
+            "supabase"
+          ]
+        }
+      },
+      {
+        "id": "authjs",
+        "when": {
+          "auth": [
+            "authjs"
+          ]
+        }
+      }
+    ],
+    "database": [
+      {
+        "id": "web-security",
+        "sections": [
+          "Authorization — 最優先",
+          "Input / injection / filesystem"
+        ]
+      },
+      {
+        "id": "supabase",
+        "sections": [
+          "Postgresの境界",
+          "DB security tests"
+        ],
+        "when": {
+          "database": [
+            "supabase"
+          ]
+        }
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "dependencies"
+      },
+      {
+        "id": "npm-security"
+      }
+    ],
+    "upload": [
+      {
+        "id": "web-security",
+        "sections": [
+          "Authorization — 最優先",
+          "File upload"
+        ]
+      },
+      {
+        "id": "supabase",
+        "sections": [
+          "Storageを使う場合だけ"
+        ],
+        "when": {
+          "database": [
+            "supabase"
+          ]
+        }
+      }
+    ],
+    "webhook": [
+      {
+        "id": "web-security",
+        "sections": [
+          "Authentication",
+          "Input / injection / filesystem",
+          "Secrets / errors / headers"
+        ]
+      }
+    ],
+    "billing": [
+      {
+        "id": "web-security",
+        "sections": [
+          "Authorization — 最優先",
+          "Authentication",
+          "Session / Cookie / CSRF",
+          "Input / injection / filesystem"
+        ]
+      },
+      {
+        "id": "testing",
+        "sections": [
+          "Security tests"
+        ]
+      }
+    ],
+    "admin": [
+      {
+        "id": "web-security",
+        "sections": [
+          "Authorization — 最優先",
+          "Authentication",
+          "Session / Cookie / CSRF"
+        ]
+      },
+      {
+        "id": "testing",
+        "sections": [
+          "Security tests"
+        ]
+      }
+    ],
+    "privacy": [
+      {
+        "id": "privacy"
+      },
+      {
+        "id": "web-security",
+        "sections": [
+          "Secrets / errors / headers"
+        ]
+      }
+    ],
+    "deployment": [
+      {
+        "id": "dependencies"
+      },
+      {
+        "id": "web-security",
+        "sections": [
+          "Secrets / errors / headers"
+        ]
+      },
+      {
+        "id": "nextjs",
+        "sections": [
+          "Qualityと検証"
+        ],
+        "when": {
+          "framework": [
+            "nextjs"
+          ]
+        }
+      },
+      {
+        "id": "operations"
+      }
+    ],
+    "testing": [
+      {
+        "id": "testing"
+      },
+      {
+        "id": "nextjs",
+        "sections": [
+          "Qualityと検証"
+        ],
+        "when": {
+          "framework": [
+            "nextjs"
+          ]
+        }
+      },
+      {
+        "id": "supabase",
+        "sections": [
+          "DB security tests"
+        ],
+        "when": {
+          "database": [
+            "supabase"
+          ]
+        }
+      }
+    ],
+    "framework": [
+      {
+        "id": "nextjs",
+        "when": {
+          "framework": [
+            "nextjs"
+          ]
+        }
+      }
+    ],
+    "accessibility": [
+      {
+        "id": "accessibility"
+      }
+    ],
+    "ui": [
+      {
+        "id": "ui-ux-tooling"
+      }
+    ],
+    "ux": [
+      {
+        "id": "ux-audit"
+      }
+    ],
+    "performance": [
+      {
+        "id": "performance"
+      }
+    ],
+    "seo": [
+      {
+        "id": "seo"
+      }
+    ],
+    "debugging": [
+      {
+        "id": "browser-debugging"
+      }
+    ],
+    "observability": [
+      {
+        "id": "sentry"
+      }
+    ],
+    "operations": [
+      {
+        "id": "operations"
+      }
+    ],
+    "incident": [
+      {
+        "id": "operations"
+      },
+      {
+        "id": "npm-security",
+        "sections": [
+          "Incident"
+        ]
+      }
+    ]
+  },
+  "compatibility": [
+    {
+      "dependency": "next",
+      "major": 16,
+      "recipe": "nextjs",
+      "message": "nextjs recipe is verified for Next.js 16; other major versions need review."
+    }
+  ]
 }
