@@ -1,6 +1,6 @@
 # Versioned distribution
 
-Phase 1 introduces the package `@ryooooooya/cclauncher` at `0.1.0`. The personal scope avoids assuming ownership of the proposed `@cclauncher` organization. npm scope ownership and the initial publication have **not** been configured or verified. This repository has no license grant; `UNLICENSED` preserves that status pending the owner's license decision.
+Phase 1 introduces the package `@ryooooooya/cclauncher` at `0.1.0`. The personal scope avoids assuming ownership of the proposed `@cclauncher` organization. npm scope ownership and the initial publication have **not** been configured or verified. The owner approved a future MIT release on 2026-09-09. npm publication is deferred while the harness is developed and used locally. Before applying MIT, review existing documents and code excerpts for third-party licensing and attribution requirements; preserve required notices and exclude or replace incompatible material. Until that review is complete, retain `UNLICENSED` and do not add an MIT license grant.
 
 ## Reproducibility
 
@@ -32,8 +32,11 @@ Until npm publication, use `npm pack` from a reviewed checkout and install the r
 
 Use SemVer. Every distributed content change, including guidance-only changes, requires a new version. Never move or reuse an existing release tag. For pre-1.0 releases, breaking behavior increments the minor version; compatible fixes increment patch. Publish stable releases only through `v<package.version>` tags on commits reachable from main.
 
+Public npm publication is a later milestone, not a prerequisite for continuing Issues #2–#9. Keep `NPM_PUBLISH_ENABLED` unset or false until publication is requested and the prerequisites below are complete.
+
 Before the first public release, the owner must:
-- Confirm npm scope ownership and choose a license.
+- Confirm npm scope ownership.
+- Complete the third-party content review, add the approved MIT license and required attribution, and update package metadata.
 - Set up the initial package and npm Trusted Publisher for owner `ryooooooya`, repo `CCLauncher`, workflow `release.yml`, environment `npm`.
 - Protect the GitHub `npm` environment with required review and release-tag restrictions.
 - Enable the repository variable `NPM_PUBLISH_ENABLED=true` only after configuration is complete.
