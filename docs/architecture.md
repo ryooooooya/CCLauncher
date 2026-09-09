@@ -39,6 +39,6 @@ Issue #8 migrates these files together and updates internal references. Domain l
 - New architecture and [distribution policy](distribution.md) govern the new package. Legacy generation and raw-main retrieval instructions do not govern its implementation.
 - Each content migration updates references and the [migration map](migration.md); avoid maintaining two normative copies. Issue #9 removes obsolete files after replacement verification.
 - Issue #2 adds directory contracts and the migration map only. Standards, recipes, template generation, adapters and methods are implemented in Issues #3–#8.
-- Knowledge packaging and manifest selection are implemented with the CLI in #5 after content is available. For now manifest entries stay empty and the build rejects unhandled entries.
-- Current tarballs still contain the CLI, emitted manifest, package metadata and root README only. No directory README, migration plan or legacy knowledge is implicitly distributed.
+- Issue #5 implements knowledge packaging with explicit manifest entries and context selectors. The build validates metadata and section references; unknown or malformed entries fail.
+- Tarballs contain the CLI modules, emitted inventory, selected standards/recipes and webapp scaffold templates, plus package metadata and root README. Maintainer indexes and legacy knowledge files are excluded. See [CLI behavior](cli.md).
 - npm publication remains deferred. Future MIT application follows the third-party-content review agreed in the distribution policy.
