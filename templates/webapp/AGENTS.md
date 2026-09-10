@@ -35,6 +35,8 @@ Load generic guidance only when relevant:
 
     pnpm exec cclauncher context <topic>
 
+For role handoffs and risk classification, load `cclauncher context workflow`.
+
 Generic guidance remains in the installed package.
 Do not copy recipes or standards into this project.
 Project decisions take precedence over generic recipes.
@@ -43,7 +45,7 @@ Report conflicts that would weaken a security boundary.
 ## Security-sensitive changes
 
 Authentication, authorization, billing, admin access, file uploads,
-webhooks, PII, database permissions and secrets are high-risk.
+webhooks, PII, database permissions, security configuration and secrets are high-risk.
 
 Before changing these areas:
 

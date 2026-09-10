@@ -1,7 +1,11 @@
 # Adapters
 
-Tool-specific configuration belongs here. Planned destinations are `claude/`, `codex/` and `generic/`; implementation is tracked in Issue #7.
+共有の正本はconsumerのAGENTS.md。agent固有の差分だけをここで管理する。
 
-Claude's CLAUDE.md will reference `@AGENTS.md`. Codex and generic integrations use the same AGENTS.md source. Adapters do not duplicate security policy, generate the shared index from tool-specific rules, or assign models to roles.
+- [Claude](claude/security.md): `init --adapter claude` で参照だけのCLAUDE.mdを配置。
+- [Codex](codex/README.md): AGENTS.mdを直接読む。追加ファイル不要。
+- [Generic](generic/README.md): 自動読込のないagentにも同じ正本を渡す。
 
-See the [architecture](../docs/architecture.md) and [migration map](../docs/migration.md). This index is maintainer-only.
+adapterはpackage内に収録するが、consumerへ一般的な説明やsecurity policyをコピーしない。
+省略時のadapterはgeneric。選択はinitの一時的なオプションで、project configには保存しない。
+共有workflowは [standard](../standards/workflow.md)、移行手順は [guide](../docs/agent-adapters.md)。

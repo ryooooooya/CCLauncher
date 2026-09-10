@@ -144,7 +144,7 @@ adopted 決定後は `/ux-audit {slug}` で採用案を監査する（`base_ux_a
 - 非採用パターンの story には `tags: ['!manifest']` を付けてエージェントの視界から外す
 - 実装完了後の正は受け入れ条件と実装。プロトタイプと実装がずれてもプロトタイプは直さない
 - adopted を本実装へ昇格させるのはコピーで行い、`src/prototypes/` 側の原本は残す。
-  昇格作業（データつなぎ込み・状態管理・テスト追加）は実装エージェントの担当（`base_agents_md.md`）
+  昇格作業（データつなぎ込み・状態管理・テスト追加）は実装エージェントの担当（projectの `AGENTS.md` と `standards/workflow.md`）
 - `/ux-audit` は `src/prototypes/` を対象外にしている。adopted を本実装へ昇格させたあとに監査する
 
 ---

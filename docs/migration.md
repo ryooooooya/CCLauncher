@@ -105,3 +105,8 @@ The preflight questions and initial project-specific security fields now belong 
 ## Issue #6 progress
 
 PR #17 adds the Biome/TypeScript/Vitest/Playwright harness, actual HTTP security test templates, and the explicit nextjs-supabase example. The example includes managed cookie auth, owner-scoped document operations, migration grants/RLS and pgTAP, local-only synthetic fixtures and full consumer/repository CI. Default initialization preserves existing package manifests; example initialization requires matching stack and an empty directory. CLAUDE.md/agent adapters remain #7. See [webapp template](webapp-template.md).
+
+## Issue #7 implementation
+
+`standards/workflow.md`, packaged adapters and optional init entry points are implemented.
+AGENTS.md remains directly maintained after deterministic initialization. The extraction specification is removed; old workflow/review/bootstrap/instruction guides are retired pointers, not active policies. Remaining legacy removal follows in #9.
