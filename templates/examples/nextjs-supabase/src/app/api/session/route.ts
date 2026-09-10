@@ -27,6 +27,7 @@ export function POST(request: Request) {
       email: input.email,
       password: input.password,
     });
+    if (error) console.error("Authentication failed:", error.code || "unknown");
     return error
       ? json({ error: "Invalid credentials" }, 401)
       : json({ signedIn: true });

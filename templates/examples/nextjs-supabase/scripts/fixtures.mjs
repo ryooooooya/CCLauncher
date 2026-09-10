@@ -35,6 +35,16 @@ for (const role of ["OWNER", "OTHER", "ADMIN"]) {
     email_confirm: true,
   });
   if (error) throw new Error(`Could not provision ${role} fixture.`);
+  const probe = createClient(url.origin, status.ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { error: loginError } = await probe.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (loginError)
+    throw new Error(`Fixture login failed: ${loginError.code || "unknown"}`);
+  await probe.auth.signOut();
   env.push(
     `SECURITY_${role}_EMAIL=${email}`,
     `SECURITY_${role}_PASSWORD=${password}`,
