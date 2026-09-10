@@ -5,3 +5,7 @@ Minimal consumer-owned files: project documents, security tests, verification sc
 Issue #5 adds deterministic generation of project docs, verification runners and a production CI scaffold under webapp/. The runners deliberately fail until real application commands and boundary tests exist. Runnable framework/provider integrations remain Issue #6. Optional methodologies and agent adapters are not installed by default.
 
 See the [architecture](../docs/architecture.md) and [migration map](../docs/migration.md). This index itself is not generated into consumers.
+
+Issue #6 adds the single-linter webapp harness and real HTTP security tests.
+The opt-in examples/nextjs-supabase variant implements the tested resource boundary,
+local provider fixtures, pgTAP tests and full CI. See [webapp guide](../docs/webapp-template.md).

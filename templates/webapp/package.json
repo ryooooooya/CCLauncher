@@ -1,0 +1,28 @@
+{
+  "name": "cclauncher-webapp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "cc": "cclauncher",
+    "verify": "sh scripts/verify.sh",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:security": "playwright test --project=api",
+    "test:e2e": "playwright test --project=chromium",
+    "build": "node scripts/configure-app.mjs",
+    "start": "node scripts/configure-app.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.2",
+    "typescript": "5.9.3",
+    "vitest": "5.0.0"
+  }
+}

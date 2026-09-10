@@ -1,0 +1,39 @@
+{
+  "name": "cclauncher-documents-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "cc": "cclauncher",
+    "verify": "sh scripts/verify.sh",
+    "lint": "biome check .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:security": "playwright test --project=api",
+    "test:e2e": "playwright test --project=chromium",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "fixtures": "node scripts/fixtures.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.2",
+    "typescript": "5.9.3",
+    "vitest": "5.0.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "supabase": "2.117.0"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.116.0"
+  }
+}

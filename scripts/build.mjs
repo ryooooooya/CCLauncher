@@ -44,6 +44,7 @@ for (const [topic, rules] of Object.entries(manifest.contexts)) {
 }
 function collect(dir, prefix) {
   for (const item of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name < b.name ? -1 : 1)) {
+    if (['node_modules', '.next', '.temp', '.branches', 'test-results', 'playwright-report'].includes(item.name)) continue;
     const path = resolve(dir, item.name);
     if (item.isSymbolicLink()) throw new Error('Package sources must not be symlinks');
     if (item.isDirectory()) collect(path, prefix);
@@ -56,6 +57,7 @@ function collect(dir, prefix) {
 }
 collect(resolve(root, 'src/cli'), resolve(root, 'src'));
 collect(resolve(root, 'templates/webapp'), root);
+collect(resolve(root, 'templates/examples/nextjs-supabase'), root);
 rmSync(resolve(root, 'dist'), { recursive: true, force: true });
 const hashes = {};
 for (const [name, bytes] of [...files].sort(([a], [b]) => a < b ? -1 : 1)) {

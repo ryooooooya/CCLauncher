@@ -4,7 +4,7 @@ import { resolve, relative, isAbsolute } from 'node:path';
 
 export const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 export function packagedPath(dist, path) {
-  if (typeof path !== 'string' || !/^[a-zA-Z0-9_.\/-]+$/.test(path) || path.split('/').some(x => !x || x === '.' || x === '..') || isAbsolute(path)) throw new Error('Invalid packaged path.');
+  if (typeof path !== 'string' || !/^[a-zA-Z0-9_.\/\[\]-]+$/.test(path) || path.split('/').some(x => !x || x === '.' || x === '..') || isAbsolute(path)) throw new Error('Invalid packaged path.');
   const file = realpathSync(resolve(dist, path));
   const rel = relative(realpathSync(dist), file);
   if (rel.startsWith('..') || isAbsolute(rel)) throw new Error('Packaged path escapes package.');

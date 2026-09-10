@@ -117,7 +117,7 @@ test('doctor reports missing project requirements, freshness and compatibility w
   const before = listing(dir).map(p => [p, readFileSync(resolve(dir, p), 'utf8')]);
   const report = run(dir, ['doctor']);
   assert.equal(report.status, 1);
-  assert.match(report.stdout, /FAIL security tests/);
+  assert.match(report.stdout, /PASS security tests/);
   assert.match(report.stdout, /FAIL DB security tests/);
   assert.match(report.stdout, /FAIL local install/);
   assert.deepEqual(listing(dir).map(p => [p, readFileSync(resolve(dir, p), 'utf8')]), before);
@@ -145,10 +145,11 @@ test('tampered packaged content fails before any partial context output', t => {
   assert.match(result.stderr, /integrity mismatch/);
 });
 
-test('verification scaffold refuses missing tests and propagates runner failure before build', t => {
+test('verification scaffold refuses missing tests and propagates runner failure before E2E', t => {
   const dir = temp(t);
   ok(run(dir, ['init', '--yes', '--framework', 'none', '--scope', 'prototype']));
-  writeFileSync(resolve(dir, 'package.json'), JSON.stringify({ scripts: Object.fromEntries(['lint', 'typecheck', 'test', 'test:security', 'build'].map(s => [s, 'application-check'])) }));
+  writeFileSync(resolve(dir, 'package.json'), JSON.stringify({ scripts: Object.fromEntries(['lint', 'typecheck', 'test', 'test:security', 'test:e2e', 'build'].map(s => [s, 'application-check'])) }));
+  for (const name of ['authentication.spec.ts', 'authorization.spec.ts']) rmSync(resolve(dir, 'tests/security', name));
   let result = spawnSync('sh', ['scripts/verify.sh'], { cwd: dir, encoding: 'utf8' });
   assert.equal(result.status, 1);
   assert.match(result.stderr, /No executable application security tests/);
@@ -163,7 +164,7 @@ test('verification scaffold refuses missing tests and propagates runner failure 
   result = spawnSync('sh', ['scripts/verify.sh'], { cwd: dir, encoding: 'utf8', env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, CC_TEST_LOG: log } });
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Verification failed: pnpm run test:security/);
-  assert.equal(readFileSync(log, 'utf8'), 'run lint\nrun typecheck\nrun test\nrun test:security\n');
+  assert.equal(readFileSync(log, 'utf8'), 'run lint\nrun typecheck\nrun test\nrun build\nrun test:security\n');
 });
 
 test('doctor can pass complete metadata but never runs declared application commands', t => {
@@ -173,7 +174,7 @@ test('doctor can pass complete metadata but never runs declared application comm
   const installed = resolve(dir, 'node_modules', pkg.name);
   mkdirSync(installed, { recursive: true });
   writeFileSync(resolve(installed, 'package.json'), JSON.stringify({ name: pkg.name, version: pkg.version }));
-  writeFileSync(resolve(dir, 'package.json'), JSON.stringify({ packageManager: 'pnpm@11.19.0', devDependencies: { [pkg.name]: pkg.version }, scripts: Object.fromEntries(['lint', 'typecheck', 'test', 'test:security', 'build'].map(s => [s, 'exit 91'])) }));
+  writeFileSync(resolve(dir, 'package.json'), JSON.stringify({ packageManager: 'pnpm@11.19.0', devDependencies: { [pkg.name]: pkg.version }, scripts: Object.fromEntries(['lint', 'typecheck', 'test', 'test:security', 'test:e2e', 'build'].map(s => [s, 'exit 91'])) }));
   writeFileSync(resolve(dir, 'pnpm-lock.yaml'), '# Metadata fixture; doctor does not validate lockfile integrity.\n');
   writeFileSync(resolve(dir, 'tests/security/boundary.test.mjs'), 'throw new Error("must not execute")');
   const result = run(dir, ['doctor']);
@@ -181,4 +182,20 @@ test('doctor can pass complete metadata but never runs declared application comm
   assert.match(result.stdout, /PASS local install/);
   assert.match(result.stdout, /does not execute tests or certify security/);
   assert.doesNotMatch(result.stdout, /FAIL/);
+});
+
+test('optional example generates real application, DB policies and tests only for the matching stack', t => {
+  const dir = temp(t);
+  const target = resolve(dir, 'app');
+  const args = ['init', '--yes', '--auth', 'supabase', '--database', 'supabase', '--example', 'nextjs-supabase', '--dir', target];
+  ok(run(dir, args));
+  for (const path of ['src/app/api/documents/[id]/route.ts', 'supabase/migrations/20260909000000_documents.sql', 'supabase/tests/database/documents.test.sql', 'tests/security/authentication.spec.ts', 'tests/security/authorization.spec.ts', 'tests/e2e/session.spec.ts', 'pnpm-lock.yaml']) assert.ok(existsSync(resolve(target, path)), path);
+  const pkg = JSON.parse(readFileSync(resolve(target, 'package.json')));
+  assert.equal(pkg.scripts.verify, 'sh scripts/verify.sh');
+  assert.equal(pkg.scripts.build, 'next build');
+  assert.ok(pkg.dependencies['@supabase/ssr']);
+  assert.ok(!existsSync(resolve(target, 'recipes')));
+  assert.equal(run(dir, ['init', '--yes', '--example', 'nextjs-supabase', '--dir', resolve(dir, 'invalid')]).status, 1);
+  assert.ok(!existsSync(resolve(dir, 'invalid')));
+  assert.equal(run(dir, args).status, 1);
 });

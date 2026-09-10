@@ -18,3 +18,33 @@ jobs:
       - run: npm install --global pnpm@11.19.0 --ignore-scripts
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm verify
+  webapp-example:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.19.0'
+      - run: npm install --global pnpm@11.19.0 --ignore-scripts
+      - run: node scripts/build.mjs
+      - run: node dist/cli/index.js init --yes --auth supabase --database supabase --example nextjs-supabase --dir "$RUNNER_TEMP/cclauncher-webapp"
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+        working-directory: ${{ runner.temp }}/cclauncher-webapp
+      - run: pnpm exec playwright install --with-deps chromium
+        working-directory: ${{ runner.temp }}/cclauncher-webapp
+      - run: pnpm exec supabase start
+        working-directory: ${{ runner.temp }}/cclauncher-webapp
+      - run: pnpm fixtures
+        working-directory: ${{ runner.temp }}/cclauncher-webapp
+      - run: pnpm verify
+        working-directory: ${{ runner.temp }}/cclauncher-webapp
+      - run: pnpm audit --audit-level=high
+        working-directory: ${{ runner.temp }}/cclauncher-webapp
+      - if: always()
+        run: pnpm exec supabase stop --no-backup
+        working-directory: ${{ runner.temp }}/cclauncher-webapp
