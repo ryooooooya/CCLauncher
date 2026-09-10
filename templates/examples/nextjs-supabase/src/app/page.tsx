@@ -2,7 +2,7 @@
 import { type FormEvent, useState } from "react";
 
 export default function Page() {
-  const [message, setMessage] = useState("Signed out");
+  const [message, setMessage] = useState("Ready");
   async function login(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);

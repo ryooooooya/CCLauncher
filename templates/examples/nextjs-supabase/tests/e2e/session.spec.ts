@@ -15,7 +15,13 @@ test("browser signs in with a managed session cookie and signs out", async ({
   expect((await page.request.get("/api/session")).status()).toBe(200);
   await page.reload();
   expect((await page.request.get("/api/documents")).status()).toBe(200);
+  const signedOut = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === "/api/session" &&
+      response.request().method() === "DELETE",
+  );
   await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  expect((await signedOut).status()).toBe(200);
   await expect(page.getByRole("status")).toHaveText("Signed out");
   expect((await page.request.get("/api/session")).status()).toBe(401);
 });
