@@ -26,6 +26,12 @@
       "verified": "2026-09-09"
     },
     {
+      "id": "workflow",
+      "kind": "standard",
+      "path": "standards/workflow.md",
+      "verified": "2026-09-10"
+    },
+    {
       "id": "accessibility",
       "kind": "recipe",
       "path": "recipes/accessibility.md",
@@ -485,6 +491,11 @@
         "sections": [
           "Incident"
         ]
+      }
+    ],
+    "workflow": [
+      {
+        "id": "workflow"
       }
     ]
   },

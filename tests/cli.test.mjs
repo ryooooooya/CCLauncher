@@ -199,3 +199,29 @@ test('optional example generates real application, DB policies and tests only fo
   assert.ok(!existsSync(resolve(dir, 'invalid')));
   assert.equal(run(dir, args).status, 1);
 });
+
+test('adapters preserve one shared index and reject conflicts before writing', t => {
+  const generic = temp(t), claude = temp(t), codex = temp(t);
+  ok(run(generic, ['init', '--yes']));
+  ok(run(claude, ['init', '--yes', '--adapter', 'claude']));
+  ok(run(codex, ['init', '--yes', '--adapter', 'codex']));
+  assert.equal(readFileSync(resolve(claude, 'CLAUDE.md'), 'utf8'), '@AGENTS.md\n');
+  for (const dir of [generic, codex]) assert.ok(!existsSync(resolve(dir, 'CLAUDE.md')));
+  for (const dir of [claude, codex]) {
+    assert.equal(readFileSync(resolve(dir, 'AGENTS.md'), 'utf8'), readFileSync(resolve(generic, 'AGENTS.md'), 'utf8'));
+    assert.equal(readFileSync(resolve(dir, '.cclauncher.json'), 'utf8'), readFileSync(resolve(generic, '.cclauncher.json'), 'utf8'));
+    assert.ok(!existsSync(resolve(dir, 'adapters')));
+  }
+  const conflict = temp(t);
+  writeFileSync(resolve(conflict, 'CLAUDE.md'), 'Existing project instructions\n');
+  assert.equal(run(conflict, ['init', '--yes', '--adapter', 'claude']).status, 1);
+  assert.deepEqual(listing(conflict), ['CLAUDE.md']);
+  assert.equal(readFileSync(resolve(conflict, 'CLAUDE.md'), 'utf8'), 'Existing project instructions\n');
+  const invalid = temp(t);
+  assert.equal(run(invalid, ['init', '--yes', '--adapter', 'unknown']).status, 1);
+  assert.deepEqual(listing(invalid), []);
+  const workflow = ok(run(generic, ['context', 'workflow']));
+  assert.equal(workflow, ok(run(codex, ['context', 'workflow'])));
+  assert.match(workflow, /High-risk gate/);
+  assert.match(workflow, /Verifier/);
+});

@@ -105,3 +105,7 @@ or unverified versions warn rather than asserting a known runtime failure. The
 manifest's compatibility rules can expand when further combinations are verified.
 Project TODOs and CI setup also remain visible. Doctor does not prove that tests
 are meaningful or passing; run the project verifier and obtain required review.
+
+## Agent entry points
+
+`init --adapter generic|claude|codex` selects an entry point without saving tool or model choices in config. Generic is the default; Claude adds only `@AGENTS.md` in CLAUDE.md. Existing files are never overwritten. `context workflow` loads the shared role/risk standard. See [adapter guide](agent-adapters.md).
