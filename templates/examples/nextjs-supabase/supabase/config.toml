@@ -22,5 +22,6 @@ enabled = true
 site_url = "http://127.0.0.1:3000"
 enable_signup = false
 [auth.email]
-enable_signup = false
+# Enable email authentication; auth.enable_signup above still blocks registration.
+enable_signup = true
 enable_confirmations = false

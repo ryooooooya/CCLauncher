@@ -45,6 +45,12 @@ for (const role of ["OWNER", "OTHER", "ADMIN"]) {
   if (loginError)
     throw new Error(`Fixture login failed: ${loginError.code || "unknown"}`);
   await probe.auth.signOut();
+  const { error: signupError } = await probe.auth.signUp({
+    email: `blocked-${randomUUID()}@example.invalid`,
+    password,
+  });
+  if (signupError?.code !== "signup_disabled")
+    throw new Error("Public registration must remain disabled.");
   env.push(
     `SECURITY_${role}_EMAIL=${email}`,
     `SECURITY_${role}_PASSWORD=${password}`,
