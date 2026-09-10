@@ -29,6 +29,8 @@ This index is maintained directly; do not generate it from agent instructions.
 
 This project uses CCLauncher {{version}}.
 Install the exact package version and commit its lockfile before using it.
+Follow current user instructions, project docs, this index, package guidance,
+then general model knowledge; report security regressions.
 Load generic guidance only when relevant:
 
     pnpm exec cclauncher context <topic>

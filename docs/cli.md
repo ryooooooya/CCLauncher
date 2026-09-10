@@ -34,6 +34,7 @@ Options:
 |---|---|
 | `--dir` | Target directory; defaults to current working directory |
 | `--scope` | production / prototype |
+| `--example` | nextjs-supabase (matching stack and empty target only) |
 | `--framework` | nextjs / none |
 | `--auth` | none / supabase / authjs |
 | `--database` | none / supabase / postgres |
@@ -44,7 +45,8 @@ under docs/, tests/security/README.md, verify.sh, security-check.sh and their
 shared Node runner under scripts/. Production also gets a verification workflow;
 Supabase database selection adds supabase/tests/database/README.md.
 
-Existing package.json and project files are preserved. Any generated-path
+Existing package.json is preserved; its dependency lockfile is not generated or replaced.
+Empty targets receive a maintained package.json and lockfile. Other existing project files are preserved. Any generated-path
 collision fails before writing. Existing symlink parents and leaf targets are
 rejected, and files use exclusive creation. Use a locally controlled workspace;
 initialization is not an OS sandbox against hostile concurrent filesystem changes.
@@ -53,16 +55,16 @@ recipe/standard copy into the consumer. No agent-specific adapter is installed.
 
 ### Completing the scaffold
 
-Define actual `lint`, `typecheck`, `test`, `test:security`, `build` package scripts,
+Define actual `lint`, `typecheck`, `test`, `test:security`, `test:e2e`, `build` package scripts,
 install their tools and implement executable application tests in tests/security/.
 Then run `sh scripts/verify.sh`. Missing scripts/tests fail before any checks run;
 runner failure stops subsequent commands. Supabase projects additionally need
 SQL tests and an available disposable local database for `pnpm exec supabase test db`.
 
 The generated workflow is an initial gate. Review the Node/pnpm pins and provision
-required test services before enabling it. Runnable framework/provider fixtures,
-security tests and complete consumer CI are Issue #6. Placeholder READMEs do not
-count as tests. CCLauncher does not execute arbitrary project scripts during init
+required test services before enabling it. Issue #6 supplies HTTP security tests and an optional runnable Next.js/Supabase
+example with provider fixtures and CI; see [webapp guide](webapp-template.md).
+Placeholder READMEs do not count as tests. CCLauncher does not execute arbitrary project scripts during init
 or doctor. Prototype omits production CI but does not silently bypass verification.
 
 ## Knowledge and determinism

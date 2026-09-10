@@ -11,8 +11,8 @@ Record project-specific decisions here and in docs/decisions/.
 
 ## Verification setup
 
-Define package scripts: lint, typecheck, test, build and test:security.
-Add actual application boundary tests under tests/security/.
+Define package scripts: lint, typecheck, test, build, test:security and test:e2e.
+Adapt tests/security/target.ts to the actual application endpoints and synthetic actors.
 Run sh scripts/verify.sh; missing checks fail deliberately.
 CCLauncher initialization does not install a framework or implement application routes.
 

@@ -6,7 +6,7 @@ AIコーディングエージェントでセキュアなWebアプリを作るた
 
 ## Versioned package + CLI
 
-`@ryooooooya/cclauncher@0.1.0` は開発中・npm未公開です。tarball配布、`init / recipe / context / doctor`、package内のstandards / recipesを実装しました。使い方は [CLI guide](docs/cli.md) を参照してください。initはproject docsと検証の土台を作り、実アプリ・provider別security testsのテンプレートは#6で追加します。
+`@ryooooooya/cclauncher@0.1.0` は開発中・npm未公開です。tarball配布、`init / recipe / context / doctor`、package内のstandards / recipesを実装しました。使い方は [CLI guide](docs/cli.md) を参照してください。initはproject docsと検証基盤を作ります。#6の [Webapp guide](docs/webapp-template.md) では、実行可能なNext.js＋Supabaseの実例とsecurity testsを利用できます。
 
 ```sh
 pnpm install --frozen-lockfile --ignore-scripts
