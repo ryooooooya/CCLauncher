@@ -35,7 +35,7 @@ export function doctor(dist, manifest, dir, now = new Date()) {
   } catch (error) { add('FAIL', 'local install', error.message); }
   if (pkg) {
     add(/^pnpm@\d+\.\d+\.\d+(?:\+.*)?$/.test(pkg.packageManager ?? '') ? 'PASS' : 'FAIL', 'package manager', 'Declare an exact pnpm version in packageManager.');
-    for (const script of ['lint', 'typecheck', 'test', 'test:security', 'build']) add(typeof pkg.scripts?.[script] === 'string' && pkg.scripts[script].trim() ? 'PASS' : 'FAIL', `script ${script}`, 'Must run the actual application check.');
+    for (const script of ['lint', 'typecheck', 'test', 'test:security', 'test:e2e', 'build']) add(typeof pkg.scripts?.[script] === 'string' && pkg.scripts[script].trim() ? 'PASS' : 'FAIL', `script ${script}`, 'Must run the actual application check.');
   }
   add(hasTests(resolve(dir, 'tests/security'), /\.(test|spec)\.[cm]?[jt]sx?$/) ? 'PASS' : 'FAIL', 'security tests', 'Expected executable application boundary tests in tests/security/.');
   if (config?.database === 'supabase') add(hasTests(resolve(dir, 'supabase/tests'), /\.sql$/) ? 'PASS' : 'FAIL', 'DB security tests', 'Expected pgTAP SQL tests in supabase/tests/.');

@@ -1,4 +1,4 @@
-import { lstatSync, mkdirSync, writeFileSync, unlinkSync, rmdirSync } from 'node:fs';
+import { lstatSync, mkdirSync, writeFileSync, unlinkSync, rmdirSync, readdirSync } from 'node:fs';
 import { resolve, dirname, parse, relative } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { defaults, choices, featureKeys, validateConfig } from './config.js';
@@ -40,20 +40,30 @@ function checkParents(path) {
   const info = stat(path);
   if (info && (!info.isDirectory() || info.isSymbolicLink())) throw new Error(`Not a regular directory: ${path}`);
 }
-export function initialize(dist, manifest, dir, config) {
+export function initialize(dist, manifest, dir, config, example) {
   dir = resolve(dir);
   checkParents(dir);
+  if (example !== undefined) {
+    if (example !== 'nextjs-supabase') throw new Error('Unknown example.');
+    if (config.framework !== 'nextjs' || config.auth !== 'supabase' || config.database !== 'supabase') throw new Error('Example requires nextjs + supabase auth/database.');
+    if (stat(dir) && readdirSync(dir).length) throw new Error('Example requires an empty target directory.');
+  }
+  const existingPackage = stat(resolve(dir, 'package.json'));
   const values = { ...config, ...config.features, version: manifest.packageVersion };
-  const prefix = 'templates/webapp/';
+  const prefixes = ['templates/webapp/'];
+  if (example) prefixes.push('templates/examples/nextjs-supabase/');
   const files = new Map();
-  for (const path of Object.keys(manifest.files).filter(path => path.startsWith(prefix)).sort()) {
-    const target = path.slice(prefix.length);
-    if (config.scope !== 'production' && target.startsWith('.github/')) continue;
-    const text = readPackaged(dist, manifest, path).replace(/\{\{([a-zA-Z]+)\}\}/g, (_, key) => {
-      if (!Object.hasOwn(values, key) || typeof values[key] === 'object') throw new Error(`Unknown template field: ${key}`);
-      return String(values[key]);
-    });
-    files.set(target, text);
+  for (const prefix of prefixes) {
+    for (const path of Object.keys(manifest.files).filter(path => path.startsWith(prefix)).sort()) {
+      const target = path.slice(prefix.length).replace(/\.tmpl$/, '');
+      if (config.scope !== 'production' && target.startsWith('.github/')) continue;
+      if (existingPackage && ['package.json', 'pnpm-lock.yaml'].includes(target)) continue;
+      const text = readPackaged(dist, manifest, path).replace(/\{\{([a-zA-Z]+)\}\}/g, (_, key) => {
+        if (!Object.hasOwn(values, key) || typeof values[key] === 'object') throw new Error(`Unknown template field: ${key}`);
+        return String(values[key]);
+      });
+      files.set(target, text);
+    }
   }
   if (!files.size) throw new Error('No packaged templates found.');
   files.set('.cclauncher.json', JSON.stringify(config, null, 2) + '\n');
