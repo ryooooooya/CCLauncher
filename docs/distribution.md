@@ -19,7 +19,17 @@ npm pack
 
 `dist/` is regenerated from source. The emitted manifest records the package version and SHA-256 of every CLI module, selected knowledge file and scaffold template. It is an inventory, not an independent trust anchor. Package integrity comes from the consumer lockfile and release provenance. Knowledge entries, metadata validation and context selection are explicit. See [architecture](architecture.md) and [CLI](cli.md).
 
-The package allowlist excludes legacy documents, source, tests and maintainer files. There is no network access or installation hook in the CLI. The CLI implements init / recipe / context / doctor. Init generates project scaffolding and supports an explicit runnable Next.js/Supabase example.
+The reviewed `distribution-files.json` lists exact distribution sources. Build rejects
+unknown files found in collected directories and additionally rejects real environment
+files, key files and logs, even if mistakenly listed. `.env.example` is permitted.
+Known tool caches are excluded. The final tarball test derives its expected paths from
+this reviewed source list, independently of the generated manifest. Build never updates
+the source list itself. Changes to that list require review.
+
+Always build release artifacts in a fresh checkout or clean archive of the reviewed
+commit. Do not package a directory used for running a sample or storing credentials.
+Do not bypass prepack or reuse a stale dist for release. The package excludes legacy
+and maintainer documentation and repository regression tests. There is no network access or installation hook in the CLI. The CLI implements init / recipe / context / doctor. Init generates project scaffolding and supports an explicit runnable Next.js/Supabase example.
 
 After a reviewed release is actually published:
 
@@ -50,7 +60,13 @@ Before the first public release, the owner must:
 
 Repository administration settings are external prerequisites, not enforced merely by this document. Main was unprotected when Phase 1 was prepared.
 
-Merge reviewed changes, create the matching protected tag, then publish its GitHub Release. The workflow verifies the tagged commit and reruns package tests before publishing with OIDC/provenance. It uses no stored npm token. Initial package registration may require an owner-operated authenticated first publish; never paste credentials into issues or source.
+Merge reviewed changes, create the matching protected tag, then publish its GitHub Release. The workflow verifies the tagged commit, requires protected main and successful
+`verify` / `webapp-example` jobs from the latest main push CI run for exactly that SHA,
+and reruns package tests before publishing with OIDC/provenance. Missing, failed,
+skipped, cancelled or different-SHA sample results stop publication. The API check is
+read-only and fails closed when GitHub evidence cannot be retrieved. Branch protection's
+boolean alone does not prove required reviews, tag restrictions or environment settings;
+the owner must still configure and verify those controls. It uses no stored npm token. Initial package registration may require an owner-operated authenticated first publish; never paste credentials into issues or source.
 
 Official references (checked 2026-09-09): [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/), [pnpm frozen installs](https://pnpm.io/cli/install).
 

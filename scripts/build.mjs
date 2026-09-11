@@ -9,7 +9,18 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 const manifest = JSON.parse(readFileSync(resolve(root, 'manifest.json'), 'utf8'));
 if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.entries) || !manifest.contexts) throw new Error('Invalid manifest');
-const files = new Map([['LICENSE', readFileSync(resolve(root, 'LICENSE'))]]);
+const approved = JSON.parse(readFileSync(resolve(root, 'distribution-files.json'), 'utf8'));
+if (!Array.isArray(approved) || new Set(approved).size !== approved.length || approved.some(path => typeof path !== 'string' || !/^[a-zA-Z0-9_.\/\[\]-]+$/.test(path) || path.startsWith('/') || path.split('/').some(part => !part || part === '.' || part === '..'))) throw new Error('Invalid distribution allowlist');
+const allowed = new Set(approved);
+function source(path) {
+  if (!allowed.has(path)) throw new Error(`Unapproved distribution source: ${path}`);
+  const name = path.split('/').at(-1);
+  if ((name.startsWith('.env') && name !== '.env.example') || /\.(pem|key|p12|log)$/i.test(name)) throw new Error(`Private distribution source: ${path}`);
+  const absolute = resolve(root, path);
+  if (!lstatSync(absolute).isFile() || lstatSync(absolute).isSymbolicLink()) throw new Error('Distribution source must be a regular file');
+  return readFileSync(absolute);
+}
+const files = new Map([['LICENSE', source('LICENSE')]]);
 const ids = new Set();
 for (const entry of manifest.entries) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error('Invalid or duplicate entry ID');
@@ -18,7 +29,7 @@ for (const entry of manifest.entries) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.verified) || !Number.isFinite(Date.parse(entry.verified)) || new Date(entry.verified).toISOString().slice(0, 10) !== entry.verified) throw new Error('Invalid verification date');
   const path = resolve(root, entry.path);
   if (!lstatSync(path).isFile()) throw new Error('Knowledge must be a regular file');
-  const bytes = readFileSync(path);
+  const bytes = source(entry.path);
   if (entry.kind === 'recipe') {
     const source = bytes.toString('utf8');
     const metadata = /^---\n([\s\S]+?)\n---\n/.exec(source)?.[1];
@@ -51,7 +62,7 @@ function collect(dir, prefix) {
     else if (item.isFile()) {
       const name = relative(prefix, path).replaceAll('\\', '/');
       if (path.endsWith('.js') || path.endsWith('.mjs')) execFileSync(process.execPath, ['--check', path]);
-      files.set(name, readFileSync(path));
+      files.set(name, source(relative(root, path).replaceAll('\\', '/')));
     }
   }
 }
@@ -60,6 +71,8 @@ for (const adapter of ['claude', 'codex', 'generic']) collect(resolve(root, 'ada
 collect(resolve(root, 'methods/blueprint-printer'), root);
 collect(resolve(root, 'templates/webapp'), root);
 collect(resolve(root, 'templates/examples/nextjs-supabase'), root);
+files.set('templates/webapp/scripts/config.mjs', source('src/cli/config.js'));
+for (const path of approved) source(path);
 rmSync(resolve(root, 'dist'), { recursive: true, force: true });
 const hashes = {};
 for (const [name, bytes] of [...files].sort(([a], [b]) => a < b ? -1 : 1)) {

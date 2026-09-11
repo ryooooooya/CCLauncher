@@ -4,5 +4,6 @@ export default defineConfig({
     include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
     passWithNoTests: false,
     allowOnly: false,
+    reporters: ["default", "./scripts/vitest-reporter.mjs"],
   },
 });

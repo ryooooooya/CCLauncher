@@ -1,4 +1,4 @@
-import { lstatSync, mkdirSync, writeFileSync, unlinkSync, rmdirSync, readdirSync } from 'node:fs';
+import { lstatSync, mkdirSync, writeFileSync, openSync, closeSync, unlinkSync, rmdirSync, readdirSync } from 'node:fs';
 import { resolve, dirname, parse, relative } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { defaults, choices, featureKeys, validateConfig } from './config.js';
@@ -98,8 +98,9 @@ export function initialize(dist, manifest, dir, config, example, adapter = 'gene
     for (const [name, content] of files) {
       const path = resolve(dir, name);
       ensureDir(dirname(path));
-      writeFileSync(path, content, { flag: 'wx', mode: name.endsWith('.sh') ? 0o755 : 0o644 });
+      const fd = openSync(path, 'wx', name.endsWith('.sh') ? 0o755 : 0o644);
       createdFiles.push(path);
+      try { writeFileSync(fd, content); } finally { closeSync(fd); }
     }
   } catch (error) {
     for (const path of createdFiles.reverse()) { try { unlinkSync(path); } catch {} }

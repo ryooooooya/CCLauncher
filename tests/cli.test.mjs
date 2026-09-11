@@ -159,7 +159,7 @@ test('verification scaffold refuses missing tests and propagates runner failure 
   writeFileSync(resolve(dir, 'tests/security/boundary.test.mjs'), '// Runner fixture only; not an application security test.\n');
   const bin = resolve(dir, 'bin'); mkdirSync(bin);
   const executable = resolve(bin, 'pnpm');
-  writeFileSync(executable, `#!${process.execPath}\nimport { appendFileSync } from 'node:fs';\nappendFileSync(process.env.CC_TEST_LOG, process.argv.slice(2).join(' ') + '\\n');\nprocess.exit(process.argv.includes('test:security') ? 7 : 0);\n`);
+  writeFileSync(executable, `#!${process.execPath}\nimport { appendFileSync, writeFileSync } from 'node:fs';\nappendFileSync(process.env.CC_TEST_LOG, process.argv.slice(2).join(' ') + '\\n');\nif (process.env.CCLAUNCHER_TEST_REPORT) writeFileSync(process.env.CCLAUNCHER_TEST_REPORT, JSON.stringify({schemaVersion:1,states:['passed'],success:true}));\nprocess.exit(process.argv.includes('test:security') ? 7 : 0);\n`);
   // Make the fake runner an ESM script without changing the application's package.
   writeFileSync(resolve(bin, 'package.json'), '{"type":"module"}');
   chmodSync(executable, 0o755);

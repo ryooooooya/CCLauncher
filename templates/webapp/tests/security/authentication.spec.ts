@@ -33,6 +33,7 @@ test("tampered session cookies do not establish identity", async ({
     const tampered = await playwright.request.newContext({
       baseURL: process.env.SECURITY_BASE_URL || "http://127.0.0.1:3000",
       storageState: state,
+      ignoreHTTPSErrors: true,
     });
     try {
       expect((await tampered.get(paths.session)).status()).toBe(401);

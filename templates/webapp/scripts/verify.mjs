@@ -1,6 +1,9 @@
 import { spawnSync } from "node:child_process";
-import { readdirSync, readFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { resolve } from "node:path";
+import { readConfig } from "./config.mjs";
+import { checkReport } from "./test-report.mjs";
 
 const root = process.cwd();
 function hasTests(dir, extension) {
@@ -15,7 +18,7 @@ try {
   if (!["all", "security"].includes(mode))
     throw new Error("Expected all or security.");
   const pkg = JSON.parse(readFileSync("package.json", "utf8"));
-  const config = JSON.parse(readFileSync(".cclauncher.json", "utf8"));
+  const config = readConfig(root);
   const commands =
     mode === "all"
       ? ["lint", "typecheck", "test", "build", "test:security", "test:e2e"]
@@ -38,13 +41,30 @@ try {
     !hasTests(resolve(root, "supabase/tests"), /\.sql$/)
   )
     throw new Error("No Supabase SQL security tests found.");
-  function run(args) {
-    const result = spawnSync("pnpm", args, { stdio: "inherit", cwd: root });
+  function run(args, env = process.env) {
+    const result = spawnSync("pnpm", args, {
+      stdio: "inherit",
+      cwd: root,
+      env,
+    });
     if (result.error) throw result.error;
     if (result.status !== 0)
       throw new Error(`Verification failed: pnpm ${args.join(" ")}`);
   }
-  for (const command of commands) run(["run", command]);
+  for (const command of commands) {
+    if (!["test", "test:security", "test:e2e"].includes(command)) {
+      run(["run", command]);
+      continue;
+    }
+    const dir = mkdtempSync(resolve(tmpdir(), "cc-test-report-"));
+    const path = resolve(dir, "result.json");
+    try {
+      run(["run", command], { ...process.env, CCLAUNCHER_TEST_REPORT: path });
+      checkReport(JSON.parse(readFileSync(path, "utf8")));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
   if (config.database === "supabase") run(["exec", "supabase", "test", "db"]);
 } catch (error) {
   console.error(error.message);
