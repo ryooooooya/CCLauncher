@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 const manifest = JSON.parse(readFileSync(resolve(root, 'manifest.json'), 'utf8'));
 if (manifest.schemaVersion !== 1 || !Array.isArray(manifest.entries) || !manifest.contexts) throw new Error('Invalid manifest');
-const files = new Map();
+const files = new Map([['LICENSE', readFileSync(resolve(root, 'LICENSE'))]]);
 const ids = new Set();
 for (const entry of manifest.entries) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error('Invalid or duplicate entry ID');

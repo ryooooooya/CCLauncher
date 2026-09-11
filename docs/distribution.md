@@ -1,8 +1,11 @@
 # Versioned distribution
 
-The package is `@ryooooooya/cclauncher` at `0.1.0`. The personal scope avoids assuming ownership of the proposed `@cclauncher` organization. npm scope ownership and the initial publication have **not** been configured or verified. The owner approved a future MIT release on 2026-09-09. npm publication is deferred while the harness is developed and used locally. Before applying MIT, review existing documents and code excerpts for third-party licensing and attribution requirements; preserve required notices and exclude or replace incompatible material. Until that review is complete, retain `UNLICENSED` and do not add an MIT license grant.
+The package is `@ryooooooya/cclauncher` at `0.1.0`. The personal scope avoids assuming ownership of the proposed `@cclauncher` organization. npm scope ownership and the initial publication have **not** been configured or verified. The owner approved MIT on 2026-09-09 and clarified the withAI concept as original on 2026-09-11. CCLauncher is provided under the [MIT license](../LICENSE). npm publication remains deferred while the harness is developed and used locally.
 
-The [2026-09-11 provenance inventory](licensing/README.md) records the inspected source/package snapshot and an unresolved withAI origin question for the retained Blueprint/Printer material. MIT application remains pending that clarification; the inventory does not certify ownership.
+The [2026-09-11 provenance inventory](licensing/README.md) records the inspected historical source/package snapshot and subsequent owner clarification. It is not a certification of ownership or a full transitive dependency audit. Preserve existing references and review any newly identified external material against its own terms.
+
+The npm tarball includes root LICENSE and a build-generated, hash-inventoried dist/LICENSE. Init reads that packaged license and writes LICENSE.cclauncher alongside all selected scaffolding. This retains the notice for CCLauncher material without changing the consumer application's own LICENSE or package license field. Third-party dependencies retain their own terms; keep required notices when redistributing them.
+
 
 ## Reproducibility
 
@@ -38,7 +41,7 @@ Public npm publication is a separate milestone. Keep `NPM_PUBLISH_ENABLED` unset
 
 Before the first public release, the owner must:
 - Confirm npm scope ownership.
-- Complete the third-party content review, add the approved MIT license and required attribution, and update package metadata.
+- Review changes since the recorded provenance snapshot and any known external inputs; retain the MIT license and all applicable source-specific notices in the release artifact.
 - Set up the initial package and npm Trusted Publisher for owner `ryooooooya`, repo `CCLauncher`, workflow `release.yml`, environment `npm`.
 - Protect the GitHub `npm` environment with required review and release-tag restrictions.
 - Enable the repository variable `NPM_PUBLISH_ENABLED=true` only after configuration is complete.

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Model-agnostic development harness for secure web applications",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "engines": {
     "node": ">=24"
   },

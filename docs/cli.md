@@ -42,10 +42,16 @@ Options:
 | `--database` | none / supabase / postgres |
 | `--uploads`, `--billing`, `--admin`, `--pii`, `--webhooks`, `--external-api` | true / false |
 
-Generated files: AGENTS.md, .cclauncher.json, PRODUCT / ARCHITECTURE / SECURITY
+Generated files: AGENTS.md, .cclauncher.json, LICENSE.cclauncher, PRODUCT / ARCHITECTURE / SECURITY
 under docs/, tests/security/README.md, verify.sh, security-check.sh and their
 shared Node runner under scripts/. Production also gets a verification workflow;
 Supabase database selection adds supabase/tests/database/README.md.
+
+LICENSE.cclauncher carries the complete CCLauncher MIT notice for supplied scaffolding,
+including optional adapters, examples and methods. Keep it with copies or substantial
+portions of those files. It does not relicense the consumer application or third-party
+dependencies; an existing application LICENSE and package license field are preserved.
+A LICENSE.cclauncher collision also fails before any file is written.
 
 Existing package.json is preserved; its dependency lockfile is not generated or replaced.
 Empty targets receive a maintained package.json and lockfile. Other existing project files are preserved. Any generated-path

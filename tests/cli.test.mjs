@@ -19,11 +19,14 @@ function listing(dir, prefix = '') { return readdirSync(dir, { withFileTypes: tr
 
 test('init generates only project scaffolding and preserves package.json', t => {
   const dir = temp(t);
-  const pkg = '{"name":"consumer","private":true}\n';
+  const pkg = '{"name":"consumer","private":true,"license":"UNLICENSED"}\n';
   writeFileSync(resolve(dir, 'package.json'), pkg);
+  writeFileSync(resolve(dir, 'LICENSE'), 'Consumer proprietary license\n');
   ok(run(dir, ['init', '--yes', '--auth', 'supabase', '--database', 'supabase', '--pii', 'true', '--external-api', 'true']));
   for (const p of ['AGENTS.md', '.cclauncher.json', 'docs/PRODUCT.md', 'docs/ARCHITECTURE.md', 'docs/SECURITY.md', 'tests/security/README.md', 'scripts/verify.sh', 'scripts/security-check.sh', '.github/workflows/cclauncher-verify.yml', 'supabase/tests/database/README.md']) assert.ok(existsSync(resolve(dir, p)), p);
   assert.equal(readFileSync(resolve(dir, 'package.json'), 'utf8'), pkg);
+  assert.equal(readFileSync(resolve(dir, 'LICENSE'), 'utf8'), 'Consumer proprietary license\n');
+  assert.ok(readFileSync(resolve(dir, 'LICENSE.cclauncher'), 'utf8').endsWith(readFileSync(resolve(root, 'LICENSE'), 'utf8')));
   assert.ok(listing(dir).every(p => !p.startsWith('recipes/') && !p.startsWith('standards/') && !p.startsWith('node_modules/')));
   assert.match(readFileSync(resolve(dir, 'docs/SECURITY.md'), 'utf8'), /Provider: supabase/);
   assert.match(readFileSync(resolve(dir, 'docs/SECURITY.md'), 'utf8'), /PII\n\nEnabled: true/);
@@ -191,6 +194,8 @@ test('optional example generates real application, DB policies and tests only fo
   ok(run(dir, args));
   for (const path of ['src/app/api/documents/[id]/route.ts', 'supabase/migrations/20260909000000_documents.sql', 'supabase/tests/database/documents.test.sql', 'tests/security/authentication.spec.ts', 'tests/security/authorization.spec.ts', 'tests/e2e/session.spec.ts', 'pnpm-lock.yaml']) assert.ok(existsSync(resolve(target, path)), path);
   const pkg = JSON.parse(readFileSync(resolve(target, 'package.json')));
+  assert.ok(readFileSync(resolve(target, 'LICENSE.cclauncher'), 'utf8').endsWith(readFileSync(resolve(root, 'LICENSE'), 'utf8')));
+  assert.equal(pkg.license, undefined);
   assert.equal(pkg.scripts.verify, 'sh scripts/verify.sh');
   assert.equal(pkg.scripts.build, 'next build');
   assert.ok(pkg.dependencies['@supabase/ssr']);
@@ -252,4 +257,15 @@ test('method opt-in is isolated, complete and preflights existing design decisio
   assert.equal(readFileSync(resolve(conflict, 'docs/design/_rules.md'), 'utf8'), 'Reviewed project decisions');
   assert.equal(run(invalid, ['init', '--yes', '--method', '../unknown']).status, 1);
   assert.deepEqual(listing(invalid), []);
+});
+
+
+test('license notice conflicts fail before writing any scaffolding', t => {
+  const dir = temp(t);
+  writeFileSync(resolve(dir, 'LICENSE.cclauncher'), 'Previously reviewed notice\n');
+  const result = run(dir, ['init', '--yes', '--adapter', 'claude', '--method', 'blueprint-printer']);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Refusing to overwrite: .*LICENSE\.cclauncher/);
+  assert.deepEqual(listing(dir), ['LICENSE.cclauncher']);
+  assert.equal(readFileSync(resolve(dir, 'LICENSE.cclauncher'), 'utf8'), 'Previously reviewed notice\n');
 });

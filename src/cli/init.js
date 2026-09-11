@@ -77,6 +77,7 @@ export function initialize(dist, manifest, dir, config, example, adapter = 'gene
     }
   }
   if (adapter === 'claude') files.set('CLAUDE.md', readPackaged(dist, manifest, 'adapters/claude/CLAUDE.md'));
+  files.set('LICENSE.cclauncher', `CCLauncher scaffolding notice\n\nThis notice applies to material supplied by CCLauncher ${manifest.packageVersion},\nincluding selected adapters, example and method scaffolding. It does not license\nthe rest of this application or third-party dependencies. Retain this notice\nwith copies or substantial portions of the CCLauncher material.\n\n${readPackaged(dist, manifest, 'LICENSE')}`);
   files.set('.cclauncher.json', JSON.stringify(config, null, 2) + '\n');
   if (config.database === 'supabase') files.set('supabase/tests/database/README.md', '# Database security tests\n\nAdd pgTAP SQL tests for grants and RLS under this directory.\nRun against a disposable local database with migrations applied:\n\n    pnpm exec supabase test db\n\nUse anon / authenticated user A / user B and test allow and deny for every exposed table operation.\nThis README is not an executable test.\n');
   // Preflight every path before the first write. No force/overwrite option.
