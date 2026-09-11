@@ -2,6 +2,8 @@
 
 The package is `@ryooooooya/cclauncher` at `0.1.0`. The personal scope avoids assuming ownership of the proposed `@cclauncher` organization. npm scope ownership and the initial publication have **not** been configured or verified. The owner approved a future MIT release on 2026-09-09. npm publication is deferred while the harness is developed and used locally. Before applying MIT, review existing documents and code excerpts for third-party licensing and attribution requirements; preserve required notices and exclude or replace incompatible material. Until that review is complete, retain `UNLICENSED` and do not add an MIT license grant.
 
+The [2026-09-11 provenance inventory](licensing/README.md) records the inspected source/package snapshot and an unresolved withAI origin question for the retained Blueprint/Printer material. MIT application remains pending that clarification; the inventory does not certify ownership.
+
 ## Reproducibility
 
 Node 24 and pnpm 11.19.0 are the development baseline. There are no external build or runtime dependencies in the CLI. The CLI is plain ESM JavaScript. Its build checks syntax and package structure; behavioral tests verify the CLI. The generated webapp separately runs TypeScript checks.
