@@ -15,8 +15,8 @@ function init(dir) { assert.equal(node([resolve(root, 'dist/cli/index.js'), 'ini
 test('build rejects unapproved local files before adding them to distribution', t => {
   const dir = temporary(t);
   for (const name of ['LICENSE', 'package.json', 'manifest.json', 'distribution-files.json', 'src', 'scripts', 'standards', 'recipes', 'adapters', 'methods', 'templates']) cpSync(resolve(root, name), resolve(dir, name), { recursive: true });
-  for (const path of ['templates/examples/nextjs-supabase/.env.local', 'templates/webapp/.env.test', 'adapters/claude/secret.pem', 'methods/blueprint-printer/unapproved.md']) {
-    writeFileSync(resolve(dir, path), 'SYNTHETIC-NOT-A-CREDENTIAL');
+  for (const path of ['templates/examples/nextjs-supabase/.env.local', 'templates/webapp/.env.test', 'adapters/claude/secret.pem', 'methods/blueprint-printer/unapproved.md', 'templates/webapp/unapproved.js']) {
+    writeFileSync(resolve(dir, path), 'SYNTHETIC-NOT-A-CREDENTIAL )');
     const result = node(['scripts/build.mjs'], dir);
     assert.notEqual(result.status, 0, path);
     assert.match(result.stderr, /Unapproved distribution source/);

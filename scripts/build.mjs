@@ -61,8 +61,9 @@ function collect(dir, prefix) {
     if (item.isDirectory()) collect(path, prefix);
     else if (item.isFile()) {
       const name = relative(prefix, path).replaceAll('\\', '/');
+      const bytes = source(relative(root, path).replaceAll('\\', '/'));
       if (path.endsWith('.js') || path.endsWith('.mjs')) execFileSync(process.execPath, ['--check', path]);
-      files.set(name, source(relative(root, path).replaceAll('\\', '/')));
+      files.set(name, bytes);
     }
   }
 }
