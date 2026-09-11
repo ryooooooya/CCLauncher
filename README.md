@@ -2,11 +2,13 @@
 
 CCLauncher is a model-agnostic development harness for building secure web applications with AI coding agents.
 
-AIコーディングエージェントでセキュアなWebアプリを作るための、モデル非依存の開発ハーネスへ移行中です。
+AIコーディングエージェントでセキュアなWebアプリを作るための、モデル非依存の開発ハーネスです。
+プロジェクト固有の判断、必要なときだけ読む知識、コマンドで実行する検証をつなぎます。
 
-## Versioned package + CLI
+## Install
 
-`@ryooooooya/cclauncher@0.1.0` は開発中・npm未公開です。tarball配布、`init / recipe / context / doctor`、package内のstandards / recipesを実装しました。使い方は [CLI guide](docs/cli.md) を参照してください。initはproject docsと検証基盤を作ります。#6の [Webapp guide](docs/webapp-template.md) では、実行可能なNext.js＋Supabaseの実例とsecurity testsを利用できます。
+Node.js 24 / pnpm 11.19.0を使用します。`@ryooooooya/cclauncher@0.1.0` は開発中・npm未公開です。
+現在はレビュー済みcheckoutからtarballを作り、ローカルで利用できます。
 
 ```sh
 pnpm install --frozen-lockfile --ignore-scripts
@@ -14,31 +16,81 @@ pnpm verify
 npm pack
 ```
 
-導入・更新・公開・protected-main運用は [配布方針](docs/distribution.md) を参照してください。新方式ではexact versionとlockfileで配布物を固定します。mainのraw URL取得による新規bootstrapは廃止方針です。
+既存アプリでは、作成したtarballを開発依存に追加します。
 
-## 新しいディレクトリ構成
+```sh
+pnpm add -D --save-exact /absolute/path/to/ryooooooya-cclauncher-0.1.0.tgz
+pnpm exec cclauncher --version
+```
 
-| ディレクトリ | 責務 |
+package.jsonとlockfileをcommitし、tarballもチーム・CIから同じ内容を参照できる場所に固定します。
+ローカル絶対パスへの依存は、そのままでは他の環境に持ち運べません。
+更新時も版とlockfileを明示的に変更します。詳細は [配布と公開](docs/distribution.md)。
+
+## Initialize project docs
+
+```sh
+pnpm exec cclauncher init --yes --auth supabase --database supabase --pii true
+```
+
+AGENTS.md、project docs、検証設定・テスト・CIの雛形を配置します。既存ファイルは上書きしません。
+既存package.jsonは保持するため、生成された検証に必要なscriptsと依存をアプリ側へ統合してください。
+新しい空ディレクトリにはpackage.jsonとlockfileも配置します。通常のinitだけでは動作するアプリは完成しません。
+
+| ファイル | 役割 |
 |---|---|
-| `standards/` | フレームワーク非依存の原則 |
-| `recipes/` | 技術別・タスク別に読む知識 |
-| `templates/` | consumerへ生成する最小ファイル |
-| `adapters/` | エージェント・ツール固有の設定 |
-| `methods/` | 任意採用の開発手法。Blueprint / Printerを任意採用 |
-| `src/cli/` | 決定論的な初期化・知識取得・診断 |
+| AGENTS.md | 直接保守する共通索引。AIで抽出・再生成しない |
+| docs/PRODUCT.md | 目的・対象ユーザー・受け入れ条件 |
+| docs/ARCHITECTURE.md | 構成と設計判断 |
+| docs/SECURITY.md | 認証・所有権・アクセス行列・サービス固有の境界 |
+| .cclauncher.json | stackとfeature設定。モデル割当を保存しない |
 
-境界と共存方針は [architecture](docs/architecture.md)、旧文書ごとの移行先は [migration map](docs/migration.md) を参照してください。#2では置き場と責務を定義し、本文の整理・移行は#3〜#8で行います。#3の [security / dependencies / testing / privacy標準](standards/README.md) と#4の [技術別recipes](recipes/README.md) は参照可能です。package収録とCLI取得は#5、consumer向け実行可能な検証は#6です。ディレクトリのREADMEは管理者向け索引で、consumerへ配布しません。
+実行可能なNext.js＋Supabase例は `--example nextjs-supabase` で空ディレクトリに作成できます。
+[Webapp guide](docs/webapp-template.md) に、ローカルDBとテストアカウントを含む導入手順があります。
 
-## Shared instructions and adapters
+## Load relevant context
 
-AGENTS.mdを直接保守する共通の正本とします。`init --adapter claude` は
-`@AGENTS.md` のみのCLAUDE.mdを配置します。Codex / genericはAGENTS.mdを直接読みます。
-`cclauncher context workflow` でrole・risk・verification・独立reviewの標準を取得できます。
-使い方と既存projectの移行は [adapter guide](docs/agent-adapters.md) を参照してください。
+```sh
+pnpm exec cclauncher context auth
+pnpm exec cclauncher context database
+pnpm exec cclauncher context workflow
+pnpm exec cclauncher recipe supabase
+pnpm exec cclauncher doctor
+```
 
-## Migration status
+standards / recipesはpackage内に保持し、consumerへ大量コピーしません。
+同じpackage・設定・topicから同じcontextをオフラインで取得します。
+project固有の判断を優先し、security regressionは報告します。
+doctorは設定や必要ファイルを診断するもので、テスト実行や安全性の認証は行いません。
+全オプションは [CLI guide](docs/cli.md)。
 
-#1〜#8のpackage・standards・recipes・CLI・Webapp template・adaptersを実装しました。
-Blueprint / Printerは `init --method blueprint-printer` で任意採用できます。[method guide](methods/blueprint-printer/README.md) を参照してください。残るlegacy文書の撤去とREADMEの最終整理は #9です。
-旧ルート文書は移行資料です。新規bootstrapには上記CLIを使ってください。
-AGENTS.mdのAI抽出生成方式と旧bootstrap promptは廃止しました。
+## Verify
+
+```sh
+pnpm verify
+```
+
+アプリへ接続したlint・型チェック・テスト・build・security・E2Eを実行します。
+Supabase構成ではDBテストも必要です。未実装のチェックや利用できないサービスは失敗として扱います。
+認可のdenyケースと所有者の正常操作を検証し、high-risk変更では独立reviewも必要です。
+例のCIはHTTP認証・認可、Chromium、Postgres grants / RLSを実際に検証します。
+
+## Optional integration
+
+- `init --adapter claude`: `@AGENTS.md` のみのCLAUDE.mdを追加。Codex / genericはAGENTS.mdを直接読む。[Adapters](docs/agent-adapters.md)
+- `init --method blueprint-printer`: product stories・design assets・prototype履歴を扱う手法を任意導入。[Blueprint / Printer](methods/blueprint-printer/README.md)
+
+どちらもモデル選択・agent起動・権限設定を行いません。
+
+## Architecture
+
+| 場所 | 責務 |
+|---|---|
+| standards / recipes | 共通原則と技術別知識 |
+| templates | project docs・テスト・CI |
+| adapters | agent固有の薄い入口 |
+| methods | 任意採用する開発手法 |
+| src/cli / manifest.json | 決定論的な初期化・取得・診断と配布物の一覧 |
+
+構成の詳細は [architecture](docs/architecture.md)、既存利用者向けの移行記録は [migration](docs/migration.md)。
+ライセンスは出典確認が終わるまでUNLICENSEDを維持し、npm公開は保留しています。

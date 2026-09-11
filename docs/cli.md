@@ -1,6 +1,6 @@
 # CLI
 
-Issue #5 implements offline knowledge lookup and deterministic project initialization.
+The CLI provides offline knowledge lookup and deterministic project initialization.
 The package is still unpublished; use a locally built tarball as described in
 [distribution](distribution.md). Install it as a development dependency before use.
 
@@ -35,6 +35,8 @@ Options:
 | `--dir` | Target directory; defaults to current working directory |
 | `--scope` | production / prototype |
 | `--example` | nextjs-supabase (matching stack and empty target only) |
+| `--adapter` | generic (default) / claude / codex |
+| `--method` | blueprint-printer (optional) |
 | `--framework` | nextjs / none |
 | `--auth` | none / supabase / authjs |
 | `--database` | none / supabase / postgres |
@@ -51,7 +53,7 @@ collision fails before writing. Existing symlink parents and leaf targets are
 rejected, and files use exclusive creation. Use a locally controlled workspace;
 initialization is not an OS sandbox against hostile concurrent filesystem changes.
 There is no force option, network fetch, install hook, model assignment or
-recipe/standard copy into the consumer. No agent-specific adapter is installed.
+recipe/standard copy into the consumer. No agent-specific adapter is installed unless explicitly selected.
 
 ### Completing the scaffold
 
@@ -62,7 +64,7 @@ runner failure stops subsequent commands. Supabase projects additionally need
 SQL tests and an available disposable local database for `pnpm exec supabase test db`.
 
 The generated workflow is an initial gate. Review the Node/pnpm pins and provision
-required test services before enabling it. Issue #6 supplies HTTP security tests and an optional runnable Next.js/Supabase
+required test services before enabling it. The templates supply HTTP security tests and an optional runnable Next.js/Supabase
 example with provider fixtures and CI; see [webapp guide](webapp-template.md).
 Placeholder READMEs do not count as tests. CCLauncher does not execute arbitrary project scripts during init
 or doctor. Prototype omits production CI but does not silently bypass verification.

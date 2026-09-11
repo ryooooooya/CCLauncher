@@ -1,6 +1,6 @@
 # CCLauncher architecture
 
-Issue #2 defines the boundaries of the new package. This is a maintainer document; it is not copied into consumer projects.
+This document defines the package boundaries. This is a maintainer document; it is not copied into consumer projects.
 
 ## Sources and responsibilities
 
@@ -15,7 +15,7 @@ Issue #2 defines the boundaries of the new package. This is a maintainer documen
 | `manifest.json` | Explicit inventory for versioned package content | Discovery from mutable network sources |
 | `docs/` | Maintainer architecture, migration and distribution decisions | Consumer product or security specifications |
 
-Directory README files are maintainer navigation, not recipes or generated consumer files. The migration map assigns future paths; a destination in that map does not imply that its content is implemented.
+Directory README files are maintainer navigation, not recipes or generated consumer files. The migration record lists former paths and their current replacements.
 
 ## Runtime boundary
 
@@ -33,12 +33,15 @@ The method lives in `methods/blueprint-printer/`, with `blueprint/` and `printer
 
 Issue #8 migrates the files together. Explicit init --method blueprint-printer adds method-owned templates and asset rules; no runtime or Storybook dependency is installed. Domain logic is preserved and print is an agent-independent task instruction.
 
-## Staged coexistence
+## Distribution and ownership
 
-- Remaining legacy root documents remain migration sources until their replacement is reviewed. Do not copy their full content into the new directories merely to populate them.
-- New architecture and [distribution policy](distribution.md) govern the new package. Legacy generation and raw-main retrieval instructions do not govern its implementation.
-- Each content migration updates references and the [migration map](migration.md); avoid maintaining two normative copies. Issue #9 removes obsolete files after replacement verification.
-- Issue #2 adds directory contracts and the migration map only. Standards, recipes, template generation, adapters and methods are implemented in Issues #3–#8.
-- Issue #5 implements knowledge packaging with explicit manifest entries and context selectors. The build validates metadata and section references; unknown or malformed entries fail.
-- Tarballs contain the CLI modules, emitted inventory, selected standards/recipes, agent adapters, optional methodology files and webapp scaffold templates, plus package metadata and root README. Maintainer indexes and legacy knowledge files are excluded. See [CLI behavior](cli.md).
-- npm publication remains deferred. Future MIT application follows the third-party-content review agreed in the distribution policy.
+The CLI, manifest-selected standards/recipes, adapters, optional methodology and
+webapp templates are bundled into a versioned tarball. Maintainer indexes remain
+repository navigation. Build validates metadata, section references and content hashes.
+
+Legacy root guides and their distribution mechanism have been removed. Existing
+consumer projects are unaffected; package updates never rewrite their local decisions.
+See [migration](migration.md) for the historical inventory and [CLI](cli.md) for behavior.
+
+npm publication remains deferred. Future MIT application requires third-party content
+review and any required notices; see [distribution](distribution.md).

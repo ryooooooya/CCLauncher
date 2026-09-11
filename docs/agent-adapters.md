@@ -33,9 +33,8 @@ all files and fails before writing. Existing projects should migrate manually.
    Do not flatten rules into AGENTS.md or synchronize shared policy with AI summaries.
 5. Run project verification and obtain independent review for security-boundary changes.
 
-The legacy generation specification is removed. Retired root guides are migration
-pointers until #9 removes legacy paths; they no longer instruct generation.
-Blueprint/Printer behavior migrates separately in #8.
+The legacy generation specification is removed. Retired root guides have been removed.
+Blueprint/Printer is an optional method; see its packaged guide.
 
 ## Roles and evidence
 

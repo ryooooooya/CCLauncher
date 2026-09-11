@@ -1,11 +1,13 @@
 # Templates
 
-Minimal consumer-owned files: project documents, security tests, verification scripts and CI. Generic standards and recipes remain in the package.
+Consumer-owned project docs, security tests, verification scripts and CI.
+Generic standards/recipes stay in the package. Init uses deterministic templates
+and preflights collisions before writing; existing project decisions are preserved.
 
-Issue #5 adds deterministic generation of project docs, verification runners and a production CI scaffold under webapp/. The runners deliberately fail until real application commands and boundary tests exist. Runnable framework/provider integrations remain Issue #6. Optional methodologies and agent adapters are not installed by default.
+The webapp baseline uses Biome, TypeScript, Vitest and Playwright. Its verification
+fails until real application commands, tests and required services are configured.
+The explicit examples/nextjs-supabase variant provides a runnable owner-scoped
+resource boundary, local synthetic fixtures, grants/RLS/pgTAP and CI.
 
-See the [architecture](../docs/architecture.md) and [migration map](../docs/migration.md). This index itself is not generated into consumers.
-
-Issue #6 adds the single-linter webapp harness and real HTTP security tests.
-The opt-in examples/nextjs-supabase variant implements the tested resource boundary,
-local provider fixtures, pgTAP tests and full CI. See [webapp guide](../docs/webapp-template.md).
+See [webapp guide](../docs/webapp-template.md) and [CLI](../docs/cli.md).
+Adapters and methodologies are optional. This index is not copied to consumers.

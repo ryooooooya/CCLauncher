@@ -32,7 +32,17 @@ jobs:
           node-version: '24.19.0'
       - run: npm install --global pnpm@11.19.0 --ignore-scripts
       - run: node scripts/build.mjs
-      - run: node dist/cli/index.js init --yes --auth supabase --database supabase --example nextjs-supabase --dir "$RUNNER_TEMP/cclauncher-webapp"
+      - name: Install built tarball in an isolated tool project
+        run: |
+          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
+          mv "$RUNNER_TEMP"/ryooooooya-cclauncher-*.tgz "$RUNNER_TEMP/cclauncher.tgz"
+          mkdir "$RUNNER_TEMP/cclauncher-tools"
+          node -e 'require("node:fs").writeFileSync(process.env.RUNNER_TEMP + "/cclauncher-tools/package.json", JSON.stringify({name:"harness-tools",private:true}))'
+          pnpm --dir "$RUNNER_TEMP/cclauncher-tools" add --offline --save-dev --save-exact --ignore-scripts "$RUNNER_TEMP/cclauncher.tgz"
+      - name: Initialize through installed CLI
+        run: pnpm --dir "$RUNNER_TEMP/cclauncher-tools" exec cclauncher init --yes --auth supabase --database supabase --example nextjs-supabase --dir "$RUNNER_TEMP/cclauncher-webapp"
+      - name: Load installed context for the generated project
+        run: pnpm --dir "$RUNNER_TEMP/cclauncher-tools" exec cclauncher context auth --dir "$RUNNER_TEMP/cclauncher-webapp"
       - run: pnpm install --frozen-lockfile --ignore-scripts
         working-directory: ${{ runner.temp }}/cclauncher-webapp
       - run: pnpm exec playwright install --with-deps chromium
