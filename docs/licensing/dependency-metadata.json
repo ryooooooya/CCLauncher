@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "reviewedCommit": "1c39d777ee35dfcbdc85f8f896dfca190eeb40cd",
+  "scope": "Direct generated-example dependencies only; installed package.json declarations, not full transitive/license-text review.",
+  "packages": [
+    {
+      "name": "@biomejs/biome",
+      "version": "2.5.12",
+      "declaredLicense": "MIT OR Apache-2.0",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/biomejs/biome.git",
+        "directory": "packages/@biomejs/biome"
+      },
+      "metadataSha256": "e8c70a380a4f0bfdd738942b9394de4675b2bcc620c9e0a7220f0e429fca4332",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "@playwright/test",
+      "version": "1.63.0",
+      "declaredLicense": "Apache-2.0",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/microsoft/playwright.git"
+      },
+      "metadataSha256": "5587f932b8979b6889654b60e3c28aeb7ca0abbac00eec8c176c939a16149536",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "@supabase/ssr",
+      "version": "0.12.7",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/supabase/ssr.git"
+      },
+      "metadataSha256": "f7fb77112c8e841801ae6b841078488ea262e226a5488ef213ce1a13c1b6be0e",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "@supabase/supabase-js",
+      "version": "2.116.0",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/supabase/supabase-js.git",
+        "directory": "packages/core/supabase-js"
+      },
+      "metadataSha256": "7fb2b72ae229cc489891f65915a11ba0528f14783ffaa95379d50bcef95f1d0c",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "@types/node",
+      "version": "22.20.2",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/node"
+      },
+      "metadataSha256": "8721a336fe0d4f04a95c2c68a206ca0a9ddd718cb7e17b64176eaa0637edf548",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "@types/react",
+      "version": "19.3.0",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/react"
+      },
+      "metadataSha256": "505c0df4cd73d6a02c946bd9b81451584bd9c83ea72d75cff9b826efceaa19c2",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "@types/react-dom",
+      "version": "19.3.0",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/react-dom"
+      },
+      "metadataSha256": "4a2052bb362c34f1d39cfe0818b6fe01a9f988b609e8b7e4832aff7dbf2f7180",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "next",
+      "version": "16.3.4",
+      "declaredLicense": "MIT",
+      "repository": "vercel/next.js",
+      "metadataSha256": "c4ef8a1c8da320a162485f96d35df7745da90e6becc36882d6e81be9df66eec1",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "react",
+      "version": "19.3.0",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/react/react.git",
+        "directory": "packages/react"
+      },
+      "metadataSha256": "6e003e4e9ed25afa7fdd55613f8aa877cefa9b359d9c13f81ee704030248e24e",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "react-dom",
+      "version": "19.3.0",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/react/react.git",
+        "directory": "packages/react-dom"
+      },
+      "metadataSha256": "136d4af63de473392ea79d6a21932b0ed9eb37fe518ce70f4621250f3d79e9bb",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "supabase",
+      "version": "2.117.0",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/supabase/cli.git",
+        "directory": "apps/cli"
+      },
+      "metadataSha256": "17d239de5b3c7e65f7e44ca1aff9b0c0089c27080bde8403d3be2f49176be633",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "declaredLicense": "Apache-2.0",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/microsoft/TypeScript.git"
+      },
+      "metadataSha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
+      "bundledInCCLauncherTarball": false
+    },
+    {
+      "name": "vitest",
+      "version": "5.0.0",
+      "declaredLicense": "MIT",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/vitest-dev/vitest.git",
+        "directory": "packages/vitest"
+      },
+      "metadataSha256": "a4f269c689b346c33446feaa8adea6bc1c1bd35a21e12c9ffac74198687b0fbc",
+      "bundledInCCLauncherTarball": false
+    }
+  ]
+}

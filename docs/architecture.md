@@ -43,5 +43,5 @@ Legacy root guides and their distribution mechanism have been removed. Existing
 consumer projects are unaffected; package updates never rewrite their local decisions.
 See [migration](migration.md) for the historical inventory and [CLI](cli.md) for behavior.
 
-npm publication remains deferred. Future MIT application requires third-party content
-review and any required notices; see [distribution](distribution.md).
+CCLauncher uses the [MIT license](../LICENSE), with a retained notice in generated
+scaffolding. npm publication remains deferred; see [distribution](distribution.md).

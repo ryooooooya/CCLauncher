@@ -25,7 +25,19 @@ if (!status.ANON_KEY || !status.SERVICE_ROLE_KEY)
 const admin = createClient(url.origin, status.SERVICE_ROLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
-const env = ["SECURITY_BASE_URL=http://127.0.0.1:3000"];
+const origin = process.env.SECURITY_BASE_URL || "http://127.0.0.1:3000";
+const app = new URL(origin);
+if (
+  app.origin !== origin ||
+  !["http:", "https:"].includes(app.protocol) ||
+  !["127.0.0.1", "localhost"].includes(app.hostname)
+)
+  throw new Error("Fixture application must use a local origin");
+const env = [
+  `SECURITY_BASE_URL=${origin}`,
+  `SUPABASE_URL=${url.origin}`,
+  `SUPABASE_ANON_KEY=${status.ANON_KEY}`,
+];
 for (const role of ["OWNER", "OTHER", "ADMIN"]) {
   const email = `fixture-${role.toLowerCase()}-${randomUUID()}@example.invalid`;
   const password = `fixture-${randomUUID()}-Aa1!`;
@@ -58,7 +70,7 @@ for (const role of ["OWNER", "OTHER", "ADMIN"]) {
 }
 writeFileSync(
   ".env.local",
-  `${marker}\nAPP_ORIGIN=http://127.0.0.1:3000\nSUPABASE_URL=${url.origin}\nSUPABASE_ANON_KEY=${status.ANON_KEY}\n`,
+  `${marker}\nAPP_ORIGIN=${origin}\nSUPABASE_URL=${url.origin}\nSUPABASE_ANON_KEY=${status.ANON_KEY}\n`,
   { mode: 0o600 },
 );
 writeFileSync(".env.test", `${marker}\n${env.join("\n")}\n`, { mode: 0o600 });

@@ -93,4 +93,4 @@ Supabase構成ではDBテストも必要です。未実装のチェックや利�
 | src/cli / manifest.json | 決定論的な初期化・取得・診断と配布物の一覧 |
 
 構成の詳細は [architecture](docs/architecture.md)、既存利用者向けの移行記録は [migration](docs/migration.md)。
-ライセンスは出典確認が終わるまでUNLICENSEDを維持し、npm公開は保留しています。
+CCLauncherは[MIT License](LICENSE)で提供します。生成先にはCCLauncher由来のファイルの表記として `LICENSE.cclauncher` を同梱し、アプリ自身のライセンスは変更しません。[出典確認の記録](docs/licensing/README.md)も参照してください。npm公開は引き続き保留しています。

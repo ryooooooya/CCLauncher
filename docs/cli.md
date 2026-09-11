@@ -42,15 +42,22 @@ Options:
 | `--database` | none / supabase / postgres |
 | `--uploads`, `--billing`, `--admin`, `--pii`, `--webhooks`, `--external-api` | true / false |
 
-Generated files: AGENTS.md, .cclauncher.json, PRODUCT / ARCHITECTURE / SECURITY
+Generated files: AGENTS.md, .cclauncher.json, LICENSE.cclauncher, PRODUCT / ARCHITECTURE / SECURITY
 under docs/, tests/security/README.md, verify.sh, security-check.sh and their
-shared Node runner under scripts/. Production also gets a verification workflow;
+shared Node runner, config validator and required-test reporters under scripts/. Production also gets a verification workflow;
 Supabase database selection adds supabase/tests/database/README.md.
+
+LICENSE.cclauncher carries the complete CCLauncher MIT notice for supplied scaffolding,
+including optional adapters, examples and methods. Keep it with copies or substantial
+portions of those files. It does not relicense the consumer application or third-party
+dependencies; an existing application LICENSE and package license field are preserved.
+A LICENSE.cclauncher collision also fails before any file is written.
 
 Existing package.json is preserved; its dependency lockfile is not generated or replaced.
 Empty targets receive a maintained package.json and lockfile. Other existing project files are preserved. Any generated-path
 collision fails before writing. Existing symlink parents and leaf targets are
-rejected, and files use exclusive creation. Use a locally controlled workspace;
+rejected, and files use exclusive creation. A newly opened file is registered for rollback before
+writing; partial write failures clean up generated files without deleting preexisting files. Use a locally controlled workspace;
 initialization is not an OS sandbox against hostile concurrent filesystem changes.
 There is no force option, network fetch, install hook, model assignment or
 recipe/standard copy into the consumer. No agent-specific adapter is installed unless explicitly selected.
@@ -60,7 +67,15 @@ recipe/standard copy into the consumer. No agent-specific adapter is installed u
 Define actual `lint`, `typecheck`, `test`, `test:security`, `test:e2e`, `build` package scripts,
 install their tools and implement executable application tests in tests/security/.
 Then run `sh scripts/verify.sh`. Missing scripts/tests fail before any checks run;
-runner failure stops subsequent commands. Supabase projects additionally need
+runner failure stops subsequent commands. Both verifier modes validate config using
+an unchanged copy of the CLI validator packaged as scripts/config.mjs. Missing/invalid
+schema fields fail before running project commands.
+
+Vitest/Playwright configs load required-test reporters. Each test command must emit a
+fresh structured report with at least one executed test, all passing and no skip/todo.
+Missing reports fail even if a command exits zero. The reporters also reject skipped
+runs when invoked directly. If changing test tools, provide an equivalent reporter;
+do not replace the checks with file-name scans or unconditional success. Supabase projects additionally need
 SQL tests and an available disposable local database for `pnpm exec supabase test db`.
 
 The generated workflow is an initial gate. Review the Node/pnpm pins and provision

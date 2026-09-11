@@ -81,7 +81,8 @@ package; do not delete local rules merely because their old upstream names disap
 
 All implemented package flows are covered by CLI/distribution and webapp CI. This does
 not certify every recipe integration or replace independent security review.
-The repository-wide third-party provenance/license review and npm publication remain
-pending. UNLICENSED stays in place; future MIT direction is approved but not yet applied.
+The [provenance inventory and owner clarification](licensing/README.md) are recorded
+and the approved MIT license is applied, including notices in copied scaffolding.
+The inventory is not a full dependency legal audit. npm publication remains pending.
 External branch/tag/environment protections must be verified by the repository owner;
 source documentation is not proof that those settings are enabled. See [distribution](distribution.md).

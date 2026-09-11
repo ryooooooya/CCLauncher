@@ -30,3 +30,21 @@ test('release requires matching tag, checkout and main ancestry', () => {
     assert.notEqual(check('v0.1.0'), 0);
   } finally { rmSync(temp, { recursive: true, force: true }); }
 });
+
+
+test('publish gate requires both successful jobs on the exact main commit', async () => {
+  const { requiredCI } = await import('../scripts/check-ci.mjs');
+  const sha = 'a'.repeat(40);
+  const run = { head_sha: sha, event: 'push', head_branch: 'main', status: 'completed', conclusion: 'success' };
+  const jobs = ['verify', 'webapp-example'].map(name => ({ name, head_sha: sha, status: 'completed', conclusion: 'success' }));
+  assert.doesNotThrow(() => requiredCI([run], jobs, sha));
+  assert.throws(() => requiredCI([], [], sha));
+  assert.throws(() => requiredCI([run], jobs.slice(0, 1), sha));
+  for (const conclusion of ['failure', 'skipped', 'cancelled', null]) {
+    assert.throws(() => requiredCI([{ ...run, conclusion }], jobs, sha));
+    assert.throws(() => requiredCI([run], [jobs[0], { ...jobs[1], conclusion }], sha));
+  }
+  assert.throws(() => requiredCI([{ ...run, head_sha: 'b'.repeat(40) }], jobs, sha));
+  assert.throws(() => requiredCI([run], [jobs[0], { ...jobs[1], head_sha: 'b'.repeat(40) }], sha));
+  assert.throws(() => requiredCI([{ ...run, event: 'pull_request' }], jobs, sha));
+});

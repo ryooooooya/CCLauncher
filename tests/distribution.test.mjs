@@ -23,7 +23,7 @@ test('build is deterministic and manifest matches packaged CLI', () => {
   const before = readFileSync(resolve(root, 'dist/manifest.json'), 'utf8');
   const isolated = mkdtempSync(resolve(tmpdir(), 'cclauncher-build-'));
   try {
-    for (const name of ['package.json', 'manifest.json', 'scripts', 'src', 'standards', 'recipes', 'templates', 'adapters', 'methods']) cpSync(resolve(root, name), resolve(isolated, name), { recursive: true });
+    for (const name of ['LICENSE', 'package.json', 'manifest.json', 'distribution-files.json', 'scripts', 'src', 'standards', 'recipes', 'templates', 'adapters', 'methods']) cpSync(resolve(root, name), resolve(isolated, name), { recursive: true });
     run(process.execPath, ['scripts/build.mjs'], isolated);
     assert.equal(readFileSync(resolve(isolated, 'dist/manifest.json'), 'utf8'), before);
   } finally { rmSync(isolated, { recursive: true, force: true }); }
@@ -36,7 +36,7 @@ test('real tarball installs offline, locks integrity, and runs without source or
   try {
     const [pack] = JSON.parse(run('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', temp]));
     const manifest = JSON.parse(readFileSync(resolve(root, 'dist/manifest.json')));
-    assert.deepEqual(pack.files.map(f => f.path).sort(), ['README.md', 'dist/manifest.json', 'package.json', ...Object.keys(manifest.files).map(p => `dist/${p}`)].sort());
+    assert.deepEqual(pack.files.map(f => f.path).sort(), ['LICENSE', 'README.md', 'dist/manifest.json', 'package.json', ...JSON.parse(readFileSync(resolve(root, 'distribution-files.json'))).map(p => `dist/${p.replace(/^src\//, '')}`), 'dist/templates/webapp/scripts/config.mjs'].sort());
     const archive = resolve(temp, pack.filename);
     writeFileSync(resolve(temp, 'package.json'), JSON.stringify({ name: 'consumer', private: true }));
     run('pnpm', ['add', '--offline', '--save-dev', '--save-exact', '--ignore-scripts', archive], temp);
@@ -54,6 +54,11 @@ test('real tarball installs offline, locks integrity, and runs without source or
     assert.doesNotMatch(context, /DB security tests/);
     const installed = JSON.parse(readFileSync(resolve(temp, 'node_modules', pkg.name, 'package.json')));
     assert.equal(installed.version, pkg.version);
+    assert.equal(installed.license, 'MIT');
+    const license = readFileSync(resolve(root, 'LICENSE'), 'utf8');
+    assert.equal(readFileSync(resolve(temp, 'node_modules', pkg.name, 'LICENSE'), 'utf8'), license);
+    assert.equal(readFileSync(resolve(temp, 'node_modules', pkg.name, 'dist/LICENSE'), 'utf8'), license);
+    assert.ok(readFileSync(resolve(temp, 'LICENSE.cclauncher'), 'utf8').endsWith(license));
     for (const hook of ['preinstall', 'install', 'postinstall', 'prepare']) assert.equal(installed.scripts[hook], undefined);
   } finally { rmSync(temp, { recursive: true, force: true }); }
 });

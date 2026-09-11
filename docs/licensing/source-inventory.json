@@ -1,0 +1,1645 @@
+{
+  "schemaVersion": 1,
+  "reviewedCommit": "1c39d777ee35dfcbdc85f8f896dfca190eeb40cd",
+  "scope": "Tracked source at the baseline commit; history is evidence, not copyright ownership or license clearance.",
+  "files": [
+    {
+      "path": ".github/dependabot.yml",
+      "sha256": "e6714156ceca913ca03c2235c80c76c735ebc9312279ad69ffb86457efd7670c",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": ".github",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "5ab2f8748a09bdf51b38c79ace4cc693473425e71a27449d8b453cdb5b7816dc",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": ".github",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "sha256": "0655dc748abc76a703da1bdc6aeae2b3f41cbc5291bdd8ca7f84d13fd33ad0c4",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": ".github",
+      "references": [
+        "https://registry.npmjs.org"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "e8e70120c7fb8891ed746bb896e739a62f7f6ea1df6225461506760c146f6614",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "root",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": ".npmrc",
+      "sha256": "be85cc462e740587626bbcbb1c3ed1c40b26e62ec072e8cbd2768f23915c28e6",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "root",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "README.md",
+      "sha256": "384ed52b024fb9088767758f1dc0ede08b68f97601493b00434d53c70ab7125f",
+      "firstTraceableCommit": "0a4291c62e0b77856ac4f9f0aee113b5daeb33a7",
+      "category": "root",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "adapters/README.md",
+      "sha256": "a5d324aabcc7c4599322edb320cb5d415f90d238c49a5c2ae650f915b5bf5c02",
+      "firstTraceableCommit": "dc11c02697da4a1e57ade0935da6eb108695e5b2",
+      "category": "adapters",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "adapters/claude/CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "firstTraceableCommit": "61daab8447602ed805ed62bdd0e7ca46ccd8162a",
+      "category": "adapters",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "adapters/claude/README.md",
+      "sha256": "36f28689aecc65f092f22fd6e3b8e5b9cce68e1307c1a77865143eed9e17d5fb",
+      "firstTraceableCommit": "4adcb865b93503ab5511b09627963b612f7ac757",
+      "category": "adapters",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "adapters/claude/security.md",
+      "sha256": "ac632e225e48447c22510f4fba0b9f3e1f5891f89dc73de2ce730845e716813f",
+      "firstTraceableCommit": "61daab8447602ed805ed62bdd0e7ca46ccd8162a",
+      "category": "adapters",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "adapters/codex/README.md",
+      "sha256": "b89cdf62d9777485c71aea4cd78c2d7a65110b8ca6c67ad67d93dab647bc3b99",
+      "firstTraceableCommit": "61daab8447602ed805ed62bdd0e7ca46ccd8162a",
+      "category": "adapters",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "adapters/generic/README.md",
+      "sha256": "7c259cc832a01ca8e05b0dee40174eaf004b9a5b2f330703cb6be412a22904cc",
+      "firstTraceableCommit": "61daab8447602ed805ed62bdd0e7ca46ccd8162a",
+      "category": "adapters",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "docs/agent-adapters.md",
+      "sha256": "952815576de67d34644a8c068ddf86f973ec93793b40867004ad816ea6645b3e",
+      "firstTraceableCommit": "61daab8447602ed805ed62bdd0e7ca46ccd8162a",
+      "category": "docs",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "6f0f4b0ebee49ba8d061035b82300f006b92ebb1d27892e6bb56c04c4214199f",
+      "firstTraceableCommit": "dc11c02697da4a1e57ade0935da6eb108695e5b2",
+      "category": "docs",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "docs/cli.md",
+      "sha256": "4ab06890a9440a052e5f58282f82bf0569a9dfc5f85859908a1c28fac3945c59",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "docs",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "docs/distribution.md",
+      "sha256": "0fee246c413a8e724d12f43375172ed46d1b5705abf2782667fdd8b05db9d711",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "docs",
+      "references": [
+        "https://docs.npmjs.com/trusted-publishers/",
+        "https://pnpm.io/cli/install"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "docs/maintainers/automation.md",
+      "sha256": "f07226c88ce0f362545ddbd2654bfd5b501fd5dbe3613c169a867de706f92ae8",
+      "firstTraceableCommit": "4adcb865b93503ab5511b09627963b612f7ac757",
+      "category": "docs",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "docs/migration.md",
+      "sha256": "72d48156df192e5dceb36d8b5f13736440eb2c6a0599e7e04c7fc9e274884d1f",
+      "firstTraceableCommit": "dc11c02697da4a1e57ade0935da6eb108695e5b2",
+      "category": "docs",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "docs/webapp-template.md",
+      "sha256": "3e3602e40aca282ed3c251c8d0b5ca2df91ca590ae067feccb1f37218a02f551",
+      "firstTraceableCommit": "5ee3233bddb68d151c3a806b68f8bb4ef1b4e6f6",
+      "category": "docs",
+      "references": [
+        "https://playwright.dev/docs/api-testing",
+        "https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs",
+        "https://supabase.com/docs/guides/database/testing",
+        "https://supabase.com/docs/guides/local-development/cli/config"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "82facf9125e3983098acedcfed6fdbaf09a1867055f34779df0469a3dfb9017f",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "root",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "methods/README.md",
+      "sha256": "ba0d4039611c1b8cc02d5950ec0b5cfee1ba4e434797d74219305e36092019af",
+      "firstTraceableCommit": "dc11c02697da4a1e57ade0935da6eb108695e5b2",
+      "category": "methods",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "methods/blueprint-printer/README.md",
+      "sha256": "a7b1f2303263cfd2bd71c4a8052d8bfcfacd9baaea5536b520013e367faaadea",
+      "firstTraceableCommit": "abb2fbff9388d607d45bce4d577ec6722d1125a9",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/blueprint/deck-template.md",
+      "sha256": "bf8e38c92ffed878ada01b082c0d229a6267e1c01f7a9a93dfca6a4067051614",
+      "firstTraceableCommit": "06e470b79e328a092573c2ed1f61f9b13cf2ace7",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/blueprint/docs-rules.md",
+      "sha256": "68f3dc1b0d21ea55379a6866510ad5f7fcbfd3e471cced1237be4e993c267833",
+      "firstTraceableCommit": "ecb5a2fb6b06ae39d548e272393ad1d7b00b3a28",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/blueprint/stories-rules.md",
+      "sha256": "d17d5560c83994178880b38778553105239ff7beca7316d27bae902746bcbdcc",
+      "firstTraceableCommit": "ecb5a2fb6b06ae39d548e272393ad1d7b00b3a28",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/blueprint/stories-template.md",
+      "sha256": "b9e418e8fec3574b57e17830aef5c006c03a0e0bad437b90168ef442442a3fd8",
+      "firstTraceableCommit": "ecb5a2fb6b06ae39d548e272393ad1d7b00b3a28",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/print.md",
+      "sha256": "5d5628629839d0f5b802e24136a897b04a845c5532284e12c0df3c124659e20b",
+      "firstTraceableCommit": "06e470b79e328a092573c2ed1f61f9b13cf2ace7",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/printer/README.md",
+      "sha256": "761933501835211fa15050db2c5208344c32478afd28883e7b398123cdfe58b2",
+      "firstTraceableCommit": "abb2fbff9388d607d45bce4d577ec6722d1125a9",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/printer/design-rules.md",
+      "sha256": "4e500d3979d918f8e5ff0ed0e194835ad3848b9274ddf83ec086bd0f0d74ed0d",
+      "firstTraceableCommit": "ecb5a2fb6b06ae39d548e272393ad1d7b00b3a28",
+      "category": "methods",
+      "references": [
+        "https://github.com/ryooooooya/CCLauncher"
+      ],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/printer/layout/_template.md",
+      "sha256": "670a9565e46bca0f9ee9766308626146efed0b7965778a1f73b9a78c937223f6",
+      "firstTraceableCommit": "ecb5a2fb6b06ae39d548e272393ad1d7b00b3a28",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/printer/tokens-rules.md",
+      "sha256": "93eef01d6ba9a0b2f6b84389a3123dbcd991df3b6031c5cf05a53e29dfae4350",
+      "firstTraceableCommit": "ecb5a2fb6b06ae39d548e272393ad1d7b00b3a28",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/printer/ui/_template.md",
+      "sha256": "3fab6b527e5134fb2da41a0035dd031688420d007b5704a3ddd6fbebf4ad7911",
+      "firstTraceableCommit": "ecb5a2fb6b06ae39d548e272393ad1d7b00b3a28",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/project.md",
+      "sha256": "4817349c71b56cddf3a6f11edbbdb4b5eb6fb706fedf700d26aef7e8936ecc63",
+      "firstTraceableCommit": "abb2fbff9388d607d45bce4d577ec6722d1125a9",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/prototypes.md",
+      "sha256": "bbf774aaba7734dba8cce0cfb973affc90bcee9781f2c62e1551fb98a64cfc4e",
+      "firstTraceableCommit": "abb2fbff9388d607d45bce4d577ec6722d1125a9",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "methods/blueprint-printer/scaffold.json",
+      "sha256": "67c91daaea132e6260ce34169a261398ceef186e1ccf995ae17cd0391ae82eeb",
+      "firstTraceableCommit": "abb2fbff9388d607d45bce4d577ec6722d1125a9",
+      "category": "methods",
+      "references": [],
+      "assessment": "method-origin-confirmation-required"
+    },
+    {
+      "path": "package.json",
+      "sha256": "81a94d5007fa38f1848182d0b0369e8bbf2c0036323b8be8dc4ae5c2cfaa49cb",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "root",
+      "references": [
+        "https://github.com/ryooooooya/CCLauncher.git",
+        "https://registry.npmjs.org/"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "root",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/README.md",
+      "sha256": "2fc9c779864247897d02c9433f1eca07d184f1fe832c15ac077a58930acaafd2",
+      "firstTraceableCommit": "dc11c02697da4a1e57ade0935da6eb108695e5b2",
+      "category": "recipes",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/accessibility.md",
+      "sha256": "4fb353c6093840f7edbbcfe51f80452b25c4f72676a1c3be5167327561a63806",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://playwright.dev/docs/accessibility-testing",
+        "https://www.w3.org/TR/WCAG22/"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/authjs.md",
+      "sha256": "4c94c16ae12fe2ffff7ee7cc120068d0a46915521866b3640bb4908c6bcf06b9",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://authjs.dev/concepts/session-strategies",
+        "https://authjs.dev/getting-started/session-management/protecting",
+        "https://authjs.dev/guides/extending-the-session"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/browser-debugging.md",
+      "sha256": "c1a36bdff0f37085be90cbb161be6e7cd8517b8ffc30b9179bbada5734e018fb",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://developer.chrome.com/docs/devtools/network",
+        "https://developer.chrome.com/docs/devtools/performance"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/nextjs.md",
+      "sha256": "583b4ba6755fcf95d049f8debe021ff3da22f19ac611a71c8f265c99df766a4e",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://nextjs.org/docs/app/api-reference/config/eslint",
+        "https://nextjs.org/docs/app/api-reference/file-conventions/proxy",
+        "https://nextjs.org/docs/app/guides/upgrading/version-16",
+        "https://nextjs.org/docs/messages/sync-dynamic-apis",
+        "https://tailwindcss.com/docs/theme"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/npm-security.md",
+      "sha256": "934ce451c5b1bfca4b2caf91e2e046248a15215f63ec01be5925ad6e27b42f24",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://docs.npmjs.com/cli/v11/commands/npm-audit/",
+        "https://docs.npmjs.com/cli/v11/commands/npm-ci/",
+        "https://docs.npmjs.com/generating-provenance-statements",
+        "https://pnpm.io/cli/audit",
+        "https://pnpm.io/cli/install"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/operations.md",
+      "sha256": "a3ada344dcaab43adde3abf055e58ff0f1c4a6e95b53bf0d76052f019b3af11d",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://sre.google/workbook/incident-response/"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/performance.md",
+      "sha256": "dce8c0455bddcbc8245f99a439141a83ae77c3d109527cef58a1e9eda4b1ab5f",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://developer.chrome.com/docs/devtools/performance/reference",
+        "https://web.dev/articles/vitals"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/sentry.md",
+      "sha256": "5e5cd954399a0460499cc6693a11622620ec8ce49e4c5f87805a3a0f8c47b62f",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://docs.sentry.io/platforms/javascript/configuration/options/",
+        "https://docs.sentry.io/platforms/javascript/guides/nextjs/",
+        "https://docs.sentry.io/platforms/javascript/guides/nextjs/data-management/data-collected/"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/seo.md",
+      "sha256": "e448fab49cd10aaac5c9c354d24d099b6603e58244a9c96516bd13827c4d0ce8",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://developers.google.com/search/docs/crawling-indexing/robots/intro",
+        "https://nextjs.org/docs/app/getting-started/metadata-and-og-images"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/storybook.md",
+      "sha256": "693300f198c22e22bbbd2a3d74514daac72a7e9d95f48220e23dc46570182af9",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://storybook.js.org/docs/get-started/frameworks/nextjs-vite",
+        "https://storybook.js.org/docs/writing-tests/accessibility-testing",
+        "https://storybook.js.org/docs/writing-tests/integrations/vitest-addon"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/supabase.md",
+      "sha256": "741973e293af306ff76a36ac8638a29cbc7ef057230f3082a3bc6e45d56a3e56",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://supabase.com/docs/guides/api/securing-your-api",
+        "https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs",
+        "https://supabase.com/docs/guides/database/postgres/row-level-security",
+        "https://supabase.com/docs/guides/database/testing",
+        "https://supabase.com/docs/guides/storage/security/access-control",
+        "https://supabase.com/docs/reference/javascript/auth-getclaims",
+        "https://supabase.com/docs/reference/javascript/auth-getsession",
+        "https://supabase.com/docs/reference/javascript/auth-getuser"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/ui-motion.md",
+      "sha256": "e709e71fb95a1d41528e8f2bbcb9882920f545a4c584bbbe7afafd0e96aca9c4",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://motion.dev/docs/react-accessibility",
+        "https://motion.dev/docs/react-motion-config",
+        "https://motion.dev/docs/react-use-reduced-motion"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/ui-ux-tooling.md",
+      "sha256": "62325282f1ec08f021958c6f010fee1bf0178b57587886aa8a900f2a58458da3",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://playwright.dev/docs/accessibility-testing",
+        "https://storybook.js.org/docs/get-started/frameworks/nextjs-vite"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "recipes/ux-audit.md",
+      "sha256": "847cf962c735947e99c7038ca3ee3668883d51b5de52ab59b8ff319265d563bf",
+      "firstTraceableCommit": "c3d5e1da7c229e7b4f8b632e91103e999004196e",
+      "category": "recipes",
+      "references": [
+        "https://www.w3.org/WAI/test-evaluate/easy-checks/"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "scripts/build.mjs",
+      "sha256": "80a8a8299173aa9326d1f5adedcfc79aee0334f0cc0d118fa4cc63ae434b038b",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "scripts",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "scripts/check-release.mjs",
+      "sha256": "da87ed5909bd6f1e0d2dd5888c62abd8a0fff71bbe610262a0a8ef477abd0e0d",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "scripts",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "src/cli/config.js",
+      "sha256": "3d7ff2f757a36920cfd4f1a0db4d905b2b922b345d3dd6e805cbb48c13445076",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "src",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "src/cli/doctor.js",
+      "sha256": "097633fd91089ec3f6e81cc083101795aa38916dcf9a7f222c81eb37e9030fc0",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "src",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "src/cli/index.js",
+      "sha256": "10465cb7e9cc45c79bdb7f86ff668457ce661d9485959d187f35c079182c3d8c",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "src",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "src/cli/init.js",
+      "sha256": "e971de453229928fcb885beec5fa5671d8e212f91fca6068ba1f7ab848927346",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "src",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "src/cli/knowledge.js",
+      "sha256": "92533fba569d6e25d22bec279605f772c3ab68a0c4321934eb94e1d102580572",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "src",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "standards/README.md",
+      "sha256": "5a7e8f2f202b507b42c603c1d530747e5f3c9cdcdaff14462e49366a2fc04abc",
+      "firstTraceableCommit": "dc11c02697da4a1e57ade0935da6eb108695e5b2",
+      "category": "standards",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "standards/dependencies.md",
+      "sha256": "85d761d2e810320da1c568b8df323e0124645ab61a7ec0f0904e5e75ccd7bea1",
+      "firstTraceableCommit": "b2933ba4652627711f49d288930aff64a14779af",
+      "category": "standards",
+      "references": [
+        "https://cheatsheetseries.owasp.org/cheatsheets/Vulnerable_Dependency_Management_Cheat_Sheet.html",
+        "https://docs.npmjs.com/generating-provenance-statements/"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "standards/privacy.md",
+      "sha256": "9b9b563ead1990f70b88807f9af15ccdd6db848afd28b334af28179d3c22626b",
+      "firstTraceableCommit": "b2933ba4652627711f49d288930aff64a14779af",
+      "category": "standards",
+      "references": [
+        "https://cheatsheetseries.owasp.org/cheatsheets/User_Privacy_Protection_Cheat_Sheet.html"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "standards/testing.md",
+      "sha256": "d409dd6eadf009ca8a55e63e68f57b9ecd4a0282faaceb3934ec5680a7401844",
+      "firstTraceableCommit": "b2933ba4652627711f49d288930aff64a14779af",
+      "category": "standards",
+      "references": [
+        "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Testing_Automation_Cheat_Sheet.html"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "standards/web-security.md",
+      "sha256": "ccd84f4fc67c190d3c9f68dc3c2325252de78680434f0959d76ac08911e177b9",
+      "firstTraceableCommit": "b2933ba4652627711f49d288930aff64a14779af",
+      "category": "standards",
+      "references": [
+        "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+        "https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "standards/workflow.md",
+      "sha256": "77c2e4f1b86b3749b06a6ba6791a252415d0960a6f9181ba909efa1e4fd56f6e",
+      "firstTraceableCommit": "61daab8447602ed805ed62bdd0e7ca46ccd8162a",
+      "category": "standards",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/README.md",
+      "sha256": "f9527ea9cc22cbf8e2bc375f2406abb953c104319d8b00fd820529b638574760",
+      "firstTraceableCommit": "dc11c02697da4a1e57ade0935da6eb108695e5b2",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/.env.example",
+      "sha256": "0fcd70ebd750d398f63d44a6d244575e85853823ecb270fd366f0511faddf212",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:54321"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/.github/workflows/cclauncher-verify.yml",
+      "sha256": "d3dfc2c826e648a914c405f4bd84eca0e8a4da0791dd6177a6cd8a23c38ddfc9",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/docs/ARCHITECTURE.md",
+      "sha256": "d55b8be5564eb8d8304c2b4995c4c212fa6d2a6b5c89b3791c7798fed80aa1cb",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/docs/SECURITY.md",
+      "sha256": "b693a9b8cc5bc42c269f3e10256454d53d8d76c04c221470c83f101b23f8abcb",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/next.config.ts",
+      "sha256": "01b44f7818bb6fb3721881b7232ec2a223fbced7f53fa85e4015d84bc194bd92",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/package.json",
+      "sha256": "e34c724745a53f50f3c38b209129128290e9a3a1b5990fef7d3a36109a5b78a2",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/pnpm-lock.yaml",
+      "sha256": "d437118a3bf7a4db29092468fde04dd21b6f5fba487c0c1c7bab89bf9c96f2a8",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/pnpm-workspace.yaml",
+      "sha256": "358aaa36c2aa1a481c778b51fd1190ac8469ca82c0a20cea2a6769fdae2cce2e",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/scripts/fixtures.mjs",
+      "sha256": "611c64ad4c62cbdae919f0dd80f1f8c46fcc70afe5daf494d154fcd9ae1bc501",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3000\\nSUPABASE_URL=${url.origin}\\nSUPABASE_ANON_KEY=${status.ANON_KEY}\\n"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/app/api/documents/[id]/route.ts",
+      "sha256": "646ceaeb88bcf9a1dad3726ff43fe851be1df61053e35c05e07c31f0aff81e89",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/app/api/documents/route.ts",
+      "sha256": "3da87ab2968ce981bb1a11bb112fb38a6c69630e0de85a724b3aee7336f08755",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/app/api/session/route.ts",
+      "sha256": "a376076adc07c03bd2f0faa45fbac0d764f352325d670a18c69209ef2d0f71d4",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/app/layout.tsx",
+      "sha256": "c170ff020f9e568f6375e374a8aeea3606bb91cc686f7bae9dfd718048a752b5",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/app/page.tsx",
+      "sha256": "6c81e98fdc041f72a0010f64cc838d452338490291b62bb9ddb4d3b17d3454c8",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/lib/http.ts",
+      "sha256": "e0a66ebcb8ad5f8e8975be12dcb972de7ac4f070d3ec12ab1f62c3f0ee471108",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/lib/input.ts",
+      "sha256": "d58498d39f78e47afb43666664c9e97168252fa93ee0045d8e27fdb7cfc99249",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/src/lib/supabase.ts",
+      "sha256": "9e2a4f1bffeae25416b4a0837561998f66ab85f1f700366653d1201dc6857184",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/supabase/config.toml",
+      "sha256": "42a8f5f46a217a5bbf2b9589c9c638fd640b7d4b9a1682e5805a4913cb214644",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [
+        "http://127.0.0.1:3000"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/supabase/migrations/20260909000000_documents.sql",
+      "sha256": "eefa158d5041f2b812294ff9f168a2b9506ea845aa3dd773befe167fb3f16e14",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/supabase/tests/database/documents.test.sql",
+      "sha256": "154cd2e101337e857cddf1d02e924a09045500a603dd772d9980a3302163a036",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/tests/e2e/session.spec.ts",
+      "sha256": "6cbfff52fbc1b51befaf06d40dd4a1327bf3357b5fdaf44c767fc4e34318c3d1",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/tests/unit/input.test.ts",
+      "sha256": "1f6e333a69926da28e962309a55602b7fa773796d75ea5aca1f15d919bd9dac1",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/examples/nextjs-supabase/tsconfig.json",
+      "sha256": "2fe31ee31d4633a579637f4747f0150ce16b3a213e83dca4fcf4212988230744",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/.github/workflows/cclauncher-verify.yml",
+      "sha256": "14c74e5e6daa555627a22c8d9c97a355b5f74b3845e494416e64a5eb214a91bf",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/.gitignore.tmpl",
+      "sha256": "e2d92cafcdae006b326a73c5744f575dd5d7c53bb5e69049daaf7e9429ed8fd1",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/AGENTS.md",
+      "sha256": "272e6a7e41207d98a84985eeaf8034b8a5ca858859e6cdf4b7a9d198b37d4c47",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/biome.json",
+      "sha256": "8fe033cdbbc7351ef12b87b271bb9f51daee7d676ff693b8b0e56c15d6c7e595",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/docs/ARCHITECTURE.md",
+      "sha256": "c68ea6792570c6b4a280f6bbdcdf0930e0f377e7544e997df0a221bffd3d1bbb",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/docs/PRODUCT.md",
+      "sha256": "3d7c00299569889b671b43e096764783a7f4b0b1d2b86e3fe8417ca8d2d9ead4",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/docs/SECURITY.md",
+      "sha256": "8b7814dd65b91f07d7d8cb5c9bd7c7952c32bbe07fca647754891d9a7e709dcb",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/docs/decisions/README.md",
+      "sha256": "ae19ce920a3f115591a0f707652d26a4b0f2137b01749393586a961cb31a6003",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/docs/specs/README.md",
+      "sha256": "2e4466ddbb560851544383f43b4ad7c52c97dfe103bcfca6820ab24a2e24f66a",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/package.json",
+      "sha256": "895918597c7867966c2c1b06f9c7d28727a77fa5f9003413022dc3171a790ad1",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/playwright.config.ts",
+      "sha256": "a747d245aef63bd3816571cda792ed531c113f561d3c6007437f83f7373e97c3",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [
+        "http://127.0.0.1:3000"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/pnpm-lock.yaml",
+      "sha256": "b20a19d2f515fe91d5564125a60f3fb464de5e988eef2a10fe34e42edd5dc28e",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/pnpm-workspace.yaml",
+      "sha256": "2b3b2fd7c4b0d3aef3e491c073619c499a2742c97c74746ae6ffdbc503d3ae01",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/scripts/configure-app.mjs",
+      "sha256": "e0223ec1932ecb07e92dc506fedf3acf7a736cf849463a4c30a134c81779ff07",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/scripts/security-check.sh",
+      "sha256": "61e0d5375dbe5bf8f3cd7818613c0c8f02e28eff3e8ce515623cac63b2c92e7a",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/scripts/verify.mjs",
+      "sha256": "526525cf915bba0d9a8bab2bc064fa2ca0223283287a165465402cfc2367a495",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/scripts/verify.sh",
+      "sha256": "9362a8f3fb1aa3ec74cab55c3d2345569e977a19d2b0024d36a0e1092b8de92a",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tests/e2e/README.md",
+      "sha256": "4d93878dba9b53c5f8b0e2d049ccb98b77ff6b7b3040d0a4843801abae4f6a66",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tests/integration/README.md",
+      "sha256": "a6a4181e18ddeeeb2b9f60f0e5945af8efe56cec5fdf58e58c0a2ff6c34ce18f",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tests/security/README.md",
+      "sha256": "9c7987bf43907a754c5402c530d991d93ea7f788a6fafbe5417487ab108d0030",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tests/security/authentication.spec.ts",
+      "sha256": "32fa7ed23953b29825554c2a8db03a847c5dd7ec69a57c4793afa3a7b184c1dc",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [
+        "http://127.0.0.1:3000"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tests/security/authorization.spec.ts",
+      "sha256": "0a4cbee95c7b62ea5b6d7d48a40a5ed0fdefafa46c4e44240c69f4ff488bbb9b",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [
+        "https://untrusted.invalid"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tests/security/target.ts",
+      "sha256": "22efb984a8016dce458d6bcdca7fc37f6d383119f3bc8810d6f3058798ca0b02",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [
+        "http://127.0.0.1:3000"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tests/unit/README.md",
+      "sha256": "f400309655d4f05a3ea3306fef8018596121338c57e97a46e57a2156b67dadbb",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/tsconfig.json",
+      "sha256": "ef637ec61bba990454cf9f3e4f4115f063ae06fb033127730c2394f3ffe32218",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "templates/webapp/vitest.config.ts",
+      "sha256": "05617b8cdf756f463e363c76b71219b537e29e934aa5eef80b1318f119e86b6d",
+      "firstTraceableCommit": "3f45aa79a9923f91b14ee48cbd31245e0482fe48",
+      "category": "templates",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "tests/cli.test.mjs",
+      "sha256": "085d3d14e0f220ec503e658020b958a4d1a65cfbacf194d99c1210e84f8aa487",
+      "firstTraceableCommit": "c3079b6c08a67358a73a4259476573a18969a11e",
+      "category": "tests",
+      "references": [
+        "http://127.0.0.1:1',"
+      ],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "tests/distribution.test.mjs",
+      "sha256": "d5a451c554b2a3391dd1dfadad49484b36d8a8c1036bef09c38f066b56fdeae0",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "tests",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "sha256": "d7fa7c451f2c59bbd276fb36873299193281c22033e840cf6c9fcbe16b324ce0",
+      "firstTraceableCommit": "4adcb865b93503ab5511b09627963b612f7ac757",
+      "category": "tests",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "tests/release.test.mjs",
+      "sha256": "14af6c962869ec3d04af3a251b0287e365006f5397fb86f394bdd2be0ecb74eb",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "tests",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "3951f5153ef1bc2609c873742ef9818d9c0bfe527a72080ae8f141b7f766b51b",
+      "firstTraceableCommit": "2f982c595723af63805c946c91a69daa20f7d08b",
+      "category": "root",
+      "references": [],
+      "assessment": "repository-history-recorded-not-ownership-proof"
+    }
+  ],
+  "packageFiles": [
+    {
+      "path": "README.md",
+      "source": "README.md",
+      "sha256": "384ed52b024fb9088767758f1dc0ede08b68f97601493b00434d53c70ab7125f",
+      "size": 4569
+    },
+    {
+      "path": "dist/adapters/claude/CLAUDE.md",
+      "source": "adapters/claude/CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "size": 11
+    },
+    {
+      "path": "dist/adapters/claude/README.md",
+      "source": "adapters/claude/README.md",
+      "sha256": "36f28689aecc65f092f22fd6e3b8e5b9cce68e1307c1a77865143eed9e17d5fb",
+      "size": 709
+    },
+    {
+      "path": "dist/adapters/claude/security.md",
+      "source": "adapters/claude/security.md",
+      "sha256": "ac632e225e48447c22510f4fba0b9f3e1f5891f89dc73de2ce730845e716813f",
+      "size": 783
+    },
+    {
+      "path": "dist/adapters/codex/README.md",
+      "source": "adapters/codex/README.md",
+      "sha256": "b89cdf62d9777485c71aea4cd78c2d7a65110b8ca6c67ad67d93dab647bc3b99",
+      "size": 866
+    },
+    {
+      "path": "dist/adapters/generic/README.md",
+      "source": "adapters/generic/README.md",
+      "sha256": "7c259cc832a01ca8e05b0dee40174eaf004b9a5b2f330703cb6be412a22904cc",
+      "size": 670
+    },
+    {
+      "path": "dist/cli/config.js",
+      "source": "src/cli/config.js",
+      "sha256": "3d7ff2f757a36920cfd4f1a0db4d905b2b922b345d3dd6e805cbb48c13445076",
+      "size": 2259
+    },
+    {
+      "path": "dist/cli/doctor.js",
+      "source": "src/cli/doctor.js",
+      "sha256": "097633fd91089ec3f6e81cc083101795aa38916dcf9a7f222c81eb37e9030fc0",
+      "size": 4307
+    },
+    {
+      "path": "dist/cli/index.js",
+      "source": "src/cli/index.js",
+      "sha256": "10465cb7e9cc45c79bdb7f86ff668457ce661d9485959d187f35c079182c3d8c",
+      "size": 4520
+    },
+    {
+      "path": "dist/cli/init.js",
+      "source": "src/cli/init.js",
+      "sha256": "e971de453229928fcb885beec5fa5671d8e212f91fca6068ba1f7ab848927346",
+      "size": 6108
+    },
+    {
+      "path": "dist/cli/knowledge.js",
+      "source": "src/cli/knowledge.js",
+      "sha256": "92533fba569d6e25d22bec279605f772c3ab68a0c4321934eb94e1d102580572",
+      "size": 3256
+    },
+    {
+      "path": "dist/manifest.json",
+      "source": "manifest.json + scripts/build.mjs",
+      "sha256": "2cac420231275528488b7556c3bcd8f18dfa71a52e40992ca0cc83d72bcd2c99",
+      "size": 19817
+    },
+    {
+      "path": "dist/methods/blueprint-printer/blueprint/deck-template.md",
+      "source": "methods/blueprint-printer/blueprint/deck-template.md",
+      "sha256": "bf8e38c92ffed878ada01b082c0d229a6267e1c01f7a9a93dfca6a4067051614",
+      "size": 5688
+    },
+    {
+      "path": "dist/methods/blueprint-printer/blueprint/docs-rules.md",
+      "source": "methods/blueprint-printer/blueprint/docs-rules.md",
+      "sha256": "68f3dc1b0d21ea55379a6866510ad5f7fcbfd3e471cced1237be4e993c267833",
+      "size": 5252
+    },
+    {
+      "path": "dist/methods/blueprint-printer/blueprint/stories-rules.md",
+      "source": "methods/blueprint-printer/blueprint/stories-rules.md",
+      "sha256": "d17d5560c83994178880b38778553105239ff7beca7316d27bae902746bcbdcc",
+      "size": 10411
+    },
+    {
+      "path": "dist/methods/blueprint-printer/blueprint/stories-template.md",
+      "source": "methods/blueprint-printer/blueprint/stories-template.md",
+      "sha256": "b9e418e8fec3574b57e17830aef5c006c03a0e0bad437b90168ef442442a3fd8",
+      "size": 3914
+    },
+    {
+      "path": "dist/methods/blueprint-printer/print.md",
+      "source": "methods/blueprint-printer/print.md",
+      "sha256": "5d5628629839d0f5b802e24136a897b04a845c5532284e12c0df3c124659e20b",
+      "size": 9023
+    },
+    {
+      "path": "dist/methods/blueprint-printer/printer/design-rules.md",
+      "source": "methods/blueprint-printer/printer/design-rules.md",
+      "sha256": "4e500d3979d918f8e5ff0ed0e194835ad3848b9274ddf83ec086bd0f0d74ed0d",
+      "size": 5686
+    },
+    {
+      "path": "dist/methods/blueprint-printer/printer/layout/_template.md",
+      "source": "methods/blueprint-printer/printer/layout/_template.md",
+      "sha256": "670a9565e46bca0f9ee9766308626146efed0b7965778a1f73b9a78c937223f6",
+      "size": 3372
+    },
+    {
+      "path": "dist/methods/blueprint-printer/printer/README.md",
+      "source": "methods/blueprint-printer/printer/README.md",
+      "sha256": "761933501835211fa15050db2c5208344c32478afd28883e7b398123cdfe58b2",
+      "size": 1131
+    },
+    {
+      "path": "dist/methods/blueprint-printer/printer/tokens-rules.md",
+      "source": "methods/blueprint-printer/printer/tokens-rules.md",
+      "sha256": "93eef01d6ba9a0b2f6b84389a3123dbcd991df3b6031c5cf05a53e29dfae4350",
+      "size": 10708
+    },
+    {
+      "path": "dist/methods/blueprint-printer/printer/ui/_template.md",
+      "source": "methods/blueprint-printer/printer/ui/_template.md",
+      "sha256": "3fab6b527e5134fb2da41a0035dd031688420d007b5704a3ddd6fbebf4ad7911",
+      "size": 3919
+    },
+    {
+      "path": "dist/methods/blueprint-printer/project.md",
+      "source": "methods/blueprint-printer/project.md",
+      "sha256": "4817349c71b56cddf3a6f11edbbdb4b5eb6fb706fedf700d26aef7e8936ecc63",
+      "size": 1637
+    },
+    {
+      "path": "dist/methods/blueprint-printer/prototypes.md",
+      "source": "methods/blueprint-printer/prototypes.md",
+      "sha256": "bbf774aaba7734dba8cce0cfb973affc90bcee9781f2c62e1551fb98a64cfc4e",
+      "size": 403
+    },
+    {
+      "path": "dist/methods/blueprint-printer/README.md",
+      "source": "methods/blueprint-printer/README.md",
+      "sha256": "a7b1f2303263cfd2bd71c4a8052d8bfcfacd9baaea5536b520013e367faaadea",
+      "size": 2104
+    },
+    {
+      "path": "dist/methods/blueprint-printer/scaffold.json",
+      "source": "methods/blueprint-printer/scaffold.json",
+      "sha256": "67c91daaea132e6260ce34169a261398ceef186e1ccf995ae17cd0391ae82eeb",
+      "size": 589
+    },
+    {
+      "path": "dist/recipes/accessibility.md",
+      "source": "recipes/accessibility.md",
+      "sha256": "4fb353c6093840f7edbbcfe51f80452b25c4f72676a1c3be5167327561a63806",
+      "size": 1722
+    },
+    {
+      "path": "dist/recipes/authjs.md",
+      "source": "recipes/authjs.md",
+      "sha256": "4c94c16ae12fe2ffff7ee7cc120068d0a46915521866b3640bb4908c6bcf06b9",
+      "size": 1978
+    },
+    {
+      "path": "dist/recipes/browser-debugging.md",
+      "source": "recipes/browser-debugging.md",
+      "sha256": "c1a36bdff0f37085be90cbb161be6e7cd8517b8ffc30b9179bbada5734e018fb",
+      "size": 1549
+    },
+    {
+      "path": "dist/recipes/nextjs.md",
+      "source": "recipes/nextjs.md",
+      "sha256": "583b4ba6755fcf95d049f8debe021ff3da22f19ac611a71c8f265c99df766a4e",
+      "size": 3079
+    },
+    {
+      "path": "dist/recipes/npm-security.md",
+      "source": "recipes/npm-security.md",
+      "sha256": "934ce451c5b1bfca4b2caf91e2e046248a15215f63ec01be5925ad6e27b42f24",
+      "size": 2749
+    },
+    {
+      "path": "dist/recipes/operations.md",
+      "source": "recipes/operations.md",
+      "sha256": "a3ada344dcaab43adde3abf055e58ff0f1c4a6e95b53bf0d76052f019b3af11d",
+      "size": 1740
+    },
+    {
+      "path": "dist/recipes/performance.md",
+      "source": "recipes/performance.md",
+      "sha256": "dce8c0455bddcbc8245f99a439141a83ae77c3d109527cef58a1e9eda4b1ab5f",
+      "size": 1601
+    },
+    {
+      "path": "dist/recipes/sentry.md",
+      "source": "recipes/sentry.md",
+      "sha256": "5e5cd954399a0460499cc6693a11622620ec8ce49e4c5f87805a3a0f8c47b62f",
+      "size": 2004
+    },
+    {
+      "path": "dist/recipes/seo.md",
+      "source": "recipes/seo.md",
+      "sha256": "e448fab49cd10aaac5c9c354d24d099b6603e58244a9c96516bd13827c4d0ce8",
+      "size": 1368
+    },
+    {
+      "path": "dist/recipes/storybook.md",
+      "source": "recipes/storybook.md",
+      "sha256": "693300f198c22e22bbbd2a3d74514daac72a7e9d95f48220e23dc46570182af9",
+      "size": 1740
+    },
+    {
+      "path": "dist/recipes/supabase.md",
+      "source": "recipes/supabase.md",
+      "sha256": "741973e293af306ff76a36ac8638a29cbc7ef057230f3082a3bc6e45d56a3e56",
+      "size": 4117
+    },
+    {
+      "path": "dist/recipes/ui-motion.md",
+      "source": "recipes/ui-motion.md",
+      "sha256": "e709e71fb95a1d41528e8f2bbcb9882920f545a4c584bbbe7afafd0e96aca9c4",
+      "size": 1449
+    },
+    {
+      "path": "dist/recipes/ui-ux-tooling.md",
+      "source": "recipes/ui-ux-tooling.md",
+      "sha256": "62325282f1ec08f021958c6f010fee1bf0178b57587886aa8a900f2a58458da3",
+      "size": 1744
+    },
+    {
+      "path": "dist/recipes/ux-audit.md",
+      "source": "recipes/ux-audit.md",
+      "sha256": "847cf962c735947e99c7038ca3ee3668883d51b5de52ab59b8ff319265d563bf",
+      "size": 1594
+    },
+    {
+      "path": "dist/standards/dependencies.md",
+      "source": "standards/dependencies.md",
+      "sha256": "85d761d2e810320da1c568b8df323e0124645ab61a7ec0f0904e5e75ccd7bea1",
+      "size": 2381
+    },
+    {
+      "path": "dist/standards/privacy.md",
+      "source": "standards/privacy.md",
+      "sha256": "9b9b563ead1990f70b88807f9af15ccdd6db848afd28b334af28179d3c22626b",
+      "size": 2318
+    },
+    {
+      "path": "dist/standards/testing.md",
+      "source": "standards/testing.md",
+      "sha256": "d409dd6eadf009ca8a55e63e68f57b9ecd4a0282faaceb3934ec5680a7401844",
+      "size": 2979
+    },
+    {
+      "path": "dist/standards/web-security.md",
+      "source": "standards/web-security.md",
+      "sha256": "ccd84f4fc67c190d3c9f68dc3c2325252de78680434f0959d76ac08911e177b9",
+      "size": 7448
+    },
+    {
+      "path": "dist/standards/workflow.md",
+      "source": "standards/workflow.md",
+      "sha256": "77c2e4f1b86b3749b06a6ba6791a252415d0960a6f9181ba909efa1e4fd56f6e",
+      "size": 3343
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/.env.example",
+      "source": "templates/examples/nextjs-supabase/.env.example",
+      "sha256": "0fcd70ebd750d398f63d44a6d244575e85853823ecb270fd366f0511faddf212",
+      "size": 291
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/.github/workflows/cclauncher-verify.yml",
+      "source": "templates/examples/nextjs-supabase/.github/workflows/cclauncher-verify.yml",
+      "sha256": "d3dfc2c826e648a914c405f4bd84eca0e8a4da0791dd6177a6cd8a23c38ddfc9",
+      "size": 800
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/docs/ARCHITECTURE.md",
+      "source": "templates/examples/nextjs-supabase/docs/ARCHITECTURE.md",
+      "sha256": "d55b8be5564eb8d8304c2b4995c4c212fa6d2a6b5c89b3791c7798fed80aa1cb",
+      "size": 1131
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/docs/SECURITY.md",
+      "source": "templates/examples/nextjs-supabase/docs/SECURITY.md",
+      "sha256": "b693a9b8cc5bc42c269f3e10256454d53d8d76c04c221470c83f101b23f8abcb",
+      "size": 3441
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/next.config.ts",
+      "source": "templates/examples/nextjs-supabase/next.config.ts",
+      "sha256": "01b44f7818bb6fb3721881b7232ec2a223fbced7f53fa85e4015d84bc194bd92",
+      "size": 417
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/package.json",
+      "source": "templates/examples/nextjs-supabase/package.json",
+      "sha256": "e34c724745a53f50f3c38b209129128290e9a3a1b5990fef7d3a36109a5b78a2",
+      "size": 1025
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/pnpm-lock.yaml",
+      "source": "templates/examples/nextjs-supabase/pnpm-lock.yaml",
+      "sha256": "d437118a3bf7a4db29092468fde04dd21b6f5fba487c0c1c7bab89bf9c96f2a8",
+      "size": 50776
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/pnpm-workspace.yaml",
+      "source": "templates/examples/nextjs-supabase/pnpm-workspace.yaml",
+      "sha256": "358aaa36c2aa1a481c778b51fd1190ac8469ca82c0a20cea2a6769fdae2cce2e",
+      "size": 167
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/scripts/fixtures.mjs",
+      "source": "templates/examples/nextjs-supabase/scripts/fixtures.mjs",
+      "sha256": "611c64ad4c62cbdae919f0dd80f1f8c46fcc70afe5daf494d154fcd9ae1bc501",
+      "size": 2519
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/app/api/documents/[id]/route.ts",
+      "source": "templates/examples/nextjs-supabase/src/app/api/documents/[id]/route.ts",
+      "sha256": "646ceaeb88bcf9a1dad3726ff43fe851be1df61053e35c05e07c31f0aff81e89",
+      "size": 1487
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/app/api/documents/route.ts",
+      "source": "templates/examples/nextjs-supabase/src/app/api/documents/route.ts",
+      "sha256": "3da87ab2968ce981bb1a11bb112fb38a6c69630e0de85a724b3aee7336f08755",
+      "size": 1212
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/app/api/session/route.ts",
+      "source": "templates/examples/nextjs-supabase/src/app/api/session/route.ts",
+      "sha256": "a376076adc07c03bd2f0faa45fbac0d764f352325d670a18c69209ef2d0f71d4",
+      "size": 1588
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/app/layout.tsx",
+      "source": "templates/examples/nextjs-supabase/src/app/layout.tsx",
+      "sha256": "c170ff020f9e568f6375e374a8aeea3606bb91cc686f7bae9dfd718048a752b5",
+      "size": 257
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/app/page.tsx",
+      "source": "templates/examples/nextjs-supabase/src/app/page.tsx",
+      "sha256": "6c81e98fdc041f72a0010f64cc838d452338490291b62bb9ddb4d3b17d3454c8",
+      "size": 1548
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/lib/http.ts",
+      "source": "templates/examples/nextjs-supabase/src/lib/http.ts",
+      "sha256": "e0a66ebcb8ad5f8e8975be12dcb972de7ac4f070d3ec12ab1f62c3f0ee471108",
+      "size": 1039
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/lib/input.ts",
+      "source": "templates/examples/nextjs-supabase/src/lib/input.ts",
+      "sha256": "d58498d39f78e47afb43666664c9e97168252fa93ee0045d8e27fdb7cfc99249",
+      "size": 508
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/src/lib/supabase.ts",
+      "source": "templates/examples/nextjs-supabase/src/lib/supabase.ts",
+      "sha256": "9e2a4f1bffeae25416b4a0837561998f66ab85f1f700366653d1201dc6857184",
+      "size": 788
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/supabase/config.toml",
+      "source": "templates/examples/nextjs-supabase/supabase/config.toml",
+      "sha256": "42a8f5f46a217a5bbf2b9589c9c638fd640b7d4b9a1682e5805a4913cb214644",
+      "size": 536
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/supabase/migrations/20260909000000_documents.sql",
+      "source": "templates/examples/nextjs-supabase/supabase/migrations/20260909000000_documents.sql",
+      "sha256": "eefa158d5041f2b812294ff9f168a2b9506ea845aa3dd773befe167fb3f16e14",
+      "size": 981
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/supabase/tests/database/documents.test.sql",
+      "source": "templates/examples/nextjs-supabase/supabase/tests/database/documents.test.sql",
+      "sha256": "154cd2e101337e857cddf1d02e924a09045500a603dd772d9980a3302163a036",
+      "size": 5182
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/tests/e2e/session.spec.ts",
+      "source": "templates/examples/nextjs-supabase/tests/e2e/session.spec.ts",
+      "sha256": "6cbfff52fbc1b51befaf06d40dd4a1327bf3357b5fdaf44c767fc4e34318c3d1",
+      "size": 1212
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/tests/unit/input.test.ts",
+      "source": "templates/examples/nextjs-supabase/tests/unit/input.test.ts",
+      "sha256": "1f6e333a69926da28e962309a55602b7fa773796d75ea5aca1f15d919bd9dac1",
+      "size": 693
+    },
+    {
+      "path": "dist/templates/examples/nextjs-supabase/tsconfig.json",
+      "source": "templates/examples/nextjs-supabase/tsconfig.json",
+      "sha256": "2fe31ee31d4633a579637f4747f0150ce16b3a213e83dca4fcf4212988230744",
+      "size": 634
+    },
+    {
+      "path": "dist/templates/webapp/.github/workflows/cclauncher-verify.yml",
+      "source": "templates/webapp/.github/workflows/cclauncher-verify.yml",
+      "sha256": "14c74e5e6daa555627a22c8d9c97a355b5f74b3845e494416e64a5eb214a91bf",
+      "size": 817
+    },
+    {
+      "path": "dist/templates/webapp/.gitignore.tmpl",
+      "source": "templates/webapp/.gitignore.tmpl",
+      "sha256": "e2d92cafcdae006b326a73c5744f575dd5d7c53bb5e69049daaf7e9429ed8fd1",
+      "size": 110
+    },
+    {
+      "path": "dist/templates/webapp/AGENTS.md",
+      "source": "templates/webapp/AGENTS.md",
+      "sha256": "272e6a7e41207d98a84985eeaf8034b8a5ca858859e6cdf4b7a9d198b37d4c47",
+      "size": 2004
+    },
+    {
+      "path": "dist/templates/webapp/biome.json",
+      "source": "templates/webapp/biome.json",
+      "sha256": "8fe033cdbbc7351ef12b87b271bb9f51daee7d676ff693b8b0e56c15d6c7e595",
+      "size": 328
+    },
+    {
+      "path": "dist/templates/webapp/docs/ARCHITECTURE.md",
+      "source": "templates/webapp/docs/ARCHITECTURE.md",
+      "sha256": "c68ea6792570c6b4a280f6bbdcdf0930e0f377e7544e997df0a221bffd3d1bbb",
+      "size": 807
+    },
+    {
+      "path": "dist/templates/webapp/docs/decisions/README.md",
+      "source": "templates/webapp/docs/decisions/README.md",
+      "sha256": "ae19ce920a3f115591a0f707652d26a4b0f2137b01749393586a961cb31a6003",
+      "size": 103
+    },
+    {
+      "path": "dist/templates/webapp/docs/PRODUCT.md",
+      "source": "templates/webapp/docs/PRODUCT.md",
+      "sha256": "3d7c00299569889b671b43e096764783a7f4b0b1d2b86e3fe8417ca8d2d9ead4",
+      "size": 282
+    },
+    {
+      "path": "dist/templates/webapp/docs/SECURITY.md",
+      "source": "templates/webapp/docs/SECURITY.md",
+      "sha256": "8b7814dd65b91f07d7d8cb5c9bd7c7952c32bbe07fca647754891d9a7e709dcb",
+      "size": 1806
+    },
+    {
+      "path": "dist/templates/webapp/docs/specs/README.md",
+      "source": "templates/webapp/docs/specs/README.md",
+      "sha256": "2e4466ddbb560851544383f43b4ad7c52c97dfe103bcfca6820ab24a2e24f66a",
+      "size": 104
+    },
+    {
+      "path": "dist/templates/webapp/package.json",
+      "source": "templates/webapp/package.json",
+      "sha256": "895918597c7867966c2c1b06f9c7d28727a77fa5f9003413022dc3171a790ad1",
+      "size": 714
+    },
+    {
+      "path": "dist/templates/webapp/playwright.config.ts",
+      "source": "templates/webapp/playwright.config.ts",
+      "sha256": "a747d245aef63bd3816571cda792ed531c113f561d3c6007437f83f7373e97c3",
+      "size": 702
+    },
+    {
+      "path": "dist/templates/webapp/pnpm-lock.yaml",
+      "source": "templates/webapp/pnpm-lock.yaml",
+      "sha256": "b20a19d2f515fe91d5564125a60f3fb464de5e988eef2a10fe34e42edd5dc28e",
+      "size": 25097
+    },
+    {
+      "path": "dist/templates/webapp/pnpm-workspace.yaml",
+      "source": "templates/webapp/pnpm-workspace.yaml",
+      "sha256": "2b3b2fd7c4b0d3aef3e491c073619c499a2742c97c74746ae6ffdbc503d3ae01",
+      "size": 52
+    },
+    {
+      "path": "dist/templates/webapp/scripts/configure-app.mjs",
+      "source": "templates/webapp/scripts/configure-app.mjs",
+      "sha256": "e0223ec1932ecb07e92dc506fedf3acf7a736cf849463a4c30a134c81779ff07",
+      "size": 114
+    },
+    {
+      "path": "dist/templates/webapp/scripts/security-check.sh",
+      "source": "templates/webapp/scripts/security-check.sh",
+      "sha256": "61e0d5375dbe5bf8f3cd7818613c0c8f02e28eff3e8ce515623cac63b2c92e7a",
+      "size": 75
+    },
+    {
+      "path": "dist/templates/webapp/scripts/verify.mjs",
+      "source": "templates/webapp/scripts/verify.mjs",
+      "sha256": "526525cf915bba0d9a8bab2bc064fa2ca0223283287a165465402cfc2367a495",
+      "size": 1950
+    },
+    {
+      "path": "dist/templates/webapp/scripts/verify.sh",
+      "source": "templates/webapp/scripts/verify.sh",
+      "sha256": "9362a8f3fb1aa3ec74cab55c3d2345569e977a19d2b0024d36a0e1092b8de92a",
+      "size": 70
+    },
+    {
+      "path": "dist/templates/webapp/tests/e2e/README.md",
+      "source": "templates/webapp/tests/e2e/README.md",
+      "sha256": "4d93878dba9b53c5f8b0e2d049ccb98b77ff6b7b3040d0a4843801abae4f6a66",
+      "size": 173
+    },
+    {
+      "path": "dist/templates/webapp/tests/integration/README.md",
+      "source": "templates/webapp/tests/integration/README.md",
+      "sha256": "a6a4181e18ddeeeb2b9f60f0e5945af8efe56cec5fdf58e58c0a2ff6c34ce18f",
+      "size": 184
+    },
+    {
+      "path": "dist/templates/webapp/tests/security/authentication.spec.ts",
+      "source": "templates/webapp/tests/security/authentication.spec.ts",
+      "sha256": "32fa7ed23953b29825554c2a8db03a847c5dd7ec69a57c4793afa3a7b184c1dc",
+      "size": 1430
+    },
+    {
+      "path": "dist/templates/webapp/tests/security/authorization.spec.ts",
+      "source": "templates/webapp/tests/security/authorization.spec.ts",
+      "sha256": "0a4cbee95c7b62ea5b6d7d48a40a5ed0fdefafa46c4e44240c69f4ff488bbb9b",
+      "size": 3229
+    },
+    {
+      "path": "dist/templates/webapp/tests/security/README.md",
+      "source": "templates/webapp/tests/security/README.md",
+      "sha256": "9c7987bf43907a754c5402c530d991d93ea7f788a6fafbe5417487ab108d0030",
+      "size": 1486
+    },
+    {
+      "path": "dist/templates/webapp/tests/security/target.ts",
+      "source": "templates/webapp/tests/security/target.ts",
+      "sha256": "22efb984a8016dce458d6bcdca7fc37f6d383119f3bc8810d6f3058798ca0b02",
+      "size": 1944
+    },
+    {
+      "path": "dist/templates/webapp/tests/unit/README.md",
+      "source": "templates/webapp/tests/unit/README.md",
+      "sha256": "f400309655d4f05a3ea3306fef8018596121338c57e97a46e57a2156b67dadbb",
+      "size": 138
+    },
+    {
+      "path": "dist/templates/webapp/tsconfig.json",
+      "source": "templates/webapp/tsconfig.json",
+      "sha256": "ef637ec61bba990454cf9f3e4f4115f063ae06fb033127730c2394f3ffe32218",
+      "size": 394
+    },
+    {
+      "path": "dist/templates/webapp/vitest.config.ts",
+      "source": "templates/webapp/vitest.config.ts",
+      "sha256": "05617b8cdf756f463e363c76b71219b537e29e934aa5eef80b1318f119e86b6d",
+      "size": 221
+    },
+    {
+      "path": "package.json",
+      "source": "package.json",
+      "sha256": "81a94d5007fa38f1848182d0b0369e8bbf2c0036323b8be8dc4ae5c2cfaa49cb",
+      "size": 727
+    }
+  ]
+}

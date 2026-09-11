@@ -88,3 +88,56 @@ test("forged ownership and cross-origin mutations cannot change a document", asy
     await owner.dispose();
   }
 });
+
+for (const name of ["owner", "other"] as const) {
+  test(`${name} lists own documents and cannot create as another user`, async () => {
+    const own = await actor(name);
+    const other = await actor(name === "owner" ? "other" : "owner");
+    const anonymous = await guest();
+    const doc = await createDocument(own);
+    const otherDoc = await createDocument(other);
+    try {
+      const before = await (await own.get(paths.documents)).json();
+      expect(before.map((item: { id: string }) => item.id)).toContain(doc.id);
+      expect(before.map((item: { id: string }) => item.id)).not.toContain(
+        otherDoc.id,
+      );
+      const otherId = (await (await other.get(paths.session)).json()).id;
+      expect(
+        (
+          await own.post(paths.documents, {
+            data: { body: "forged", owner_id: otherId },
+          })
+        ).status(),
+      ).toBe(400);
+      expect(
+        (
+          await anonymous.post(paths.documents, { data: { body: "guest" } })
+        ).status(),
+      ).toBe(401);
+      expect(await (await own.get(paths.documents)).json()).toEqual(before);
+      expect(
+        (
+          await own.patch(`${paths.documents}/${doc.id}`, {
+            data: { body: "own update" },
+          })
+        ).status(),
+      ).toBe(200);
+      expect(
+        (await (await own.get(`${paths.documents}/${doc.id}`)).json()).body,
+      ).toBe("own update");
+      expect((await own.delete(`${paths.documents}/${doc.id}`)).status()).toBe(
+        200,
+      );
+      expect((await own.get(`${paths.documents}/${doc.id}`)).status()).toBe(
+        404,
+      );
+    } finally {
+      await own.delete(`${paths.documents}/${doc.id}`);
+      await other.delete(`${paths.documents}/${otherDoc.id}`);
+      await own.dispose();
+      await other.dispose();
+      await anonymous.dispose();
+    }
+  });
+}
