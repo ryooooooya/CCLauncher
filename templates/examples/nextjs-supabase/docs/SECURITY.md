@@ -47,8 +47,10 @@ Application configuration contains only Supabase URL and publishable/anon key.
 The service-role key is used only by the local fixture script and is not persisted
 in application config, bundled or sent to the app server.
 Session cookies are HttpOnly, SameSite=Lax and host-only with path /. Secure is enabled
-for HTTPS APP_ORIGIN, including refresh and deletion. HTTP is accepted only for local
-loopback origins; never use a loopback APP_ORIGIN for a deployed service. There is no
+for HTTPS APP_ORIGIN, including refresh and deletion. HTTP requires both a loopback origin and explicit CCLAUNCHER_LOCAL_HTTP=true.
+The fixture script sets this flag for its local HTTP mode; HTTPS is the default policy.
+This flag asserts local isolation; it cannot detect tunnels, proxies or public exposure.
+Never enable it or use a loopback APP_ORIGIN for a deployed service. There is no
 Supabase browser client in this example. Reassess the session architecture before adding one.
 Configure production HTTPS, CSP, rate limits and service-specific logging for deployment.
 

@@ -48,3 +48,31 @@ Technical references checked during the response: [Vitest reporter API](https://
 [Playwright reporter API](https://playwright.dev/docs/api/class-reporter),
 [PostgreSQL column grants](https://www.postgresql.org/docs/17/sql-grant.html),
 [Supabase SSR session architecture](https://supabase.com/docs/guides/auth/server-side/advanced-guide).
+
+## Second review response
+
+The supplied summary reviewed `6afb1916b21d75d64ea4985f9829629a7cb0ce2b`:
+F1/F3 resolved, F2/F4–F7 partially resolved, development conditionally usable,
+production/npm publication on hold. Only the summary was supplied for this round.
+
+- F2: reproduced passing test + empty Playwright describe succeeding. Playwright
+  removes empty groups before reporter onBegin, so reporter inspection alone cannot
+  enforce this. The guarded test API counts declarations, including nested and
+  dynamically empty groups; config import checks prevent accidental raw API use.
+  Existing skipped/todo/failed-result checks remain. This is not a sandbox against
+  intentional edits to configuration, guards or verifier code.
+- F7: failed rollback reports the original write error, remaining paths and removal
+  error codes. Fault injection verifies existing data is retained and retry succeeds
+  after deliberate removal of failed output. Permission errors cannot be repaired
+  automatically or guarantee a clean directory.
+- Cookie exception: HTTP now requires explicit CCLAUNCHER_LOCAL_HTTP=true as well
+  as a loopback origin. Default policy requires HTTPS. This mitigates accidental
+  insecure configuration; it does not discover the real deployment topology.
+
+Local verification: 24 repository tests, 27 actual pinned-runner cases (10 Vitest,
+17 Playwright including describe variants/custom fixtures/import rejection), 13
+application unit tests, lint, typecheck and build passed. CI results must be assessed
+on the new commit. The reviewer's
+lack of real DB/HTTPS execution is not retroactively converted into independent
+validation by implementer CI. No complete closure of F4–F7 is claimed.
+Main protection and the remaining publication/deployment prerequisites above remain open.

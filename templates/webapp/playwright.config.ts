@@ -1,5 +1,8 @@
 import { existsSync } from "node:fs";
 import { defineConfig } from "@playwright/test";
+import { checkTestImports } from "./scripts/check-test-imports";
+
+checkTestImports("./tests");
 
 if (existsSync(".env.test")) process.loadEnvFile(".env.test");
 const baseURL = process.env.SECURITY_BASE_URL || "http://127.0.0.1:3000";
