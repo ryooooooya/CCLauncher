@@ -94,3 +94,12 @@ Data API writes by column and configures HttpOnly cookies with Secure on HTTPS o
 CI uses an isolated loopback TLS proxy to exercise browser cookie behavior; it is not a
 production server. Existing consumers must review and apply the additional column-grant
 migration and updated verifier/reporters themselves; package updates do not rewrite them.
+
+Playwright declarations use `tests/required-test.ts`, including custom fixtures via `test.extend`.
+Empty describe groups fail during collection even alongside passing tests. The config rejects
+unguarded Playwright test imports under tests/. Keep these guards when adapting the template.
+
+The example defaults to HTTPS cookies. Local HTTP requires explicit
+`CCLAUNCHER_LOCAL_HTTP=true` and a loopback APP_ORIGIN; fixtures set this only for HTTP mode.
+This is an operator assertion of isolation, not a check for public network exposure.
+Never enable the exception for a deployment, tunnel or public reverse proxy.

@@ -70,7 +70,7 @@ for (const role of ["OWNER", "OTHER", "ADMIN"]) {
 }
 writeFileSync(
   ".env.local",
-  `${marker}\nAPP_ORIGIN=${origin}\nSUPABASE_URL=${url.origin}\nSUPABASE_ANON_KEY=${status.ANON_KEY}\n`,
+  `${marker}\nAPP_ORIGIN=${origin}\nCCLAUNCHER_LOCAL_HTTP=${app.protocol === "http:"}\nSUPABASE_URL=${url.origin}\nSUPABASE_ANON_KEY=${status.ANON_KEY}\n`,
   { mode: 0o600 },
 );
 writeFileSync(".env.test", `${marker}\n${env.join("\n")}\n`, { mode: 0o600 });

@@ -1,4 +1,5 @@
-import { expect, request, test } from "@playwright/test";
+import { expect, request } from "@playwright/test";
+import { test } from "../required-test";
 
 // Real Auth JWTs and PostgREST requests; no service-role key or mocked authorization.
 test("direct Data API limits ownership and writable columns for both users", async () => {

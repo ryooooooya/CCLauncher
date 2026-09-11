@@ -1,4 +1,5 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "../required-test";
 
 test("browser signs in with a managed session cookie and signs out", async ({
   page,

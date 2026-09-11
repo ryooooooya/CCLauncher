@@ -57,7 +57,9 @@ Existing package.json is preserved; its dependency lockfile is not generated or 
 Empty targets receive a maintained package.json and lockfile. Other existing project files are preserved. Any generated-path
 collision fails before writing. Existing symlink parents and leaf targets are
 rejected, and files use exclusive creation. A newly opened file is registered for rollback before
-writing; partial write failures clean up generated files without deleting preexisting files. Use a locally controlled workspace;
+writing; partial write failures attempt to clean up generated files without deleting preexisting files.
+If cleanup fails, init reports the original error plus each remaining path and removal error.
+Inspect and remove only failed initialization output before retrying; no force overwrite is provided. Use a locally controlled workspace;
 initialization is not an OS sandbox against hostile concurrent filesystem changes.
 There is no force option, network fetch, install hook, model assignment or
 recipe/standard copy into the consumer. No agent-specific adapter is installed unless explicitly selected.
@@ -74,7 +76,9 @@ schema fields fail before running project commands.
 Vitest/Playwright configs load required-test reporters. Each test command must emit a
 fresh structured report with at least one executed test, all passing and no skip/todo.
 Missing reports fail even if a command exits zero. The reporters also reject skipped
-runs when invoked directly. If changing test tools, provide an equivalent reporter;
+runs when invoked directly. Playwright tests import `test` from `tests/required-test.ts`;
+this guarded API rejects empty describe groups during declaration, before Playwright filters them out.
+The config checks test imports to prevent accidental use of the unguarded API. If changing test tools, provide an equivalent reporter;
 do not replace the checks with file-name scans or unconditional success. Supabase projects additionally need
 SQL tests and an available disposable local database for `pnpm exec supabase test db`.
 

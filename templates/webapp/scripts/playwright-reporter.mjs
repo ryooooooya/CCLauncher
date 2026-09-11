@@ -1,6 +1,9 @@
 import { recordReport } from "./test-report.mjs";
 
 export default class RequiredTestsReporter {
+  onError(error) {
+    console.error(error.message);
+  }
   onBegin(_config, suite) {
     this.suite = suite;
   }

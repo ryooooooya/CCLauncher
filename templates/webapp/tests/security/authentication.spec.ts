@@ -1,4 +1,5 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "../required-test";
 import { actor, guest, paths } from "./target";
 
 test("guest cannot read session or private collection", async () => {

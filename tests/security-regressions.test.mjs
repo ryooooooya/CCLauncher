@@ -79,3 +79,38 @@ test('init rolls back files after open and partial writes without deleting exist
     init(target);
   }
 });
+
+test('init reports cleanup failures with original error and leaves existing files intact', t => {
+  const dir = temporary(t);
+  const target = resolve(dir, 'target'); mkdirSync(target);
+  writeFileSync(resolve(target, 'keep.txt'), 'existing');
+  const script = resolve(dir, 'fault.mjs');
+  writeFileSync(script, `import fs from 'node:fs';
+import { syncBuiltinESMExports } from 'node:module';
+const original = fs.writeFileSync;
+fs.writeFileSync = (file, data, ...args) => {
+  if (typeof file === 'number') {
+    original(file, data.slice(0, 5), ...args);
+    throw Object.assign(new Error('synthetic ENOSPC'), {code:'ENOSPC'});
+  }
+  return original(file, data, ...args);
+};
+fs.unlinkSync = () => { throw Object.assign(new Error('synthetic EACCES'), {code:'EACCES'}); };
+syncBuiltinESMExports();
+const { initialize } = await import(${JSON.stringify(new URL('../src/cli/init.js', import.meta.url).href)});
+try { initialize(${JSON.stringify(resolve(root, 'dist'))}, JSON.parse(fs.readFileSync(${JSON.stringify(resolve(root, 'dist/manifest.json'))})), ${JSON.stringify(target)}, ${JSON.stringify(defaults())}); }
+catch (error) { console.error(error.message); process.exitCode = 1; }
+`);
+  const result = node([script], dir);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /synthetic ENOSPC/);
+  assert.match(result.stderr, /Cleanup incomplete/);
+  assert.match(result.stderr, /EACCES/);
+  const leftovers = readdirSync(target).filter(name => name !== 'keep.txt');
+  assert.ok(leftovers.length > 0);
+  for (const path of leftovers) assert.ok(result.stderr.includes(resolve(target, path)));
+  assert.equal(readFileSync(resolve(target, 'keep.txt'), 'utf8'), 'existing');
+  assert.notEqual(node([resolve(root, 'dist/cli/index.js'), 'init', '--yes'], target).status, 0);
+  for (const path of leftovers) rmSync(resolve(target, path), { recursive: true });
+  init(target);
+});

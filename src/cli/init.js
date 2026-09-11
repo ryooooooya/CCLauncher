@@ -103,8 +103,16 @@ export function initialize(dist, manifest, dir, config, example, adapter = 'gene
       try { writeFileSync(fd, content); } finally { closeSync(fd); }
     }
   } catch (error) {
-    for (const path of createdFiles.reverse()) { try { unlinkSync(path); } catch {} }
-    for (const path of createdDirs.reverse()) { try { rmdirSync(path); } catch {} }
+    const remaining = [];
+    for (const [paths, remove] of [[createdFiles, unlinkSync], [createdDirs, rmdirSync]]) {
+      for (const path of paths.reverse()) {
+        try { remove(path); }
+        catch (cleanupError) {
+          if (cleanupError.code !== 'ENOENT') remaining.push(`${path} (${cleanupError.code || 'cleanup failed'})`);
+        }
+      }
+    }
+    if (remaining.length) throw new Error(`${error.message}\nCleanup incomplete; paths could not be removed:\n${remaining.map(path => `- ${path}`).join('\n')}\nInspect these paths and remove only failed initialization output before retrying; existing project files must be preserved.`, { cause: error });
     throw error;
   }
   return [...files.keys()].sort();
