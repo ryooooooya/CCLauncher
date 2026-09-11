@@ -1,7 +1,7 @@
 # デッキ記入テンプレート
 
-配置先: `docs/product/_deck_template.md`
-正本: CCLauncher の `blueprint_deck_template.md`（直接編集せず、上流を更新して再取得する）
+配置先: `docs/product/_deck-template.md`
+正本: CCLauncher の `methods/blueprint-printer/blueprint/deck-template.md`（固定package版を参照し、更新時は差分をレビューする）
 
 `docs/product/deck.md` を書くための構造と問い。**このファイル自身は deck ではない**。
 問いに答えて埋め切った時点で `docs/product/deck.md` を作る（空の deck.md は置かない。

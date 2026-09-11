@@ -1,0 +1,12 @@
+{
+  "blueprint/docs-rules.md": "docs/_rules.md",
+  "blueprint/deck-template.md": "docs/product/_deck-template.md",
+  "blueprint/stories-rules.md": "docs/product/stories/_rules.md",
+  "blueprint/stories-template.md": "docs/product/stories/_template.md",
+  "printer/design-rules.md": "docs/design/_rules.md",
+  "printer/tokens-rules.md": "docs/design/tokens/_rules.md",
+  "printer/ui/_template.md": "docs/design/ui/_template.md",
+  "printer/layout/_template.md": "docs/design/layout/_template.md",
+  "project.md": "docs/BLUEPRINT-PRINTER.md",
+  "prototypes.md": "src/prototypes/README.md"
+}

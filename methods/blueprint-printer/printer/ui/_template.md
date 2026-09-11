@@ -1,7 +1,7 @@
 # ui spec テンプレート
 
 配置先: `docs/design/ui/_template.md`
-正本: CCLauncher の `printer/ui/_template.md`（直接編集せず、上流を更新して再取得する）
+正本: CCLauncher の `methods/blueprint-printer/printer/ui/_template.md`（固定package版を参照し、更新時は差分をレビューする）
 
 コンポーネント1つにつき `docs/design/ui/{component}.md` を1ファイル作る。
 `{component}` はパスカルケースで、実装（`src/components/{component}.tsx`）と揃える。

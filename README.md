@@ -24,7 +24,7 @@ npm pack
 | `recipes/` | 技術別・タスク別に読む知識 |
 | `templates/` | consumerへ生成する最小ファイル |
 | `adapters/` | エージェント・ツール固有の設定 |
-| `methods/` | 任意採用の開発手法。Blueprint / Printerはここへ移行 |
+| `methods/` | 任意採用の開発手法。Blueprint / Printerを任意採用 |
 | `src/cli/` | 決定論的な初期化・知識取得・診断 |
 
 境界と共存方針は [architecture](docs/architecture.md)、旧文書ごとの移行先は [migration map](docs/migration.md) を参照してください。#2では置き場と責務を定義し、本文の整理・移行は#3〜#8で行います。#3の [security / dependencies / testing / privacy標準](standards/README.md) と#4の [技術別recipes](recipes/README.md) は参照可能です。package収録とCLI取得は#5、consumer向け実行可能な検証は#6です。ディレクトリのREADMEは管理者向け索引で、consumerへ配布しません。
@@ -38,7 +38,7 @@ AGENTS.mdを直接保守する共通の正本とします。`init --adapter clau
 
 ## Migration status
 
-#1〜#7のpackage・standards・recipes・CLI・Webapp template・adaptersを実装しました。
-Blueprint / Printerの独立methodology化は #8、残るlegacy文書の撤去とREADMEの最終整理は #9です。
+#1〜#8のpackage・standards・recipes・CLI・Webapp template・adaptersを実装しました。
+Blueprint / Printerは `init --method blueprint-printer` で任意採用できます。[method guide](methods/blueprint-printer/README.md) を参照してください。残るlegacy文書の撤去とREADMEの最終整理は #9です。
 旧ルート文書は移行資料です。新規bootstrapには上記CLIを使ってください。
 AGENTS.mdのAI抽出生成方式と旧bootstrap promptは廃止しました。

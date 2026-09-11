@@ -1,9 +1,9 @@
-# base_print
+# Print
 
 ストーリーを入力に、`src/prototypes/{slug}/` へデザイン案を複数生成する**印刷コマンド**の仕組み。
 Printer 工程（デザインが必要なときに走る工程）の実行手段。
 
-Printer 資産（tokens / ui spec / layout spec）の正本は CCLauncher の `printer/`。
+Printer 資産（tokens / ui spec / layout spec）の正本は package内の `methods/blueprint-printer/printer/`。
 このファイルはその資産を使って出力する側の運用を持つ。
 
 ---
@@ -19,7 +19,7 @@ Printer 資産（tokens / ui spec / layout spec）の正本は CCLauncher の `p
 
 ## なぜコマンドにするのか
 
-`/ux-audit` と同じ理由。入力（ストーリー・ui spec・tokens）は後から必ず変わるので、
+UX audit と同じ理由。入力（ストーリー・ui spec・tokens）は後から必ず変わるので、
 そのたびに同じ手順を会話で組み立て直すと、参照漏れが起きて出力の質が入力に追従しなくなる。
 
 ドキュメントを入力に取り、固定パスへ出力する再実行可能なコマンドにしておけば、
@@ -27,12 +27,12 @@ Printer 資産（tokens / ui spec / layout spec）の正本は CCLauncher の `p
 
 | | 入力 | 出力 |
 |---|---|---|
-| `/print {slug}` | story ＋ layout spec ＋ ui spec ＋ tokens（＋ 既存実装） | `src/prototypes/{slug}/` の複数パターン |
-| `/ux-audit {scope}` | 汎用 UX チェックリスト ＋ 実装 | `docs/ux-audit/{scope}.md` |
+| `print <slug>` | story ＋ layout spec ＋ ui spec ＋ tokens（＋ 既存実装） | `src/prototypes/{slug}/` の複数パターン |
+| UX audit | 汎用 UX チェックリスト ＋ 実装 | `docs/ux-audit/{scope}.md` |
 
 ## 前提
 
-- Storybook が入っていること（プロトタイプを story として置くため。セットアップは `base_storybook.md`）
+- Storybook が入っていること（プロトタイプを story として置くため。セットアップは `cclauncher recipe storybook`）
 - `docs/product/stories/{slug}.md` が存在し、文脈層が書かれていること
   （受け入れ条件は未確定でよい。印刷の出力を素材に確定させる順序のため）
 - `src/app/globals.css` に semantic トークンが定義済みであること
@@ -40,20 +40,11 @@ Printer 資産（tokens / ui spec / layout spec）の正本は CCLauncher の `p
 
 ---
 
-## セットアップ: `.claude/commands/print.md`
+## 実行
 
-以下を `.claude/commands/print.md` として配置する。`/print` で実行できるようになる。
-
-````markdown
----
-description: story を入力に src/prototypes/{slug}/ へデザイン案を複数生成（印刷）する
-argument-hint: <slug> [パターン数（既定 3）]
----
-
-ストーリー `$1` を印刷する。パターン数: $2（省略時は 3）
-
-計画の確認やパターン方向性の相談を挟まず、最後まで走り切ること。
-報告は生成後に1回だけ行う。
+これはagent非依存のタスク手順。`print <slug> [パターン数]` は入力表記であり、
+CLIのサブコマンドではない。agentにこのファイルとslugを渡して実行する。
+パターン数の既定は3。以下の `{slug}` を指定された値として読む。
 
 ## 手順
 
@@ -61,7 +52,7 @@ argument-hint: <slug> [パターン数（既定 3）]
 
    | 入力 | 何を取るか |
    |---|---|
-   | `docs/product/stories/$1.md` | frontmatter（`target` / `pages` / `prototypes` / `adopted`）、文脈層（ゴール・フリクション・推奨 UI）、規範層（定義する挙動・参照する挙動・対象外） |
+   | `docs/product/stories/{slug}.md` | frontmatter（`target` / `pages` / `prototypes` / `adopted`）、文脈層（ゴール・フリクション・推奨 UI）、規範層（定義する挙動・参照する挙動・対象外） |
    | `docs/design/layout/{pattern}.md` | 推奨 UI が指すレイアウトパターン。領域分割・レスポンシブ方針・必須の3状態 |
    | `docs/design/ui/{component}.md` | 推奨 UI が指す各コンポーネントの usage / function / surface |
    | `src/app/globals.css` と `docs/design/tokens/_rules.md` | 使えるのは semantic 層のみ（`--p-*` は参照しない） |
@@ -72,8 +63,7 @@ argument-hint: <slug> [パターン数（既定 3）]
      `docs/design/layout/` の既存パターンを選ぶ。新しいパターンをここで定義しない
    - 推奨 UI が指すコンポーネントの ui spec が存在しない場合、spec を勝手に書かない。
      既存のプリミティブで組み、報告に「ui spec 未整備」として挙げる
-   - Storybook の MCP server が起動している場合、`get-documentation` で Props を確認する。
-     推測で Props を使わない
+   - 利用可能なcomponentドキュメントか実装でPropsを確認する。推測でPropsを使わない
 
 2. `target` で分岐する
 
@@ -91,9 +81,9 @@ argument-hint: <slug> [パターン数（既定 3）]
 
 4. 生成する
 
-   - 出力先: `src/prototypes/$1/{a,b,c}-{方向性を表す名前}.tsx`
+   - 出力先: `src/prototypes/{slug}/{a,b,c}-{方向性を表す名前}.tsx`
    - story の書き方は `docs/product/stories/_rules.md` の「Story 作成ルール」に従う
-     （CSF 3、title は `Prototypes/$1` で揃える、各 story に `@summary` で
+     （CSF 3、title は `Prototypes/{slug}` で揃える、各 story に `@summary` で
      「この案が何を優先しているか」を1行）
    - 守る制約:
      - 本番と同一リソースのみで組む。`src/components/` の実コンポーネントと semantic トークン
@@ -118,13 +108,12 @@ argument-hint: <slug> [パターン数（既定 3）]
    - 使った layout spec / ui spec / semantic トークン群
    - 入力が欠けていたもの（ui spec 未整備、tokens に無い用途、content-list に無いページ）
    - 制約を守れなかった箇所があれば、その理由（守れなかったことを黙って通さない）
-````
 
 ---
 
 ## 実行のトリガー
 
-**いつ走らせるかの指定は Blueprint 側の管轄**で、プロジェクトの `CLAUDE.md` の読み分け表に
+**いつ走らせるかの指定は Blueprint 側の管轄**で、プロジェクトの `AGENTS.md` の読み分け表に
 行として持たせる。このリポジトリの責務は、コマンドと Printer 資産の提供まで。
 
 目安として、以下を想定している。
@@ -133,7 +122,7 @@ argument-hint: <slug> [パターン数（既定 3）]
 - 既存画面の改修ストーリー（`target: modify`）を起こしたとき
 - ui spec / layout spec / tokens を大きく更新したあと、既存の未実装ストーリーを刷り直すとき
 
-adopted 決定後は `/ux-audit {slug}` で採用案を監査する（`base_ux_audit.md`）。
+adopted を本実装へ昇格させたあとに UX audit で監査する（`cclauncher recipe ux-audit`）。
 
 ---
 
@@ -141,12 +130,12 @@ adopted 決定後は `/ux-audit {slug}` で採用案を監査する（`base_ux_a
 
 - `src/prototypes/` は検討過程の記録。実装完了後も削除せずアーカイブする
   （ライフサイクルは `docs/product/stories/_rules.md`）
-- 非採用パターンの story には `tags: ['!manifest']` を付けてエージェントの視界から外す
+- Manifest連携を採用している場合、非採用パターンの story には `tags: ['!manifest']` を付けてエージェントの視界から外す
 - 実装完了後の正は受け入れ条件と実装。プロトタイプと実装がずれてもプロトタイプは直さない
 - adopted を本実装へ昇格させるのはコピーで行い、`src/prototypes/` 側の原本は残す。
   昇格作業（データつなぎ込み・状態管理・テスト追加）は実装エージェントの担当（projectの `AGENTS.md` と `standards/workflow.md`）
-- `/ux-audit` は `src/prototypes/` を対象外にしている。adopted を本実装へ昇格させたあとに監査する
+- UX audit は `src/prototypes/` を対象外にしている。adopted を本実装へ昇格させたあとに監査する
 
 ---
 
-最終検証日: 2026-07-30
+移行日: 2026-09-11（技術別のセットアップと検証は対応recipeを参照）

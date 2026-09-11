@@ -110,7 +110,7 @@ Storybook のコンポーネント・ドキュメント情報を確認してか�
 ## 6. Story 作成ルール
 
 Story の書き方（基本方針・JSDoc・Manifest 管理・プロトタイプの story 化）は Blueprint 側が持つ。
-`docs/product/stories/_rules.md`（正本: CCLauncher の `blueprint_stories_rules.md`）を参照すること。
+`docs/product/stories/_rules.md`（正本: CCLauncher の `methods/blueprint-printer/blueprint/stories-rules.md`）を参照すること。
 このファイルの責務は Storybook 環境のセットアップまでで、story の内容規約には踏み込まない。
 
 理由: プロトタイプを `src/prototypes/{slug}/` に story として置く運用と密結合しており、

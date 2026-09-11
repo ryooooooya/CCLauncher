@@ -57,6 +57,7 @@ function collect(dir, prefix) {
 }
 collect(resolve(root, 'src/cli'), resolve(root, 'src'));
 for (const adapter of ['claude', 'codex', 'generic']) collect(resolve(root, 'adapters', adapter), root);
+collect(resolve(root, 'methods/blueprint-printer'), root);
 collect(resolve(root, 'templates/webapp'), root);
 collect(resolve(root, 'templates/examples/nextjs-supabase'), root);
 rmSync(resolve(root, 'dist'), { recursive: true, force: true });

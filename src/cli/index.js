@@ -21,6 +21,7 @@ init defaults: scope=production, framework=nextjs, auth=none, database=none,
 all features=false. Interactive init asks for each value; --yes accepts defaults.
 Options: --scope production|prototype --framework nextjs|none
   --auth none|supabase|authjs --database none|supabase|postgres
+  --method blueprint-printer: opt-in methodology scaffolding.
   --adapter generic|claude|codex: optional entry point; default generic.
   --example nextjs-supabase: optional document app in an empty target directory.
   --uploads --billing --admin --pii --webhooks --external-api: each takes true|false.
@@ -42,7 +43,7 @@ try {
       const arg = args[i];
       if (!arg.startsWith('-')) { positional.push(arg); continue; }
       const key = arg === '--external-api' ? 'externalApi' : arg.slice(2);
-      const allowed = command === 'init' ? ['yes', 'dir', 'example', 'adapter', ...Object.keys(choices), ...featureKeys] : command === 'recipe' ? [] : ['dir'];
+      const allowed = command === 'init' ? ['yes', 'dir', 'example', 'adapter', 'method', ...Object.keys(choices), ...featureKeys] : command === 'recipe' ? [] : ['dir'];
       if (!arg.startsWith('--') || !allowed.includes(key) || Object.hasOwn(options, key)) throw new Error(`Unknown or duplicate option: ${arg}`);
       if (key === 'yes') options[key] = true;
       else {
@@ -57,7 +58,7 @@ try {
     if (command === 'recipe') process.stdout.write(recipe(dist, manifest, positional[0]));
     if (command === 'context') process.stdout.write(context(dist, manifest, readConfig(dir), positional[0]));
     if (command === 'init') {
-      const files = initialize(dist, manifest, dir, await initConfig(options), options.example, options.adapter);
+      const files = initialize(dist, manifest, dir, await initConfig(options), options.example, options.adapter, options.method);
       console.log(`Created ${files.length} files in ${dir}:\n${files.join('\n')}\n\nNext: install the exact CCLauncher version, configure application checks and run sh scripts/verify.sh.\nRun the generated verification against the actual application; the optional example includes a local Supabase fixture.`);
     }
     if (command === 'doctor') {

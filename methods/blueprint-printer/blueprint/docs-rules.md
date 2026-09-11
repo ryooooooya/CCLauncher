@@ -1,9 +1,10 @@
 # docs 全体規約
 
 配置先: `docs/_rules.md`
-正本: CCLauncher の `blueprint_docs_rules.md`（直接編集せず、上流を更新して再取得する）
+正本: CCLauncher の `methods/blueprint-printer/blueprint/docs-rules.md`（固定package版を参照し、更新時は差分をレビューする）
 
-このプロジェクトの `docs/` 配下のドキュメントが従う全体規約。
+このmethodを採用した `docs/product/` と `docs/design/` の共通規約。
+required baseline docsやproject固有のsecurity boundaryを置き換えない。
 個別の規約は各ディレクトリの `_rules.md`（`docs/product/stories/_rules.md`、`docs/design/_rules.md`、
 `docs/design/tokens/_rules.md`）が持ち、このファイルはそれらに共通する原則と境界定義だけを持つ。
 
@@ -31,7 +32,7 @@
 ### 生成物は手編集しない
 
 他のファイルから生成されるドキュメント（`tests/coverage-map.md`、`docs/ux-audit/*.md` など）は
-手で編集しない。ソースを直して再生成する。手編集禁止ファイルの一覧は `CLAUDE.md` が持つ。
+手で編集しない。ソースを直して再生成する。手編集禁止ファイルの一覧は `AGENTS.md` が持つ。
 
 ---
 

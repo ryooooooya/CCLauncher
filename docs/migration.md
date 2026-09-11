@@ -110,3 +110,7 @@ PR #17 adds the Biome/TypeScript/Vitest/Playwright harness, actual HTTP security
 
 `standards/workflow.md`, packaged adapters and optional init entry points are implemented.
 AGENTS.md remains directly maintained after deterministic initialization. The extraction specification is removed; old workflow/review/bootstrap/instruction guides are retired pointers, not active policies. Remaining legacy removal follows in #9.
+
+## Issue #8 implementation
+
+Blueprint source documents, Printer assets and print procedure now live together under methods/blueprint-printer/. Old paths were moved, and the old philosophy document is retired. Opt-in init installs the explicit scaffold.json mapping; default consumers receive none of these files. Domain ownership, new/modify, adopted-file protection, overrides and promotion history are preserved. Storybook setup is delegated to the packaged recipe.
