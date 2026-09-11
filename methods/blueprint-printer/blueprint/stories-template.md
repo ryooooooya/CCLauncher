@@ -1,7 +1,7 @@
 # ストーリーテンプレート
 
 配置先: `docs/product/stories/_template.md`
-正本: CCLauncher の `blueprint_stories_template.md`（直接編集せず、上流を更新して再取得する）
+正本: CCLauncher の `methods/blueprint-printer/blueprint/stories-template.md`（固定package版を参照し、更新時は差分をレビューする）
 
 新しいストーリーを書くときは、このファイルの「テンプレート本体」以下をコピーして
 `docs/product/stories/{slug}.md` を作る。書き方の規約は `_rules.md` を参照。
@@ -17,7 +17,7 @@ slug: product-search              # ケバブケース。ファイル名と一�
 target: new                       # new（新規画面） / modify（既存画面の改修）
 pages:                            # content-list.md の項目への参照。フリーテキスト不可
   - 商品一覧
-prototypes:                       # src/prototypes/{slug}/ 配下のパターン（/print が更新する）
+prototypes:                       # src/prototypes/{slug}/ 配下のパターン（print手順が更新する）
   - a-inline-filter
   - b-modal-filter
 adopted: a-inline-filter          # 採用したパターン。未決定なら未記入のまま実装に進まない

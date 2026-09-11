@@ -1,7 +1,7 @@
 # ストーリー規約
 
 配置先: `docs/product/stories/_rules.md`
-正本: CCLauncher の `blueprint_stories_rules.md`（直接編集せず、上流を更新して再取得する）
+正本: CCLauncher の `methods/blueprint-printer/blueprint/stories-rules.md`（固定package版を参照し、更新時は差分をレビューする）
 
 ストーリーの書き方・所有権・粒度の規約。テンプレート構造は `_template.md` を参照。
 
@@ -21,7 +21,7 @@
 
 ## frontmatter の `target` と `pages`
 
-この2つは印刷（`/print`）と整合性チェックの入力になるため、書き方を固定する。
+この2つは印刷（`print`）と整合性チェックの入力になるため、書き方を固定する。
 
 ### `pages`
 
@@ -32,7 +32,7 @@
 
 ### `target`
 
-| 値 | 意味 | 印刷（`/print`）の挙動 |
+| 値 | 意味 | 印刷（`print`）の挙動 |
 |---|---|---|
 | `new` | 新規画面 | layout spec の領域分割から組み立てる |
 | `modify` | 既存画面の改修 | `pages` の対象ページの既存実装を入力に加え、既存を出発点にした差分パターンを生成する |
@@ -114,13 +114,13 @@ Given-When-Then で書く。前提が自明な場合は When-Then でよい。
 
 ## プロトタイプのライフサイクル
 
-1. `/print {slug}` で `src/prototypes/{slug}/` に複数パターンを Storybook story として生成する
-   （印刷コマンドの仕様は `.claude/docs/base_print.md`。手で書き起こさない）
+1. `print <slug>` で `src/prototypes/{slug}/` に複数パターンを Storybook story として生成する
+   （印刷コマンドの仕様は `methods/blueprint-printer/print.md`。手で書き起こさない）
 2. 人間が触って評価し、adopted を1つ選ぶ。frontmatter に adopted と選定理由1行を書く
 3. 受け入れ条件を、文脈層と adopted プロトタイプを素材にドラフトする
 4. 実装完了後、プロトタイプはアーカイブする（削除はしない。検討過程として残す）
 
-adopted が決まったあとに `/print` を再実行しても adopted のファイルは上書きされない。
+adopted が決まったあとに `print` を再実行しても adopted のファイルは上書きされない。
 判断済みのものを生成で壊さないため。刷り直したいときは adopted を外してから実行する。
 
 実装完了後の正は **受け入れ条件と実装** であって、プロトタイプではない。
@@ -130,8 +130,8 @@ adopted が決まったあとに `/print` を再実行しても adopted のフ�
 
 ## Story 作成ルール
 
-プロトタイプは Storybook の story として置く。Storybook 自体のセットアップ（MCP server / Manifest 連携）は
-`.claude/docs/base_storybook.md` の管轄で、**story の書き方はこのファイルが持つ**。
+プロトタイプは Storybook の story として置く。Storybook 自体のセットアップと利用可能な連携は
+`cclauncher recipe storybook` の管轄で、**story の書き方はこのファイルが持つ**。
 
 ### 基本方針
 
@@ -149,18 +149,18 @@ adopted が決まったあとに `/print` を再実行しても adopted のフ�
   （昇格時に注入元を実データへ差し替えるだけで本実装の出発点になる状態を保つ）
 - story のタイトルは `Prototypes/{slug}` で揃える。人間が並べて比較できることが目的
 - 各パターンの story に `@summary` で「この案が何を優先しているか」を1行書く。採否判断の材料になる
-- adopted が決まったら、非採用パターンの story に `tags: ['!manifest']` を付けてエージェントの視界から外す
+- Manifest連携を採用していてadoptedが決まったら、非採用パターンの story に `tags: ['!manifest']` を付けてエージェントの視界から外す
   （ファイルは残す。検討過程の記録であって、実装の参照先ではないため）
 
 ### JSDoc（必須）
 
-AI エージェントが Manifest 経由でコンポーネントを理解するための最重要情報源。
+人間とAIがコンポーネントの意図を理解するための情報源。Manifest連携は任意とする。
 
 - コンポーネントの export に description と `@summary`（用途を簡潔に。実装詳細ではなく「いつ使うか」）
 - すべての Props に description
 - 各 story に description と `@summary`。「何を」ではなく「なぜこの状態を使うか」
 
-### Manifest の管理
+### Manifest の管理（連携を採用した場合のみ）
 
 - エージェントに見せる必要がない story（アンチパターン例・deprecated・非採用プロトタイプ）には `tags: ['!manifest']`
 - MDX も `<Meta tags={['!manifest']} />` で除外できる
@@ -169,7 +169,7 @@ AI エージェントが Manifest 経由でコンポーネントを理解する�
 ### テスト
 
 - インタラクションテストは play function で書く
-- story を書いたら `run-story-tests` で動作確認する
+- story を書いたら 採用したStorybook構成のテストコマンドで動作確認する（`cclauncher recipe storybook`）
 - 受け入れ条件を検証する story には、describe/story 名に条件 ID を含める（`tests/coverage-map.md` の生成元になる）
 
 ---

@@ -1,23 +1,23 @@
 # design 資産の運用規約
 
 配置先: `docs/design/_rules.md`
-正本: CCLauncher の `printer/design_rules.md`（直接編集せず、上流を更新して再取得する）
+正本: CCLauncher の `methods/blueprint-printer/printer/design-rules.md`（固定package版を参照し、更新時は差分をレビューする）
 
 `docs/design/` 配下は Printer（デザイン資産層）由来の**汎用資産**。このプロジェクトで生まれたものではなく、
 プロジェクト横断で育つ機構を持ち込んでいる。プロダクト固有の判断は `docs/product/` の管轄。
 
-これらの資産を使ってストーリーから画面案を出す手順（印刷）は `.claude/docs/base_print.md`（`/print`）。
+これらの資産を使ってストーリーから画面案を出す手順（印刷）は `methods/blueprint-printer/print.md`（`print`）。
 
 ---
 
 ## 出自と同期
 
-- 出自: `https://github.com/ryooooooya/CCLauncher` の `printer/`
-- 取得: `https://raw.githubusercontent.com/ryooooooya/CCLauncher/main/printer/<ファイル名>`
+- 出自: `https://github.com/ryooooooya/CCLauncher` の `methods/blueprint-printer/printer/`
+- 取得: lockfileで固定したpackage内の `dist/methods/blueprint-printer/printer/`
 
 同期のタイミング:
 
-1. プロジェクト初期化時（bootstrap が配置する）
+1. 明示的なmethod初期化時（固定packageのmethod scaffoldを配置する）
 2. 上流に影響の大きい変更が入ったと知らされたとき
 3. デザインの見直しなど、資産をまとめて更新する節目
 
@@ -47,8 +47,8 @@
 
 `_override.md` の各項目には還元判断を書く。
 
-- **還元する**: 他プロジェクトでも効く一般性がある → 上流の `printer/` に PR を出し、
-  マージされたら override から消す
+- **還元する**: 他プロジェクトでも効く一般性がある → 上流の `methods/blueprint-printer/printer/` に PR を出し、
+  修正を含む固定package版へ更新したら override から消す
 - **還元しない**: このプロダクト固有の事情 → override に残したままにする。理由を明記する
 - **保留**: 判断材料が足りない → 次の同期タイミングで再判断する
 
@@ -67,19 +67,18 @@
 - フォーカスインジケータを消さない。`outline: none` は代替の可視表現とセットでのみ許可
 - 状態を色だけで伝えない（エラー・成功・選択は形／アイコン／テキストを併用）
 - タッチターゲットは最小 44×44px
-- 詳細な検査項目は `.claude/rules/base_ux_checklist_critical.md` と
-  `.claude/docs/base_ux_checklist_high.md` を参照。ここに転記しない
+- 詳細な検査項目は `cclauncher recipe accessibility` と `cclauncher recipe ux-audit` を参照。ここに転記しない
 
 ### モーション
 
 - `transform` と `opacity` のみアニメーションする
 - `prefers-reduced-motion: reduce` を尊重し、必須でないモーションは無効化する
-- 詳細は `.claude/docs/base_ui_motion.md`
+- 詳細は `cclauncher recipe ui-motion`
 
 ### パフォーマンス
 
 - コンポーネント単位で画像・フォント・アイコンの読み込み方針を持たない。プロジェクト全体の予算に従う
-- 予算と計測は `.claude/docs/base_performance.md`
+- 予算と計測は `cclauncher recipe performance`
 
 ### レスポンシブ
 

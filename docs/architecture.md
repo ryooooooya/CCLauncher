@@ -29,16 +29,16 @@ For task decisions, follow the current user instruction and project-specific doc
 
 ## Blueprint / Printer
 
-The destination is `methods/blueprint-printer/`, with `blueprint/` and `printer/` subdirectories. Blueprint describes product intent; Printer holds reusable design assets and the print method. Projects opt into this methodology. Default webapp initialization will not install it or require Storybook because it exists in the package.
+The method lives in `methods/blueprint-printer/`, with `blueprint/` and `printer/` subdirectories. Blueprint describes product intent; Printer holds reusable design assets and the print method. Projects opt into this methodology. Default webapp initialization will not install it or require Storybook because it exists in the package.
 
-Issue #8 migrates these files together and updates internal references. Domain logic is preserved where possible; model assignments and execution-tool configuration move to adapters.
+Issue #8 migrates the files together. Explicit init --method blueprint-printer adds method-owned templates and asset rules; no runtime or Storybook dependency is installed. Domain logic is preserved and print is an agent-independent task instruction.
 
 ## Staged coexistence
 
-- Legacy root documents and `printer/` remain migration sources until their replacement is reviewed. Do not copy their full content into the new directories merely to populate them.
+- Remaining legacy root documents remain migration sources until their replacement is reviewed. Do not copy their full content into the new directories merely to populate them.
 - New architecture and [distribution policy](distribution.md) govern the new package. Legacy generation and raw-main retrieval instructions do not govern its implementation.
 - Each content migration updates references and the [migration map](migration.md); avoid maintaining two normative copies. Issue #9 removes obsolete files after replacement verification.
 - Issue #2 adds directory contracts and the migration map only. Standards, recipes, template generation, adapters and methods are implemented in Issues #3–#8.
 - Issue #5 implements knowledge packaging with explicit manifest entries and context selectors. The build validates metadata and section references; unknown or malformed entries fail.
-- Tarballs contain the CLI modules, emitted inventory, selected standards/recipes, agent adapters and webapp scaffold templates, plus package metadata and root README. Maintainer indexes and legacy knowledge files are excluded. See [CLI behavior](cli.md).
+- Tarballs contain the CLI modules, emitted inventory, selected standards/recipes, agent adapters, optional methodology files and webapp scaffold templates, plus package metadata and root README. Maintainer indexes and legacy knowledge files are excluded. See [CLI behavior](cli.md).
 - npm publication remains deferred. Future MIT application follows the third-party-content review agreed in the distribution policy.

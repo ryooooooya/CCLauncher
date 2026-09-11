@@ -1,7 +1,7 @@
 # デザイントークン規約
 
 配置先: `docs/design/tokens/_rules.md`
-正本: CCLauncher の `printer/tokens_rules.md`（直接編集せず、上流を更新して再取得する）
+正本: CCLauncher の `methods/blueprint-printer/printer/tokens-rules.md`（固定package版を参照し、更新時は差分をレビューする）
 
 **値のソースは `src/app/globals.css`**。中間の JSON もビルド段も置かない。
 Tailwind v4（CSS-first）と shadcn/ui がこのファイルの CSS 変数を直接読むため、
@@ -228,7 +228,7 @@ per-token の usage 説明は書かない。**usage は semantic 命名そのも
 | `.dark` の導出 | 承認 | ○（L 反転 ＋ AA 再検証） |
 | `globals.css` への反映 | 承認 | ○ |
 
-`src/app/globals.css` は semantic トークンの正本。実装エージェント（Codex）は変更しない
+`src/app/globals.css` は semantic トークンの正本。Implementerは変更しない
 （`AGENTS.md` の書き込み境界に入る）。値を変えるのは設計側の判断。
 
 ## レビュー観点（AI が機械的に検査する）

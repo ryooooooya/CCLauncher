@@ -1,7 +1,7 @@
 # layout spec テンプレート
 
 配置先: `docs/design/layout/_template.md`
-正本: CCLauncher の `printer/layout/_template.md`（直接編集せず、上流を更新して再取得する）
+正本: CCLauncher の `methods/blueprint-printer/printer/layout/_template.md`（固定package版を参照し、更新時は差分をレビューする）
 
 画面パターン1つにつき `docs/design/layout/{pattern}.md` を1ファイル作る。
 `{pattern}` はケバブケース（`login` / `search` / `list` / `detail` / `edit` など）。

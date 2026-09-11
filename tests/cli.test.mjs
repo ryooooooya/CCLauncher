@@ -225,3 +225,31 @@ test('adapters preserve one shared index and reject conflicts before writing', t
   assert.match(workflow, /High-risk gate/);
   assert.match(workflow, /Verifier/);
 });
+
+test('method opt-in is isolated, complete and preflights existing design decisions', t => {
+  const plain = temp(t), method = temp(t), conflict = temp(t), invalid = temp(t);
+  ok(run(plain, ['init', '--yes']));
+  ok(run(method, ['init', '--yes', '--method', 'blueprint-printer']));
+  for (const path of ['docs/product', 'docs/design', 'src/prototypes', 'docs/BLUEPRINT-PRINTER.md']) {
+    assert.ok(!existsSync(resolve(plain, path)), path);
+    assert.ok(existsSync(resolve(method, path)), path);
+  }
+  for (const path of ['AGENTS.md', '.cclauncher.json', 'package.json']) {
+    assert.equal(readFileSync(resolve(method, path), 'utf8'), readFileSync(resolve(plain, path), 'utf8'));
+  }
+  const mapping = JSON.parse(readFileSync(resolve(root, 'methods/blueprint-printer/scaffold.json')));
+  for (const [source, target] of Object.entries(mapping)) {
+    const expected = readFileSync(resolve(root, 'methods/blueprint-printer', source), 'utf8').replaceAll('{{version}}', JSON.parse(readFileSync(resolve(root, 'package.json'))).version);
+    assert.equal(readFileSync(resolve(method, target), 'utf8'), expected);
+  }
+  assert.ok(!existsSync(resolve(method, 'recipes')));
+  assert.ok(!existsSync(resolve(method, 'standards')));
+  mkdirSync(resolve(conflict, 'docs/design'), { recursive: true });
+  writeFileSync(resolve(conflict, 'docs/design/_rules.md'), 'Reviewed project decisions');
+  const before = listing(conflict);
+  assert.equal(run(conflict, ['init', '--yes', '--method', 'blueprint-printer']).status, 1);
+  assert.deepEqual(listing(conflict), before);
+  assert.equal(readFileSync(resolve(conflict, 'docs/design/_rules.md'), 'utf8'), 'Reviewed project decisions');
+  assert.equal(run(invalid, ['init', '--yes', '--method', '../unknown']).status, 1);
+  assert.deepEqual(listing(invalid), []);
+});

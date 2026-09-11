@@ -109,3 +109,7 @@ are meaningful or passing; run the project verifier and obtain required review.
 ## Agent entry points
 
 `init --adapter generic|claude|codex` selects an entry point without saving tool or model choices in config. Generic is the default; Claude adds only `@AGENTS.md` in CLAUDE.md. Existing files are never overwritten. `context workflow` loads the shared role/risk standard. See [adapter guide](agent-adapters.md).
+
+## Optional methodology
+
+`init --method blueprint-printer` adds the selected method’s templates and asset rules. It is omitted by default and does not install Storybook or other dependencies. Existing files are preflighted together with baseline files; unknown methods fail before writes. See [method guide](../methods/blueprint-printer/README.md).
