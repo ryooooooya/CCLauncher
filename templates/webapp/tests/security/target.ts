@@ -5,14 +5,18 @@ export const baseURL = process.env.SECURITY_BASE_URL || "http://127.0.0.1:3000";
 const url = new URL(baseURL);
 if (
   url.origin !== baseURL ||
-  url.protocol !== "http:" ||
+  !["http:", "https:"].includes(url.protocol) ||
   !["127.0.0.1", "localhost"].includes(url.hostname)
 )
   throw new Error("Security fixture requires a local test application origin.");
 export const paths = { session: "/api/session", documents: "/api/documents" };
 export type Actor = "owner" | "other" | "admin";
 export async function guest() {
-  return request.newContext({ baseURL, extraHTTPHeaders: { Origin: baseURL } });
+  return request.newContext({
+    baseURL,
+    ignoreHTTPSErrors: url.protocol === "https:",
+    extraHTTPHeaders: { Origin: baseURL },
+  });
 }
 export async function actor(name: Actor): Promise<APIRequestContext> {
   const prefix = `SECURITY_${name.toUpperCase()}`;

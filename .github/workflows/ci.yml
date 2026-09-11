@@ -23,6 +23,7 @@ jobs:
     timeout-minutes: 25
     env:
       NEXT_TELEMETRY_DISABLED: '1'
+      SECURITY_BASE_URL: https://127.0.0.1:3443
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -45,6 +46,14 @@ jobs:
         run: pnpm --dir "$RUNNER_TEMP/cclauncher-tools" exec cclauncher context auth --dir "$RUNNER_TEMP/cclauncher-webapp"
       - run: pnpm install --frozen-lockfile --ignore-scripts
         working-directory: ${{ runner.temp }}/cclauncher-webapp
+      - name: Check skip, todo and empty suites with the pinned runners
+        run: node scripts/test-runner-gates.mjs "$RUNNER_TEMP/cclauncher-webapp"
+      - name: Create disposable loopback HTTPS certificate
+        run: |
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout "$RUNNER_TEMP/cc-tls.key" -out "$RUNNER_TEMP/cc-tls.crt" -days 1 -subj /CN=127.0.0.1 -addext 'subjectAltName=IP:127.0.0.1' 2>/dev/null
+          chmod 600 "$RUNNER_TEMP/cc-tls.key"
+          echo "CCLAUNCHER_TLS_KEY=$RUNNER_TEMP/cc-tls.key" >> "$GITHUB_ENV"
+          echo "CCLAUNCHER_TLS_CERT=$RUNNER_TEMP/cc-tls.crt" >> "$GITHUB_ENV"
       - run: pnpm exec playwright install --with-deps chromium
         working-directory: ${{ runner.temp }}/cclauncher-webapp
       - run: pnpm exec supabase start

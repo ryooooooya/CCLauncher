@@ -84,3 +84,13 @@ No runtime dependency is added to the CCLauncher CLI itself.
 - [Supabase database testing](https://supabase.com/docs/guides/database/testing)
 - [Supabase local configuration](https://supabase.com/docs/guides/local-development/cli/config)
 - [Playwright API testing](https://playwright.dev/docs/api-testing)
+
+
+## Security review follow-up
+
+See [review follow-up](security-review-followup.md) for the September 2026 findings,
+regressions and remaining deployment/release prerequisites. The example now restricts
+Data API writes by column and configures HttpOnly cookies with Secure on HTTPS origins.
+CI uses an isolated loopback TLS proxy to exercise browser cookie behavior; it is not a
+production server. Existing consumers must review and apply the additional column-grant
+migration and updated verifier/reporters themselves; package updates do not rewrite them.
