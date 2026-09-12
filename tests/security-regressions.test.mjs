@@ -80,7 +80,7 @@ test('init rolls back files after open and partial writes without deleting exist
   }
 });
 
-test('init reports cleanup failures with original error and leaves existing files intact', t => {
+for (const failClose of [false, true]) test(`init reports write/cleanup failures, with close failure=${failClose}`, t => {
   const dir = temporary(t);
   const target = resolve(dir, 'target'); mkdirSync(target);
   writeFileSync(resolve(target, 'keep.txt'), 'existing');
@@ -88,8 +88,12 @@ test('init reports cleanup failures with original error and leaves existing file
   writeFileSync(script, `import fs from 'node:fs';
 import { syncBuiltinESMExports } from 'node:module';
 const original = fs.writeFileSync;
+const originalClose = fs.closeSync;
+let failedFd;
+if (${failClose}) fs.closeSync = fd => { originalClose(fd); if (fd === failedFd) throw Object.assign(new Error('synthetic EIO'), {code:'EIO'}); };
 fs.writeFileSync = (file, data, ...args) => {
   if (typeof file === 'number') {
+    failedFd = file;
     original(file, data.slice(0, 5), ...args);
     throw Object.assign(new Error('synthetic ENOSPC'), {code:'ENOSPC'});
   }
@@ -104,6 +108,7 @@ catch (error) { console.error(error.message); process.exitCode = 1; }
   const result = node([script], dir);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /synthetic ENOSPC/);
+  if (failClose) assert.match(result.stderr, /Close failed:.*EIO/);
   assert.match(result.stderr, /Cleanup incomplete/);
   assert.match(result.stderr, /EACCES/);
   const leftovers = readdirSync(target).filter(name => name !== 'keep.txt');

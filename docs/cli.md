@@ -134,3 +134,10 @@ are meaningful or passing; run the project verifier and obtain required review.
 ## Optional methodology
 
 `init --method blueprint-printer` adds the selected method’s templates and asset rules. It is omitted by default and does not install Storybook or other dependencies. Existing files are preflighted together with baseline files; unknown methods fail before writes. See [method guide](../methods/blueprint-printer/README.md).
+
+The Playwright import check follows local imports/reexports outside tests/ and tsconfig
+path aliases, with cycle detection and canonical paths. Dynamic import/require accepts
+only literal specifiers (including backtick literals without interpolation); computed
+module names and unresolved dependencies fail collection. Use explicit local imports
+for test fixtures. Installed package internals and the exact required-test entry point
+are trusted, as are the runner/config/verifier: this is not arbitrary-code isolation.

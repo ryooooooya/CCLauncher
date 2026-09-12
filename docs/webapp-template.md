@@ -103,3 +103,10 @@ The example defaults to HTTPS cookies. Local HTTP requires explicit
 `CCLAUNCHER_LOCAL_HTTP=true` and a loopback APP_ORIGIN; fixtures set this only for HTTP mode.
 This is an operator assertion of isolation, not a check for public network exposure.
 Never enable the exception for a deployment, tunnel or public reverse proxy.
+
+The Playwright import check follows local imports/reexports outside tests/ and tsconfig
+path aliases, with cycle detection and canonical paths. Dynamic import/require accepts
+only literal specifiers (including backtick literals without interpolation); computed
+module names and unresolved dependencies fail collection. Use explicit local imports
+for test fixtures. Installed package internals and the exact required-test entry point
+are trusted, as are the runner/config/verifier: this is not arbitrary-code isolation.

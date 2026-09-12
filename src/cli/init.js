@@ -100,7 +100,13 @@ export function initialize(dist, manifest, dir, config, example, adapter = 'gene
       ensureDir(dirname(path));
       const fd = openSync(path, 'wx', name.endsWith('.sh') ? 0o755 : 0o644);
       createdFiles.push(path);
-      try { writeFileSync(fd, content); } finally { closeSync(fd); }
+      let writeError;
+      try { writeFileSync(fd, content); } catch (error) { writeError = error; }
+      try { closeSync(fd); } catch (closeError) {
+        if (writeError) throw new Error(`${writeError.message}\nClose failed: ${path} (${closeError.code || closeError.message})`, { cause: writeError });
+        throw closeError;
+      }
+      if (writeError) throw writeError;
     }
   } catch (error) {
     const remaining = [];
