@@ -1,10 +1,11 @@
 // Run against the generated application's actual pinned runners, not mock reporters.
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const app = resolve(process.argv[2]);
+const outside = mkdtempSync(resolve(app, '.cc-external-fixture-'));
 const fixture = mkdtempSync(resolve(app, '.cc-runner-gate-'));
 try {
   writeFileSync(resolve(fixture, 'package.json'), '{"type":"module"}');
@@ -13,7 +14,7 @@ try {
     const config = resolve(fixture, `${runner}.config.ts`);
     writeFileSync(config, runner === 'vitest'
       ? `export default { test: { include: ['probe.test.ts'], passWithNoTests: false, allowOnly: false, reporters: [${JSON.stringify(reporter)}] } };`
-      : `import { checkTestImports } from ${JSON.stringify(resolve(app, 'scripts/check-test-imports.ts'))}; checkTestImports(${JSON.stringify(fixture)}); export default { testDir: '.', testMatch: 'probe.test.ts', forbidOnly: true, retries: 0, workers: 1, reporter: [[${JSON.stringify(reporter)}]] };`);
+      : `import { checkTestImports } from ${JSON.stringify(resolve(app, 'scripts/check-test-imports.ts'))}; checkTestImports(${JSON.stringify(fixture)}, ${JSON.stringify(resolve(app, 'tests/required-test.ts'))}); export default { testDir: '.', testMatch: 'probe.test.ts', forbidOnly: true, retries: 0, workers: 1, reporter: [[${JSON.stringify(reporter)}]] };`);
     const binary = resolve(app, runner === 'vitest' ? 'node_modules/vitest/vitest.mjs' : 'node_modules/@playwright/test/cli.js');
     const importLine = runner === 'vitest' ? 'import { test, expect, describe } from "vitest";' : 'import { expect } from "@playwright/test";';
     const guardedImport = runner === 'playwright' ? `import { test } from ${JSON.stringify(resolve(app, 'tests/required-test.ts'))};` : '';
@@ -58,6 +59,41 @@ try {
         assert.match(result.stdout + result.stderr, /unguarded Playwright API/);
       }
       console.log('playwright: three unguarded imports correctly rejected');
+      const external = resolve(outside, 'bridge.ts');
+      const raw = 'export { test } from "@playwright/test";';
+      const valid = `export { test } from ${JSON.stringify(resolve(app, 'tests/required-test.ts'))};`;
+      const viaHelper = `import { test } from ${JSON.stringify(external)};`;
+      const empty = 'test("pass", () => {}); test.describe("empty boundary", () => {});';
+      writeFileSync(resolve(fixture, 'tsconfig.json'), JSON.stringify({ compilerOptions: { moduleResolution: 'Bundler', paths: { '@fixture': [external] } } }));
+      mkdirSync(resolve(fixture, 'tests/security'), { recursive: true });
+      writeFileSync(resolve(fixture, 'tests/security/presence.spec.ts'), '// Actual probe selected by config in the parent directory.');
+      const { defaults } = await import('../src/cli/config.js');
+      writeFileSync(resolve(fixture, '.cclauncher.json'), JSON.stringify(defaults()));
+      writeFileSync(resolve(fixture, 'package.json'), JSON.stringify({ type: 'module', scripts: { 'test:security': `${JSON.stringify(process.execPath)} ${JSON.stringify(binary)} test --config ${JSON.stringify(config)}` } }));
+      for (const [name, source, helper, success, message] of [
+        ['backtick-import', 'const { test } = await import(`@playwright/test`);' + empty, raw, false, /unguarded Playwright API/],
+        ['outside-reexport', viaHelper + empty, raw, false, /unguarded Playwright API/],
+        ['outside-star-reexport', viaHelper + empty, 'export * from "@playwright/test";', false, /unguarded Playwright API/],
+        ['outside-nested-reexport', viaHelper + empty, 'export { test } from "./nested";', false, /unguarded Playwright API/],
+        ['alias-reexport', 'import { test } from "@fixture";' + empty, raw, false, /unguarded Playwright API/],
+        ['computed-import', 'const moduleName = "@playwright/test"; const { test } = await import(moduleName);' + empty, raw, false, /literal module specifiers/],
+        ['outside-guarded-pass', viaHelper + 'test("pass", () => {});', valid, true, null],
+        ['outside-guarded-empty', viaHelper + empty, valid, false, /Required test suite is empty/],
+      ]) {
+        writeFileSync(external, helper);
+        writeFileSync(resolve(outside, 'nested.ts'), raw);
+        writeFileSync(resolve(fixture, 'probe.test.ts'), source);
+        for (const args of [[binary, 'test', '--config', config], [resolve(app, 'scripts/verify.mjs'), 'security']]) {
+          const result = spawnSync(process.execPath, args, { cwd: fixture, encoding: 'utf8', timeout: 60000 });
+          assert.equal(result.status === 0, success, `${name}: ${result.stdout}\n${result.stderr}`);
+          if (message) assert.match(result.stdout + result.stderr, message);
+        }
+        console.log(`playwright + consumer verifier: ${name} correctly ${success ? 'accepted' : 'rejected'}`);
+      }
+
     }
   }
-} finally { rmSync(fixture, { recursive: true, force: true }); }
+} finally {
+  rmSync(fixture, { recursive: true, force: true });
+  rmSync(outside, { recursive: true, force: true });
+}
