@@ -58,6 +58,38 @@ Commit both package.json and pnpm-lock.yaml. Never use a branch, `latest`, `^` o
 
 For local development, use `npm pack` from a reviewed checkout and install the resulting tarball with `pnpm add -D --save-exact /absolute/path/to/ryooooooya-cclauncher-0.1.0.tgz` (adjust the filename for the checkout's version). This records tarball integrity but is a local smoke-test route, not a portable registry dependency.
 
+### macOS temporary directory paths
+
+During verification of `0.1.0` on macOS, four tests stopped with
+`CCLauncher: Not a regular directory: /var`. The temporary directory path used
+`/var/folders/...`, while `/var` was a symlink to `/private/var`. Init rejects
+symlink parents, so these tests stopped before reaching the behavior under test.
+
+Run the following from the fresh checkout of the reviewed commit. It resolves
+the existing temporary directory to its physical path before starting verification:
+
+```sh
+(
+  set -e
+  TMPDIR="$(node -p 'require("node:fs").realpathSync(require("node:os").tmpdir())')"
+  export TMPDIR
+  pnpm install --frozen-lockfile --ignore-scripts
+  pnpm verify
+  npm pack
+)
+```
+
+The subshell limits the environment change to these commands; `set -e` stops
+packaging if setup or verification fails. Use an existing, locally controlled
+temporary directory. All tests and the normal prepack checks still run. Do not
+remove symlink checks, skip failing tests or use `npm pack --ignore-scripts` to
+work around this error.
+
+For an explicit `init --dir` path, use the physical path of a trusted existing
+parent (obtain it with `pwd -P` from that directory), then append the new target
+name. Changing TMPDIR does not rewrite an explicit target path. Symlinks in
+target parents or generated file paths continue to be rejected.
+
 ## Release policy
 
 Use SemVer. Every distributed content change, including guidance-only changes, requires a new version. Never move or reuse an existing release tag. For pre-1.0 releases, breaking behavior increments the minor version; compatible fixes increment patch. Publish stable releases only through `v<package.version>` tags on commits reachable from main.
