@@ -65,6 +65,11 @@ initialization is not an OS sandbox against hostile concurrent filesystem change
 There is no force option, network fetch, install hook, model assignment or
 recipe/standard copy into the consumer. No agent-specific adapter is installed unless explicitly selected.
 
+On macOS, `Not a regular directory: /var` can occur when a temporary or explicit
+target path goes through the `/var` symlink. See the
+[physical-path verification procedure](distribution.md#macos-temporary-directory-paths)
+for setting TMPDIR and choosing an explicit target without weakening symlink checks.
+
 ### Completing the scaffold
 
 Define actual `lint`, `typecheck`, `test`, `test:security`, `test:e2e`, `build` package scripts,
