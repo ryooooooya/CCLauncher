@@ -85,3 +85,10 @@ Supabase構成ではDBテストも必要です。未実装のチェックや利�
 
 構成の詳細は [architecture](docs/architecture.md)、既存利用者向けの移行記録は [migration](docs/migration.md)。
 CCLauncherは[MIT License](LICENSE)で提供します。生成先にはCCLauncher由来のファイルの表記として `LICENSE.cclauncher` を同梱し、アプリ自身のライセンスは変更しません。[出典確認の記録](docs/licensing/README.md)も参照してください。
+
+## Maintenance
+
+保守では[依存パッケージの週次チェック](docs/maintainers/automation.md#template-dependency-review)と、
+[技術情報・ノウハウの月次見直し](docs/maintainers/knowledge-review.md)を行います。
+月次はGitHubのNew issueから **Monthly knowledge review** を選び、公式資料・実プロジェクトの学び・検証結果を記録します。
+確認日だけを更新せず、必要な差分を小さなPRで反映し、公開とconsumerへの適用は別途行います。
