@@ -73,3 +73,10 @@ embedded consumer workflow action pins, and changes to guidance still require
 maintainer review; the registry report does not refresh recipe verification dates.
 Reassess Dependabot's pnpm support before replacing these reports with automatic
 template update PRs, and verify a real manifest/lockfile update through CI first.
+
+## Monthly knowledge review
+
+Use the [monthly review procedure](knowledge-review.md) and the **Monthly knowledge
+review** issue template to review official sources, project feedback and verification
+dates. This is a manual monthly review, separate from the automated weekly dependency
+report. Record evidence and follow-up PRs; do not advance dates just to clear warnings.
