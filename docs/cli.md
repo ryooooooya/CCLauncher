@@ -1,8 +1,9 @@
 # CLI
 
 The CLI provides offline knowledge lookup and deterministic project initialization.
-The package is still unpublished; use a locally built tarball as described in
-[distribution](distribution.md). Install it as a development dependency before use.
+Version 0.1.0 is published on npm. Install it as an exact development dependency
+before use: `pnpm add -D --save-exact @ryooooooya/cclauncher@0.1.0`.
+See [distribution](distribution.md) for release details and local tarball testing.
 
 ## Commands
 
@@ -118,7 +119,7 @@ causes exit code 1; WARN alone does not. It checks package version/inventory has
 local installation, config, required docs/scripts, pnpm lockfile presence, declared
 application commands, actual test-file presence and selected Supabase SQL tests.
 A declared version must be exact; a local `.tgz` dependency is also accepted for
-unpublished development. Lockfile existence is not a lockfile integrity audit.
+local development. Lockfile existence is not a lockfile integrity audit.
 
 Knowledge dates older than 180 days or in the future produce a warning. Installed
 Next.js major versions are compared with the verified recipe range (16); missing

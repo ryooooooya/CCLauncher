@@ -2,7 +2,9 @@
 
 Status: historical inventory recorded; owner clarification received and [MIT applied](../../LICENSE).
 Reviewed source: `1c39d777ee35dfcbdc85f8f896dfca190eeb40cd` (2026-09-11).
-The license grant is in root LICENSE. npm publication remains deferred.
+The license grant is in root LICENSE. Version 0.1.0 was published on npm on
+2026-09-21; see the [publication record](../distribution.md#publication-record).
+The inventory below remains a historical snapshot of the reviewed source.
 
 ## Evidence collected
 

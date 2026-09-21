@@ -7,25 +7,16 @@ AIコーディングエージェントでセキュアなWebアプリを作るた
 
 ## Install
 
-Node.js 24 / pnpm 11.19.0を使用します。`@ryooooooya/cclauncher@0.1.0` は開発中・npm未公開です。
-現在はレビュー済みcheckoutからtarballを作り、ローカルで利用できます。
+Node.js 24 / pnpm 11.19.0を使用します。[`@ryooooooya/cclauncher@0.1.0`](https://www.npmjs.com/package/@ryooooooya/cclauncher/v/0.1.0) はnpmで公開済みです。
+プロジェクトのディレクトリで、開発依存に追加します。
 
 ```sh
-pnpm install --frozen-lockfile --ignore-scripts
-pnpm verify
-npm pack
-```
-
-既存アプリでは、作成したtarballを開発依存に追加します。
-
-```sh
-pnpm add -D --save-exact /absolute/path/to/ryooooooya-cclauncher-0.1.0.tgz
+pnpm add -D --save-exact @ryooooooya/cclauncher@0.1.0
 pnpm exec cclauncher --version
 ```
 
-package.jsonとlockfileをcommitし、tarballもチーム・CIから同じ内容を参照できる場所に固定します。
-ローカル絶対パスへの依存は、そのままでは他の環境に持ち運べません。
-更新時も版とlockfileを明示的に変更します。詳細は [配布と公開](docs/distribution.md)。
+package.jsonとpnpm-lock.yamlをcommitし、更新時も版とlockfileを明示的に変更します。
+ソースからのローカル検証・公開手順は [配布と公開](docs/distribution.md) を参照してください。
 
 ## Initialize project docs
 
@@ -93,4 +84,4 @@ Supabase構成ではDBテストも必要です。未実装のチェックや利�
 | src/cli / manifest.json | 決定論的な初期化・取得・診断と配布物の一覧 |
 
 構成の詳細は [architecture](docs/architecture.md)、既存利用者向けの移行記録は [migration](docs/migration.md)。
-CCLauncherは[MIT License](LICENSE)で提供します。生成先にはCCLauncher由来のファイルの表記として `LICENSE.cclauncher` を同梱し、アプリ自身のライセンスは変更しません。[出典確認の記録](docs/licensing/README.md)も参照してください。npm公開は引き続き保留しています。
+CCLauncherは[MIT License](LICENSE)で提供します。生成先にはCCLauncher由来のファイルの表記として `LICENSE.cclauncher` を同梱し、アプリ自身のライセンスは変更しません。[出典確認の記録](docs/licensing/README.md)も参照してください。
