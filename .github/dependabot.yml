@@ -1,4 +1,6 @@
 version: 2
+# Template pnpm 11 checks: workflows/dependency-review.yml.
+# See docs/maintainers/automation.md for coverage and the update response path.
 updates:
   - package-ecosystem: github-actions
     directory: /

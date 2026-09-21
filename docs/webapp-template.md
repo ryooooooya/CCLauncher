@@ -80,6 +80,9 @@ The generated pnpm workspace explicitly records version-specific release-age
 exceptions emitted during resolution; review these with dependency updates.
 No runtime dependency is added to the CCLauncher CLI itself.
 
+Maintainers use the [weekly template dependency review](maintainers/automation.md#template-dependency-review)
+to find update candidates and apply them through verified PRs.
+
 ## Primary references
 
 - [Supabase SSR client](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs)
