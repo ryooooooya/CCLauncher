@@ -18,8 +18,9 @@ framework/auth implementation is silently selected by generic initialization.
 
 ## Runnable Next.js + Supabase example
 
-Use the built CLI from the repository or an installed tarball to create an empty
-target directory:
+The [README](../README.md#install) describes installation from npm. You can run
+`pnpm exec cclauncher` from a project containing that dependency, or use the built
+CLI from a repository checkout as below, to create an empty target directory:
 
 ```sh
 node /absolute/path/to/CCLauncher/dist/cli/index.js init --yes \
@@ -48,9 +49,10 @@ The application never uses a service-role key. Provider-managed identity and
 session cookies are verified on HTTP requests; Postgres grants and RLS independently
 limit access through the Data API. There is no self-built signing/password system.
 
-Install the exact CCLauncher package/tarball as a dev dependency if you also want
-`pnpm cc` and local-install doctor checks in the generated example. npm publication
-of CCLauncher remains deferred; the example lockfile pins its application tools.
+In the generated example, run `pnpm add -D --save-exact @ryooooooya/cclauncher@0.1.0`
+if you also want `pnpm cc` and local-install doctor checks. Commit the resulting
+package.json and lockfile changes. The supplied example lockfile pins its application
+tools; it does not initially include the CCLauncher dependency.
 
 ## Verification layers
 

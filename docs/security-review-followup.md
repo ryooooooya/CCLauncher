@@ -1,5 +1,16 @@
 # Independent security review follow-up
 
+## Current publication status
+
+Version 0.1.0 was published on npm on 2026-09-21 with the owner's approval.
+The [publication record](distribution.md#publication-record) identifies the source
+commit, protection settings and the still-unverified OIDC publication path.
+The responses below describe their original review stages, including the publication
+holds and administration gaps at those times. They are retained as historical evidence;
+publication does not retroactively expand independent review or approve production use.
+
+## Original review response
+
 Received 2026-09-11: independent review of
 `1c39d777ee35dfcbdc85f8f896dfca190eeb40cd` (tree
 `7d366a02e46e1dbbe07e1c8ba930e1fc276b4471`). Findings below are responses to that
@@ -29,7 +40,7 @@ The original review's test-gap table also motivated both users' HTTP CRUD/list p
 forged-owner rejection and guest creation denial with unchanged data checks. The remaining
 items below are not silently treated as verified.
 
-## Remaining work before deployment / publication
+## Remaining work recorded before deployment / publication (original response)
 
 - Obtain independent review of these fixes. This follow-up is the implementer's response.
 - Confirm required PR approval/checks and bypass restrictions on main, protected release

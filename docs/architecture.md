@@ -44,4 +44,4 @@ consumer projects are unaffected; package updates never rewrite their local deci
 See [migration](migration.md) for the historical inventory and [CLI](cli.md) for behavior.
 
 CCLauncher uses the [MIT license](../LICENSE), with a retained notice in generated
-scaffolding. npm publication remains deferred; see [distribution](distribution.md).
+scaffolding. Version 0.1.0 is published on npm; see [distribution](distribution.md).

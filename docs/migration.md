@@ -77,12 +77,15 @@ Existing consumers are not modified by this repository cleanup. For their migrat
 review project-specific decisions first, use the adapter guide and install a pinned
 package; do not delete local rules merely because their old upstream names disappeared.
 
-## Remaining release work
+## Release status
 
 All implemented package flows are covered by CLI/distribution and webapp CI. This does
 not certify every recipe integration or replace independent security review.
 The [provenance inventory and owner clarification](licensing/README.md) are recorded
 and the approved MIT license is applied, including notices in copied scaffolding.
-The inventory is not a full dependency legal audit. npm publication remains pending.
-External branch/tag/environment protections must be verified by the repository owner;
-source documentation is not proof that those settings are enabled. See [distribution](distribution.md).
+The inventory is not a full dependency legal audit. Version 0.1.0 was published on
+npm on 2026-09-21. See the [publication record](distribution.md#publication-record)
+for the released commit, administration evidence and pending OIDC execution check.
+External protections must remain configured; source documentation alone is not
+proof that those settings are enabled. Publication does not approve a consumer's
+production deployment.
