@@ -6,6 +6,9 @@ Project rootのAGENTS.mdを共通の正本として直接読む。別の生成�
 CLI / sandbox / approval設定はホスト環境側で管理する。このadapterは設定を書き換えない。
 実行できないcommandや拒否された操作は結果に記録し、検証済みとして扱わない。
 
+モデルは固定しない。project docsのcommand例に `-m` を書かず、`~/.codex/config.toml` の `model` に任せる。
+モデル非対応のerrorが出たら `~/.codex/models_cache.json` で利用可能なモデルを確認し、`config.toml` の `model` を変更する。
+
 review機能や別instanceを使う場合、目的・差分・検証結果・残る懸念を渡す。
 独立reviewは実装contextから分け、同じcontextの自己点検で代替しない。
 具体的なreviewコマンドやGitHub連携は利用環境の機能であり、coreの必須依存にはしない。
