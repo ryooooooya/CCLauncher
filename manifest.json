@@ -2,36 +2,6 @@
   "schemaVersion": 1,
   "entries": [
     {
-      "id": "dependencies",
-      "kind": "standard",
-      "path": "standards/dependencies.md",
-      "verified": "2026-09-09"
-    },
-    {
-      "id": "privacy",
-      "kind": "standard",
-      "path": "standards/privacy.md",
-      "verified": "2026-09-09"
-    },
-    {
-      "id": "testing",
-      "kind": "standard",
-      "path": "standards/testing.md",
-      "verified": "2026-09-09"
-    },
-    {
-      "id": "web-security",
-      "kind": "standard",
-      "path": "standards/web-security.md",
-      "verified": "2026-09-09"
-    },
-    {
-      "id": "workflow",
-      "kind": "standard",
-      "path": "standards/workflow.md",
-      "verified": "2026-09-10"
-    },
-    {
       "id": "accessibility",
       "kind": "recipe",
       "path": "recipes/accessibility.md",
@@ -245,6 +215,42 @@
         "ux",
         "testing"
       ]
+    },
+    {
+      "id": "architecture-health",
+      "kind": "standard",
+      "path": "standards/architecture-health.md",
+      "verified": "2026-10-14"
+    },
+    {
+      "id": "dependencies",
+      "kind": "standard",
+      "path": "standards/dependencies.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "privacy",
+      "kind": "standard",
+      "path": "standards/privacy.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "testing",
+      "kind": "standard",
+      "path": "standards/testing.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "web-security",
+      "kind": "standard",
+      "path": "standards/web-security.md",
+      "verified": "2026-09-09"
+    },
+    {
+      "id": "workflow",
+      "kind": "standard",
+      "path": "standards/workflow.md",
+      "verified": "2026-09-10"
     }
   ],
   "contexts": {
@@ -496,6 +502,27 @@
     "workflow": [
       {
         "id": "workflow"
+      },
+      {
+        "id": "architecture-health",
+        "sections": [
+          "Change-impact review",
+          "Review output"
+        ]
+      }
+    ],
+    "architecture": [
+      {
+        "id": "architecture-health",
+        "sections": [
+          "Core rule",
+          "Before changing code",
+          "During implementation",
+          "Change-impact review",
+          "Verification",
+          "When to record a decision",
+          "Review output"
+        ]
       }
     ]
   },
