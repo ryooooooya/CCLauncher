@@ -2,6 +2,12 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "id": "architecture-health",
+      "kind": "standard",
+      "path": "standards/architecture-health.md",
+      "verified": "2026-10-14"
+    },
+    {
       "id": "dependencies",
       "kind": "standard",
       "path": "standards/dependencies.md",
@@ -496,6 +502,27 @@
     "workflow": [
       {
         "id": "workflow"
+      },
+      {
+        "id": "architecture-health",
+        "sections": [
+          "Change-impact review",
+          "Review output"
+        ]
+      }
+    ],
+    "architecture": [
+      {
+        "id": "architecture-health",
+        "sections": [
+          "Core rule",
+          "Before changing code",
+          "During implementation",
+          "Change-impact review",
+          "Verification",
+          "When to record a decision",
+          "Review output"
+        ]
       }
     ]
   },
