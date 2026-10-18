@@ -45,6 +45,7 @@ AGENTS.md、project docs、検証設定・テスト・CIの雛形を配置しま
 pnpm exec cclauncher context auth
 pnpm exec cclauncher context database
 pnpm exec cclauncher context workflow
+pnpm exec cclauncher context architecture
 pnpm exec cclauncher recipe supabase
 pnpm exec cclauncher doctor
 ```

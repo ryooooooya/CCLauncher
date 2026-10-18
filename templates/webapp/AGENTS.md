@@ -36,6 +36,8 @@ Load generic guidance only when relevant:
     pnpm exec cclauncher context <topic>
 
 For role handoffs and risk classification, load `cclauncher context workflow`.
+For non-trivial feature work, refactors, or cross-module bug fixes, load
+`cclauncher context architecture` and review the full diff for accumulated complexity.
 
 Generic guidance remains in the installed package.
 Do not copy recipes or standards into this project.
