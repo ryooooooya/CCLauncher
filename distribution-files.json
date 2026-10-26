@@ -38,6 +38,7 @@
   "src/cli/index.js",
   "src/cli/init.js",
   "src/cli/knowledge.js",
+  "standards/architecture-health.md",
   "standards/dependencies.md",
   "standards/privacy.md",
   "standards/testing.md",

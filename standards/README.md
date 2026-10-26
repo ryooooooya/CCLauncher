@@ -4,6 +4,7 @@ Framework-independent principles, loaded only when relevant to a task. Project-s
 
 | Standard | Read when |
 |---|---|
+| [Architecture health](architecture-health.md) | Adding features, changing data flow, refactoring or cross-module bug fixes |
 | [Web security](web-security.md) | Changing identity, ownership, input, storage or network boundaries |
 | [Dependencies](dependencies.md) | Adding, updating or auditing packages |
 | [Testing](testing.md) | Designing tests and verification gates |
