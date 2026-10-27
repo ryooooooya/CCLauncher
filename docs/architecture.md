@@ -25,7 +25,7 @@ Generic core consists of standards, recipes, templates and CLI code. Provider-sp
 
 A consumer uses AGENTS.md as a small shared index, and owns its PRODUCT.md, ARCHITECTURE.md and SECURITY.md. Those project documents record service-specific decisions. Generic guidance remains inside the installed package and is loaded only for relevant tasks. An adapter points to the common index instead of generating or copying its rules.
 
-For task decisions, follow the current user instruction and project-specific documents, then AGENTS.md and relevant package guidance. Report conflicts that would weaken a security boundary rather than silently applying them. These are project conventions, not overrides of the host runtime's instruction hierarchy.
+For task decisions, follow the current user instruction and project-specific documents, then AGENTS.md and relevant package guidance. Report conflicts that would weaken a security boundary rather than silently applying them. When project documents and existing code disagree on a choice the task requires, the agent stops and asks (or, unattended, finishes as incomplete with the disagreement listed) rather than picking a side or rewriting existing code; neither source is assumed to be the stale one. These are project conventions, not overrides of the host runtime's instruction hierarchy.
 
 ## Blueprint / Printer
 

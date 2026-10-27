@@ -44,6 +44,12 @@ Do not copy recipes or standards into this project.
 Project decisions take precedence over generic recipes.
 Report conflicts that would weaken a security boundary.
 
+When project docs and existing code disagree on a choice the current task
+requires, stop and ask before writing code. Never rewrite existing code to
+resolve such a disagreement. In unattended runs, finish as incomplete and
+list the disagreement instead of guessing. Disagreements that do not affect
+the current task do not block it; list them in the final response.
+
 ## Security-sensitive changes
 
 Authentication, authorization, billing, admin access, file uploads,
