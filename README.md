@@ -70,9 +70,8 @@ Supabase構成ではDBテストも必要です。未実装のチェックや利�
 ## Optional integration
 
 - `init --adapter claude`: `@AGENTS.md` のみのCLAUDE.mdを追加。Codex / genericはAGENTS.mdを直接読む。[Adapters](docs/agent-adapters.md)
-- `init --method blueprint-printer`: product stories・design assets・prototype履歴を扱う手法を任意導入。[Blueprint / Printer](methods/blueprint-printer/README.md)
 
-どちらもモデル選択・agent起動・権限設定を行いません。
+モデル選択・agent起動・権限設定は行いません。
 
 ## Architecture
 
@@ -81,7 +80,6 @@ Supabase構成ではDBテストも必要です。未実装のチェックや利�
 | standards / recipes | 共通原則と技術別知識 |
 | templates | project docs・テスト・CI |
 | adapters | agent固有の薄い入口 |
-| methods | 任意採用する開発手法 |
 | src/cli / manifest.json | 決定論的な初期化・取得・診断と配布物の一覧 |
 
 構成の詳細は [architecture](docs/architecture.md)、既存利用者向けの移行記録は [migration](docs/migration.md)。

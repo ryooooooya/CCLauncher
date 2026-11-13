@@ -37,7 +37,6 @@ Options:
 | `--scope` | production / prototype |
 | `--example` | nextjs-supabase (matching stack and empty target only) |
 | `--adapter` | generic (default) / claude / codex |
-| `--method` | blueprint-printer (optional) |
 | `--framework` | nextjs / none |
 | `--auth` | none / supabase / authjs |
 | `--database` | none / supabase / postgres |
@@ -49,7 +48,7 @@ shared Node runner, config validator and required-test reporters under scripts/.
 Supabase database selection adds supabase/tests/database/README.md.
 
 LICENSE.cclauncher carries the complete CCLauncher MIT notice for supplied scaffolding,
-including optional adapters, examples and methods. Keep it with copies or substantial
+including optional adapters and examples. Keep it with copies or substantial
 portions of those files. It does not relicense the consumer application or third-party
 dependencies; an existing application LICENSE and package license field are preserved.
 A LICENSE.cclauncher collision also fails before any file is written.
@@ -136,10 +135,6 @@ are meaningful or passing; run the project verifier and obtain required review.
 ## Agent entry points
 
 `init --adapter generic|claude|codex` selects an entry point without saving tool or model choices in config. Generic is the default; Claude adds only `@AGENTS.md` in CLAUDE.md. Existing files are never overwritten. `context workflow` loads the shared role/risk standard. See [adapter guide](agent-adapters.md).
-
-## Optional methodology
-
-`init --method blueprint-printer` adds the selected method’s templates and asset rules. It is omitted by default and does not install Storybook or other dependencies. Existing files are preflighted together with baseline files; unknown methods fail before writes. See [method guide](../methods/blueprint-printer/README.md).
 
 The Playwright import check follows local imports/reexports outside tests/ and tsconfig
 path aliases, with cycle detection and canonical paths. Dynamic import/require accepts

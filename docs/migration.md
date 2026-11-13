@@ -45,17 +45,17 @@ remaining root guides and finalizes current documentation. Git history retains o
 | `base_ux_checklist_high.md` | `recipes/ux-audit.md` | #4 | Merge into the same on-demand audit reference. |
 | `base_ux_checklist_medium.md` | `recipes/ux-audit.md` | #4 | Merge into the same on-demand audit reference. |
 | `ui_ux_skills_setup_guide.md` | `recipes/ui-ux-tooling.md`; `adapters/` | #4 / #7 / #9 | Separate tooling options from agent-specific installation; retire legacy guide. |
-| `blueprint_docs_rules.md` | `methods/blueprint-printer/blueprint/docs-rules.md` | #8 | Preserve methodology rules; update references as one migration. |
-| `blueprint_deck_template.md` | `methods/blueprint-printer/blueprint/deck-template.md` | #8 | Retain product interview/template. |
-| `blueprint_stories_rules.md` | `methods/blueprint-printer/blueprint/stories-rules.md` | #8 | Retain story ownership and lifecycle. |
-| `blueprint_stories_template.md` | `methods/blueprint-printer/blueprint/stories-template.md` | #8 | Retain story template. |
-| `printer/README.md` | `methods/blueprint-printer/printer/README.md` | #8 | Retain asset ownership and contribution guidance. |
-| `printer/design_rules.md` | `methods/blueprint-printer/printer/design-rules.md` | #8 | Preserve design-asset boundaries. |
-| `printer/tokens_rules.md` | `methods/blueprint-printer/printer/tokens-rules.md` | #8 | Preserve CSS source-of-truth principle. |
-| `printer/ui/_template.md` | `methods/blueprint-printer/printer/ui/_template.md` | #8 | Retain UI specification template. |
-| `printer/layout/_template.md` | `methods/blueprint-printer/printer/layout/_template.md` | #8 | Retain layout specification template. |
-| `base_print.md` | `methods/blueprint-printer/print.md`; `adapters/` | #8 / #7 | Method inputs/outputs here; tool-specific command entry in adapters. |
-| `docs/philosophy.md` | `docs/architecture.md`; `methods/blueprint-printer/README.md` | #2 / #8 / #9 | Architecture contract established in #2; migrate methodology rationale in #8, remove obsolete role assumptions. |
+| `blueprint_docs_rules.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `blueprint_deck_template.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `blueprint_stories_rules.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `blueprint_stories_template.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `printer/README.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `printer/design_rules.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `printer/tokens_rules.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `printer/ui/_template.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `printer/layout/_template.md` | `REMOVE` | #8 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `base_print.md` | `REMOVE` | #8 / #7 | Moved in #8; removed with the Blueprint/Printer method (see below). |
+| `docs/philosophy.md` | `docs/architecture.md` | #2 / #8 / #9 | Architecture contract established in #2; methodology rationale moved in #8 and later removed with the method; obsolete role assumptions removed. |
 | `README.md` | `README.md` | #2 / #9 | Add new architecture navigation now; remove legacy-only reference sections last. |
 
 
@@ -66,12 +66,23 @@ remaining root guides and finalizes current documentation. Git history retains o
   example live in templates. Old full/summary/setup/incident copies are removed.
 - Runtime-specific permissions and task entry points belong to adapters. The old
   AI extraction of shared instructions is retired; AGENTS.md is directly maintained.
-- Blueprint/Printer assets were moved together, preserving product/design ownership
-  and adoption history. Method adoption is explicit and optional.
+- Blueprint/Printer assets were first moved together into `methods/blueprint-printer/`
+  as an explicit `init --method` opt-in, then removed (see below).
 - Old installation prompts and automatic tool/plugin setup are retired. Tool-specific
   extensions are reviewed using their runtime documentation; they are not core requirements.
 - The automation roadmap is reduced to a maintainer decision note, without obsolete
   service prices, quotas or unsupported claims about security coverage.
+
+## Blueprint / Printer removal
+
+`methods/blueprint-printer/`, the `methods/` directory and `init --method` were removed.
+The method was optional, unused in practice and outside the harness's scope: design
+comparison and per-project development flows are assembled outside CCLauncher.
+`init --method` now fails as an unknown option before writing. Projects that already
+adopted the method keep their generated docs/product, docs/design and src/prototypes
+files; package updates do not touch them. The original files remain in Git history.
+The [licensing inventory](licensing/README.md) is a historical snapshot and still
+lists the removed paths.
 
 Existing consumers are not modified by this repository cleanup. For their migration,
 review project-specific decisions first, use the adapter guide and install a pinned

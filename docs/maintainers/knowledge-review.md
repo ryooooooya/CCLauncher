@@ -12,7 +12,7 @@
 ## 1. 対象と根拠を集める
 
 `manifest.json`の全entryを一覧として使い、対象SHAのstandards / recipes、
-templates、adapters、methods、CLIとの関係を確認する。全entryについて前回の
+templates、adapters、CLIとの関係を確認する。全entryについて前回の
 確認日と未解決事項を確認し、今回詳しく読むもの・次回に回すものを明示する。
 セキュリティ関連、採用版の変更、既知の不具合、古い確認日を優先する。
 
@@ -23,7 +23,7 @@ templates、adapters、methods、CLIとの関係を確認する。全entryにつ
 | Web security | [Web security standard](../../standards/web-security.md)のOWASP参照先、採用技術の公式security advisories。認可・cookie・入力境界 |
 | 依存 / 配布 | [週次チェック](automation.md#template-dependency-review)、公式advisories、[配布と公開](../distribution.md)。Node / pnpm、lockfile、埋め込まれたCI、公開設定 |
 | テスト / agent連携 | [Testing](../../standards/testing.md)、[adapters](../agent-adapters.md)、各ツールの公式仕様。テスト未実行・空suite・skipを失敗として扱えるか |
-| その他のrecipe / method | manifestの残りのentryと[Blueprint / Printer](../../methods/blueprint-printer/README.md)。適用対象・参照先・利用実績 |
+| その他のrecipe | manifestの残りのentry。適用対象・参照先・利用実績 |
 | 実プロジェクト | 利用者のIssue、PR、失敗ログ、回避策。何が繰り返し困るか、どの指示が過剰・曖昧か |
 
 参照URL、確認日、対象バージョン、該当節を記録する。記事・SNS・AIの提案は
@@ -42,7 +42,6 @@ templates、adapters、methods、CLIとの関係を確認する。全entryにつ
 | 特定の技術・バージョンの使い方 | recipes |
 | 初期状態から繰り返し必要になる実装・検証 | templates / CLIと回帰テスト |
 | 特定agentの入口や操作規約 | adapters |
-| 任意の開発手法だけに必要 | methods |
 | サービス固有の仕様・一度きりの事情 | consumer側のproject docs。共通知識には追加しない |
 
 一例だけを根拠に全プロジェクトへ必須化しない。既存記述を修正・削除できないか

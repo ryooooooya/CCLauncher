@@ -14,7 +14,7 @@ function markdown(dir) {
 test('current documentation has local targets and no legacy distribution dependencies', () => {
   const removed = /^(?:base_.*|framework_nextjs|project_bootstrap_guide_nextjs|ui_ux_skills_setup_guide)\.md$/;
   assert.deepEqual(readdirSync(root).filter(name => removed.test(name)), []);
-  const files = [resolve(root, 'README.md'), ...['docs', 'standards', 'recipes', 'adapters', 'methods'].flatMap(dir => markdown(resolve(root, dir)))];
+  const files = [resolve(root, 'README.md'), ...['docs', 'standards', 'recipes', 'adapters'].flatMap(dir => markdown(resolve(root, dir)))];
   for (const path of files) {
     const source = readFileSync(path, 'utf8');
     let fence = null;

@@ -89,7 +89,7 @@ Do not label this table a full third-party notices file.
 - Build copies the root license to dist/LICENSE and includes its hash in the manifest.
   Both license copies are included and checked in the actual npm tarball test.
 - Init writes LICENSE.cclauncher with the complete notice and an explicit scope note.
-  This covers supplied baseline, adapter, example and method scaffolding. The consumer's
+  This covers supplied baseline, adapter and example scaffolding. The consumer's
   own LICENSE and package license field remain intact. A notice-path conflict aborts
   before any scaffolding is written, using the normal init preflight.
 - Keep the notice when copying substantial CCLauncher material, including when moving

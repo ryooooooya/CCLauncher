@@ -10,4 +10,4 @@ The explicit examples/nextjs-supabase variant provides a runnable owner-scoped
 resource boundary, local synthetic fixtures, grants/RLS/pgTAP and CI.
 
 See [webapp guide](../docs/webapp-template.md) and [CLI](../docs/cli.md).
-Adapters and methodologies are optional. This index is not copied to consumers.
+Adapters are optional. This index is not copied to consumers.
