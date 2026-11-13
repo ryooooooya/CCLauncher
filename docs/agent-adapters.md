@@ -34,7 +34,6 @@ all files and fails before writing. Existing projects should migrate manually.
 5. Run project verification and obtain independent review for security-boundary changes.
 
 The legacy generation specification is removed. Retired root guides have been removed.
-Blueprint/Printer is an optional method; see its packaged guide.
 
 ## Roles and evidence
 
